@@ -107,7 +107,7 @@ class File_IMC_Parse {
         // convert the resulting text to an array of lines
         $lines = explode("\n", $text);
         
-        // parse the array of lines and return calendar info
+        // parse the array of lines and return info
         return $this->_fromArray($lines, $decode_qp);
     }
     
@@ -333,6 +333,7 @@ class File_IMC_Parse {
                 // left-portion of the line into a type-definition
                 // (the kind of information) and parameters for the
                 // type.
+                $group = $this->_getGroup($left);
                 $typedef = $this->_getTypeDef($left);
                 $params = $this->_getParams($left);
 
@@ -359,6 +360,7 @@ class File_IMC_Parse {
                 // instances of the same type, which might be dumb
                 // in some cases (e.g., N).
                 $block[$typedef][] = array(
+                	'group' => $group,
                     'param' => $params,
                     'value' => $value
                 );
@@ -370,7 +372,45 @@ class File_IMC_Parse {
     
     /**
     * 
-    * Takes a line and extracts the Type-Definition for the line.
+	* Takes a line and extracts the Group for the line (a group is
+	* identified as a prefix-with-dot to the Type-Definition; e.g.,
+	* Group.ADR or Group.ORG).
+    *
+    * @param string A left-part (before-the-colon part) from a line.
+    * 
+    * @return string The type definition for the line.
+    * 
+    * @access private
+    * 
+    */
+
+    function _getGroup($text)
+    {
+        // split the text by semicolons
+        $split = $this->splitBySemi($text);
+        
+        // find the first element (the typedef)
+        $tmp = $split[0];
+        
+        // find a dot in the typedef
+        $pos = strpos($tmp, '.');
+        
+        // is there a '.' in the typedef?
+        if ($pos === false) {
+        	// no group
+        	return '';
+        } else {
+        	// yes, return the group name
+        	return substr($tmp, 0, $pos);
+        }
+    }
+    
+    
+    /**
+    * 
+	* Takes a line and extracts the Type-Definition for the line (not
+	* including the Group portion; e.g., in Group.ADR, only ADR is
+	* returned).
     *
     * @param string A left-part (before-the-colon part) from a line.
     * 
@@ -385,8 +425,20 @@ class File_IMC_Parse {
         // split the text by semicolons
         $split = $this->splitBySemi($text);
         
-        // only return first element (the typedef)
-        return $split[0];
+        // find the first element (the typedef)
+        $tmp = $split[0];
+        
+        // find a dot in the typedef
+        $pos = strpos($tmp, '.');
+        
+        // is there a '.' in the typedef?
+        if ($pos === false) {
+        	// no group
+        	return $tmp;
+        } else {
+        	// yes, return the typedef without the group name
+        	return substr($tmp, $pos + 1);
+        }
     }
     
     

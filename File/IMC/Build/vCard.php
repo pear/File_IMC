@@ -13,48 +13,59 @@
 // | obtain it through the world-wide-web, please send a note to          | 
 // | license@php.net so we can mail you a copy immediately.               | 
 // +----------------------------------------------------------------------+ 
-// | Authors: Paul M. Jones <pjones@ciaweb.net>                           | 
+// | Authors: Paul M. Jones <pmjones@ciaweb.net>                          | 
 // +----------------------------------------------------------------------+ 
 // 
 // $Id$ 
 
-/**
- * This class builds a single vCard (version 3.0 or 2.1).
- *
- * General note: we use the terms "set" "add" and "get" as function
- * prefixes.
- * 
- * "Set" means there is only one iteration of a component, and it has
- * only one value repetition, so you set the whole thing at once.
- * 
- * "Add" means eith multiple iterations of a component are allowed, or
- * that there is only one iteration allowed but there can be multiple
- * value repetitions, so you add iterations or repetitions to the current
- * stack.
- * 
- * "Get" returns the full vCard line for a single iteration.
- * 
- * @author Paul M. Jones <pjones@ciaweb.net>
- * @package File_IMC
- */
 
 /**
- * The common builder functions are required
- */
+*
+* The common builder functions are required
+*
+*/
+
 require_once 'File/IMC/Build.php';
 
+
+/**
+*
+* This class builds a single vCard (version 3.0 or 2.1).
+*
+* General note: we use the terms "set", "add", and "get" as function
+* prefixes.
+* 
+* "Set" means there is only one iteration of a component, and it has
+* only one value repetition, so you set the whole thing at once.
+* 
+* "Add" means eith multiple iterations of a component are allowed, or
+* that there is only one iteration allowed but there can be multiple
+* value repetitions, so you add iterations or repetitions to the current
+* stack.
+* 
+* "Get" returns the full vCard line for a single iteration.
+* 
+* @author Paul M. Jones <pmjones@ciaweb.net>
+*
+* @package File_IMC
+*
+*/
 
 class File_IMC_Build_vCard extends File_IMC_Build {
 
     
-   /**
+    /**
+    * 
     * Sets the version of the the vCard.  Only one iteration.
     * 
     * @param string $text The text value of the verson text ('3.0' or '2.1').
+    * 
     * @return mixed Void on success, or a PEAR_Error object on failure.
     * 
     * @access public
+    * 
     */
+    
     function setVersion($text = '3.0')
     {
         $this->autoparam = 'VERSION';
@@ -68,21 +79,28 @@ class File_IMC_Build_vCard extends File_IMC_Build {
     }
     
 
-   /**
+    /**
+    * 
     * Validates parameter names and values based on the vCard version
     * (2.1 or 3.0).
     * 
     * @param  string $name The parameter name (e.g., TYPE or ENCODING).
+    * 
     * @param  string $text The parameter value (e.g., HOME or BASE64).
+    * 
     * @param  string $comp Optional, the component name (e.g., ADR or
     *                      PHOTO).  Only used for error messaging.
+    * 
     * @param  string $iter Optional, the iteration of the component. 
     *                      Only used for error messaging.
+    * 
     * @return mixed        Boolean true if the parameter is valid, or a
     *                      PEAR_Error object if not.
     * 
     * @access public
+    * 
     */
+    
     function validateParam($name, $text, $comp = null, $iter = null)
     {
         $name = strtoupper($name);
@@ -1148,7 +1166,8 @@ class File_IMC_Build_vCard extends File_IMC_Build {
             $this->getValue('GEO', 0, FILE_IMC_VCARD_GEO_LAT, 0) . ';' .
             $this->getValue('GEO', 0, FILE_IMC_VCARD_GEO_LON, 0);
     }
-
+    
+    
     /**
     * 
     * Sets the value of one entire ADR iteration.  There can be zero,
@@ -1335,6 +1354,7 @@ class File_IMC_Build_vCard extends File_IMC_Build {
         }
     }
     
+    
     /**
     * 
     * Sets the value of one EMAIL component iteration.  There can be zero,
@@ -1423,7 +1443,6 @@ class File_IMC_Build_vCard extends File_IMC_Build {
         return $this->getMeta('NICKNAME') .
             $this->getValue('NICKNAME', 0, 0);
     }
-    
     
     
     /**
@@ -1532,6 +1551,7 @@ class File_IMC_Build_vCard extends File_IMC_Build {
         
         return $text;
     }
+    
     
     /**
     *

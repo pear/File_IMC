@@ -153,10 +153,10 @@ class File_IMC_Parse {
     * @param string $text The string to split into an array.
     *
     * @param string $delim Character to split string at.
-    * 
-    * @param bool $convertSingle If splitting the string results in a
-    * single array element, return a string instead of a one-element
-    * array.
+    *
+    * @param bool $recurse If true, recursively parse the entire text
+    * for all occurrences of the delimiter; if false, only parse for
+    * the first occurrence.  Defaults to true.
     * 
     * @return string|array An array of values, or a single string.
     * 
@@ -164,45 +164,83 @@ class File_IMC_Parse {
     * 
     */
     
-    function splitByDelim($text, $delim)
+    function splitByDelim($text, $delim, $recurse = true)
     {
+        // where in the string is the delimiter?
         $pos = false;
+        
+        // was the previously-read character a backslash?
+        // (used for tracking escaped characters)
         $prevIsBackslash = false;
+        
+        // are we currently inside a quoted passage?
+        $inQuotes == false;
+        
+        // the length of the text to be parsed
         $len = strlen($text);
+        
+        // go through the text character by character, find the 
+        // first occurrence of the delimiter, save it, and
+        // recursively parse the rest of the text
         for ($i = 0; $i < $len; $i++) {
-            if ($text{$i} == "\"" && $prevIsBackslash == false) {
+            
+            // if the current char is a double-quote, and the
+            // previous char was _not_ an escaping backslash,
+            // then note that we are now inside a quoted passage.
+            if ($text{$i} == '"' && $prevIsBackslash == false) {
                 ($inQuotes == true) ? $inQuotes = false : $inQuotes = true;
             }
             
-            if ($text{$i} == $delim && $inQuotes == false && $prevIsBackslash == false) {
+            // if the current char is the delimiter, and we are _not_
+            // inside quotes, and the delimiter has not been backslash-
+            // escaped, then note the position of the delimiter and
+            // break out of the loop.
+            if ($text{$i} == $delim &&
+                $inQuotes == false &&
+                $prevIsBackslash == false) {
+                
                 $pos = $i;
                 break;
+                
             }
-
+            
+            // we have not found quotes, or the delimiter.
+            // is the current char an escaping backslash?
             if ($text{$i} == "\\") {
                 $prevIsBackslash = true;
             } else {
                 $prevIsBackslash = false;
             }
         }
-
+        
+        // have we found the delimiter in the text?
         if ($pos === false) {
+        
+            // we have not found the delimiter anywhere in the
+            // text.  return the text as it is.
             return array($text);
-        }
-
-        $left = trim(substr($text, 0, $pos));
-        $right = trim(substr($text, $pos+1, strlen($text)));
-
-        $result[] = $left;
-        $tmp = array_merge($result, $this->splitByDelim($right, $delim));
-
-        // if there is only one array-element and $convertSingle is
-        // true, then return only the value of that one array element
-        // (instead of returning the array).
-        if ($convertSingle && count($tmp) == 1) {
-            return $tmp[0];
+            
         } else {
-            return $tmp;
+            
+            // find the portions of the text to the left and the
+            // right of the delimiter
+            $left = trim(substr($text, 0, $pos));
+            $right = trim(substr($text, $pos+1, strlen($text)));
+            
+            // should we recursively parse the rest of the text?
+            if ($recurse) {
+                
+                // parse the right portion for the same delimiter, and
+                // merge the results with the left-portion.
+                return array_merge(
+                    array($left),
+                    $this->splitByDelim($right, $delim, $recurse)
+                );
+                
+            } else {
+                // no recursion
+                return array($left, $right);
+            }
         }
     }
 
@@ -215,6 +253,10 @@ class File_IMC_Parse {
     * @param bool $convertSingle If splitting the string results in a
     * single array element, return a string instead of a one-element
     * array.
+    *
+    * @param bool $recurse If true, recursively parse the entire text
+    * for all occurrences of the delimiter; if false, only parse for
+    * the first occurrence.  Defaults to true.
     * 
     * @return string|array An array of values, or a single string.
     * 
@@ -224,9 +266,9 @@ class File_IMC_Parse {
     * 
     */
 
-    function splitBySemi($text, $convertSingle = false)
+    function splitBySemi($text, $recurse = true)
     {
-        return $this->splitByDelim($text, ";", $convertSingle);
+        return $this->splitByDelim($text, ";", $recurse);
     }
     
     
@@ -235,10 +277,10 @@ class File_IMC_Parse {
     * Splits a string into an array at commas.
     * 
     * @param string $text The string to split into an array.
-    * 
-    * @param bool $convertSingle If splitting the string results in a
-    * single array element, return a string instead of a one-element
-    * array.
+    *
+    * @param bool $recurse If true, recursively parse the entire text
+    * for all occurrences of the delimiter; if false, only parse for
+    * the first occurrence.  Defaults to true.
     * 
     * @return string|array An array of values, or a single string.
     * 
@@ -248,9 +290,9 @@ class File_IMC_Parse {
     * 
     */
 
-    function splitByComma($text, $convertSingle = false)
+    function splitByComma($text, $recurse = true)
     {
-        return $this->splitByDelim($text, ",", $convertSingle);
+        return $this->splitByDelim($text, ",", $recurse);
     }
     
     
@@ -263,18 +305,22 @@ class File_IMC_Parse {
     *
     * @param string $text The string to split into an array.
     *
+    * @param bool $recurse If true, recursively parse the entire text
+    * for all occurrences of the delimiter; if false, only parse for
+    * the first occurrence.  Defaults to false (this is different from
+    * splitByCommon and splitBySemi).
+    *
     * @return array The first element contains types and parameters
-    *               (before the colon).
-    *               The second element contains the line's value
-    *               (after the colon).
+    * (before the colon). The second element contains the line's value
+    * (after the colon).
     *
     * @access public
     *
     */
     
-    function splitByColon($text)
+    function splitByColon($text, $recurse = false)
     {
-        return $this->splitByDelim($text, ":");
+        return $this->splitByDelim($text, ":", $recurse);
     }
     
     
@@ -427,9 +473,9 @@ class File_IMC_Parse {
     
     /**
     * 
-	* Takes a line and extracts the Group for the line (a group is
-	* identified as a prefix-with-dot to the Type-Definition; e.g.,
-	* Group.ADR or Group.ORG).
+    * Takes a line and extracts the Group for the line (a group is
+    * identified as a prefix-with-dot to the Type-Definition; e.g.,
+    * Group.ADR or Group.ORG).
     *
     * @param array Array containing left side (before colon) split by 
     *              semi-colon from a line.

@@ -21,21 +21,6 @@
 
 
 /**
-*
-* Emulate is_a() for PHP < 4.2.0.
-*
-*/
-
-if (!function_exists('is_a')) {
-    function is_a($obj, $classname)
-    {
-         return get_class($obj) == strtolower($classname) ||
-             is_subclass_of($obj, $classname);
-    }
-}
-
-
-/**
 * 
 * Constants for File_IMC errors.
 * 

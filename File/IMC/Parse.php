@@ -292,8 +292,9 @@ class File_IMC_Parse {
 
     function _parseBlock(&$source)
     {
+        $max = count($source);
         
-        for ($this->count++; $this->count < count($source); $this->count++) {
+        for ($this->count++; $this->count < $max; $this->count++) {
         
             $line = $source[$this->count];
             

@@ -4,11 +4,11 @@ require_once 'File/IMC.php';
 
 $parse = File_IMC::parse('vCalendar');
 
-// parse a vCard file and store the data
-// in $cardinfo
+// parse a vCalendar file and store the data
+// in $calinfo
 $calinfo = $parse->fromFile('sample.vcs');
     
-// view the card info array
+// view the calendar info array
 echo '<pre>';
 print_r($calinfo);
 echo '</pre>';

@@ -29,8 +29,8 @@
 if (!function_exists('is_a')) {
     function is_a($obj, $classname)
     {
-        return get_class($obj) == strtolower($classname) ||
-            is_subclass_of($obj, $classname);
+         return get_class($obj) == strtolower($classname) ||
+             is_subclass_of($obj, $classname);
     }
 }
 
@@ -149,30 +149,30 @@ class File_IMC {
     
     function build($format, $version = null)
     {
-       $filename = 'File/IMC/Build/'. $format . '.php';
-       $classname = 'File_IMC_Build_'. $format;
+        $filename = 'File/IMC/Build/'. $format . '.php';
+        $classname = 'File_IMC_Build_'. $format;
     
-       if (!file_exists($filename)) {
-           return File_IMC::raiseError(
-               'No builder driver found for format: ' . $format,
-               FILE_IMC_ERROR_INVALID_DRIVER);
-       }
+        if (!file_exists($filename)) {
+            return File_IMC::raiseError(
+                'No builder driver found for format: ' . $format,
+                FILE_IMC_ERROR_INVALID_DRIVER);
+        }
 
-       include_once $filename;
+        include_once $filename;
 
-       if (!class_exists($classname)) {
-           return File_IMC::raiseError(
-               'No builder driver exists for format: ' . $format,
-               FILE_IMC_ERROR_INVALID_DRIVER);
-       }
+        if (!class_exists($classname)) {
+            return File_IMC::raiseError(
+                'No builder driver exists for format: ' . $format,
+                FILE_IMC_ERROR_INVALID_DRIVER);
+        }
 
-       if ($version !== null) {
-           $class = new $classname($version);    
-       } else {
-           $class = new $classname;
-       }
+        if ($version !== null) {
+            $class = new $classname($version);    
+        } else {
+            $class = new $classname;
+        }
 
-       return $class;
+        return $class;
     }
     
     
@@ -192,26 +192,26 @@ class File_IMC {
     
     function parse($format)
     {
-       $filename = 'File/IMC/Parse/'. $format . '.php';
-       $classname = 'File_IMC_Parse_'. $format;
+        $filename = 'File/IMC/Parse/'. $format . '.php';
+        $classname = 'File_IMC_Parse_'. $format;
 
-       if (!file_exists($filename)) {
-           return File_IMC::raiseError(
-               'No builder driver exists for format: ' . $format,
-               FILE_IMC_ERROR_INVALID_DRIVER);
-       }
+        if (!file_exists($filename)) {
+            return File_IMC::raiseError(
+                'No builder driver exists for format: ' . $format,
+                FILE_IMC_ERROR_INVALID_DRIVER);
+        }
 
-       include_once $filename;
-       
-       if (!class_exists($classname)) {
-           return File_IMC::raiseError(
-               'No parser driver exists for format: ' . $format, 
-               FILE_IMC_ERROR_INVALID_DRIVER);
-       }
-       
-       $class = new $classname;
-       
-       return $class;
+        include_once $filename;
+        
+        if (!class_exists($classname)) {
+            return File_IMC::raiseError(
+                'No parser driver exists for format: ' . $format, 
+                FILE_IMC_ERROR_INVALID_DRIVER);
+        }
+        
+        $class = new $classname;
+        
+        return $class;
     }
     
     
@@ -233,8 +233,8 @@ class File_IMC {
     
     function raiseError($msg, $code)
     {
-       include_once 'PEAR.php';
-       return PEAR::raiseError($msg, $code, PEAR_ERROR_PRINT);
+        include_once 'PEAR.php';
+        return PEAR::raiseError($msg, $code, PEAR_ERROR_PRINT);
     }
 
 }

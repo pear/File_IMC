@@ -174,17 +174,21 @@ class File_IMC_Parse {
                 ($inQuotes == true) ? $inQuotes = false : $inQuotes = true;
             }
             
-            if ($text{$i} == $delim && $inQuotes == false) {
+            if ($text{$i} == $delim && $inQuotes == false && $prevIsBackslash == false) {
                 $pos = $i;
                 break;
             }
 
             if ($text{$i} == "\\") {
                 $prevIsBackslash = true;
+            } else {
+                $prevIsBackslash = false;
             }
         }
 
-        if (!$pos) return array($text);
+        if ($pos === false) {
+            return array($text);
+        }
 
         $left = trim(substr($text, 0, $pos));
         $right = trim(substr($text, $pos+1, strlen($text)));
@@ -526,7 +530,7 @@ class File_IMC_Parse {
             
             // split the full parameter at the equal sign so we can tell
             // the parameter name from the parameter value
-            $tmp = explode("=", $full);
+            $tmp = explode("=", $full, 2);
             
             // the key is the left portion of the parameter (before
             // '='). if in 2.1 format, the key may in fact be the

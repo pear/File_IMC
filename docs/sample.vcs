@@ -8,7 +8,7 @@ DTEND:20020925T020000Z
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Test Event 2
-DESCRIPTION:Blah blah blah! This one doesn't have any linebreaks, so it's not quoted-printable
+DESCRIPTION;ALTREP="http://www.example.com":Blah blah blah! This one doesn't have any linebreaks, so it's not quoted-printable
 DTSTART:20020925T010000Z
 DTEND:20020925T020000Z
 END:VEVENT

@@ -271,9 +271,9 @@ class File_IMC_Parse {
     
     function _fromArray($source, $decode_qp = true)
     {
-        $this->_parseBlock($source);
-        $this->unescape($this->blocks);
-        return $this->blocks;
+        $parsed = $this->_parseBlock($source);
+        $this->unescape($parsed);
+        return $parsed;
     }
     
     
@@ -368,6 +368,7 @@ class File_IMC_Parse {
 
             }
         }
+        return $block;
     }
     
     

@@ -18,6 +18,7 @@
 // 
 // $Id$ 
 
+
 /**
 * 
 * Common parser for IMC files (vCard, vCalendar, iCalendar)
@@ -446,13 +447,18 @@ class File_IMC_Parse {
                 // now get the value-data from the line, based on
                 // the typedef
                 $func = '_parse' . strtoupper($typedef);
+                
                 if (method_exists(&$this, $func)) {
+                
                     $value = $this->$func($right);
+                    
                 } else {
+                
                     // by default, just grab the plain value. keep
                     // as an array to make sure *all* values are
                     // arrays.  for consistency. ;-)
                     $value = array(array($right));
+                    
                 }
 
                 // add the type, parameters, and value to the

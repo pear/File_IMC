@@ -1,0 +1,26 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Shagnasty;Bolivar;Odysseus;Mr.;III,B.S.
+FN:Bolivar Shagnasty
+ADR;TYPE=HOME,WORK:;;123 Main,Apartment 101;Beverly Hills;CA;90210
+EMAIL;TYPE=HOME;TYPE=WORK:boshag@example.com
+EMAIL;TYPE=PREF:boshag@ciaweb.net
+BDAY:19950415
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Shagnasty;Bolivar;Odysseus;Mr.;III,B.S.
+FN:Bolivar Shagnasty
+ADR;TYPE=HOME,WORK:;;123 Main,Apartment 101;Beverly Hills;CA;90210
+EMAIL;TYPE=HOME;TYPE=WORK:boshag@example.com
+EMAIL;TYPE=PREF:boshag@ciaweb.net
+BDAY:1995-04-15
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Shagnasty;Bolivar;Odysseus;Mr.;III,B.S.
+FN:Bolivar Shagnasty
+ADR;TYPE=HOME,WORK:;;123 Main,Apartment 101;Beverly Hills;CA;90210
+EMAIL;TYPE=HOME;TYPE=WORK:boshag@example.com
+EMAIL;TYPE=PREF:boshag@ciaweb.net
+END:VCARD

@@ -146,10 +146,13 @@ class File_IMC_Parse {
     
     /**
     * 
-    * Splits a string into an array at semicolons.  Honors backslash-
-    * escaped semicolons (i.e., splits at ';' not '\;').
+    * Splits a string into an array.  Honors backslash-escaped 
+    * delimiters, (i.e., splits at ';' not '\;') and double-quotes
+    * (will not break inside double-quotes ("")).
     * 
     * @param string $text The string to split into an array.
+    *
+    * @param string $delim Character to split string at.
     * 
     * @param bool $convertSingle If splitting the string results in a
     * single array element, return a string instead of a one-element
@@ -160,16 +163,35 @@ class File_IMC_Parse {
     * @access public
     * 
     */
-
-    function splitBySemi($text, $convertSingle = false)
+    
+    function splitByDelim($text, $delim)
     {
-        // we use these double-backs (\\) because they get get converted
-        // to single-backs (\) by preg_split.  the quad-backs (\\\\) end
-        // up as as double-backs (\\), which is what preg_split requires
-        // to indicate a single backslash (\). what a mess.
-        $regex = '(?<!\\\\)(\;)';
-        $tmp = preg_split("/$regex/i", $text);
-        
+        $pos = false;
+        $prevIsBackslash = false;
+        $len = strlen($text);
+        for ($i = 0; $i < $len; $i++) {
+            if ($text{$i} == "\"" && $prevIsBackslash == false) {
+                ($inQuotes == true) ? $inQuotes = false : $inQuotes = true;
+            }
+            
+            if ($text{$i} == $delim && $inQuotes == false) {
+                $pos = $i;
+                break;
+            }
+
+            if ($text{$i} == "\\") {
+                $prevIsBackslash = true;
+            }
+        }
+
+        if (!$pos) return array($text);
+
+        $left = trim(substr($text, 0, $pos));
+        $right = trim(substr($text, $pos+1, strlen($text)));
+
+        $result[] = $left;
+        $tmp = array_merge($result, $this->splitByDelim($right, $delim));
+
         // if there is only one array-element and $convertSingle is
         // true, then return only the value of that one array element
         // (instead of returning the array).
@@ -179,12 +201,10 @@ class File_IMC_Parse {
             return $tmp;
         }
     }
-    
-    
+
     /**
     * 
-    * Splits a string into an array at commas.  Honors backslash-
-    * escaped commas (i.e., splits at ',' not '\,').
+    * Splits a string into an array at semicolons.
     * 
     * @param string $text The string to split into an array.
     * 
@@ -195,26 +215,62 @@ class File_IMC_Parse {
     * @return string|array An array of values, or a single string.
     * 
     * @access public
+    *
+    * @see splitByDelim()
+    * 
+    */
+
+    function splitBySemi($text, $convertSingle = false)
+    {
+        return $this->splitByDelim($text, ";", $convertSingle);
+    }
+    
+    
+    /**
+    * 
+    * Splits a string into an array at commas.
+    * 
+    * @param string $text The string to split into an array.
+    * 
+    * @param bool $convertSingle If splitting the string results in a
+    * single array element, return a string instead of a one-element
+    * array.
+    * 
+    * @return string|array An array of values, or a single string.
+    * 
+    * @access public
+    *
+    * @see splitByDelim()
     * 
     */
 
     function splitByComma($text, $convertSingle = false)
     {
-        // we use these double-backs (\\) because they get get converted
-        // to single-backs (\) by preg_split.  the quad-backs (\\\\) end
-        // up as as double-backs (\\), which is what preg_split requires
-        // to indicate a single backslash (\). ye gods, how ugly.
-        $regex = '(?<!\\\\)(\,)';
-        $tmp = preg_split("/$regex/i", $text);
-        
-        // if there is only one array-element and $convertSingle is
-        // true, then return only the value of that one array element
-        // (instead of returning the array).
-        if ($convertSingle && count($tmp) == 1) {
-            return $tmp[0];
-        } else {
-            return $tmp;
-        }
+        return $this->splitByDelim($text, ",", $convertSingle);
+    }
+    
+    
+    /**
+    *
+    * Splits the line into types/parameters and values.
+    *
+    * @todo A parameter w/ 1 quote will break everything. Try to
+    *       come up with a good way to fix this.
+    *
+    * @param string $text The string to split into an array.
+    *
+    * @return array The first element contains types and parameters
+    *               (before the colon).
+    *               The second element contains the line's value
+    *               (after the colon).
+    *
+    * @access public
+    *
+    */
+    
+    function splitByColon($text)
+    {
+        return $this->splitByDelim($text, ":");
     }
     
     
@@ -303,25 +359,17 @@ class File_IMC_Parse {
                 continue;
             }
             
-            // find the first instance of ':' on the line.  The part
+            // get the left and right portions. The part
             // to the left of the colon is the type and parameters;
             // the part to the right of the colon is the value data.
-            $pos = strpos($line, ':');
-            
-            // if there is no colon, skip the line.
-            if ($pos === false) {
+            if (!(list($left, $right) = $this->splitByColon($line))) {
+                // colon not found, skip whole line
                 continue;
             }
-            
-            // get the left and right portions
-            $left = trim(substr($line, 0, $pos));
-            $right = trim(substr($line, $pos+1, strlen($line)));
             
             if (strtoupper($left) == "BEGIN") {
                 
                 $block[$right][] = $this->_parseBlock($source);
-                
-                $this->blocks = $block;
                                 
             } elseif (strtoupper($left) == "END") {
 
@@ -334,9 +382,10 @@ class File_IMC_Parse {
                 // left-portion of the line into a type-definition
                 // (the kind of information) and parameters for the
                 // type.
-                $group = $this->_getGroup($left);
-                $typedef = $this->_getTypeDef($left);
-                $params = $this->_getParams($left);
+                $tmp = $this->splitBySemi($left);
+                $group = $this->_getGroup($tmp);
+                $typedef = $this->_getTypeDef($tmp);
+                $params = $this->_getParams($tmp);
 
                 // if we are decoding quoted-printable, do so now.
                 // QUOTED-PRINTABLE is not allowed in version 3.0,
@@ -361,7 +410,7 @@ class File_IMC_Parse {
                 // instances of the same type, which might be dumb
                 // in some cases (e.g., N).
                 $block[$typedef][] = array(
-                	'group' => $group,
+                    'group' => $group,
                     'param' => $params,
                     'value' => $value
                 );
@@ -378,68 +427,70 @@ class File_IMC_Parse {
 	* identified as a prefix-with-dot to the Type-Definition; e.g.,
 	* Group.ADR or Group.ORG).
     *
-    * @param string A left-part (before-the-colon part) from a line.
+    * @param array Array containing left side (before colon) split by 
+    *              semi-colon from a line.
     * 
-    * @return string The type definition for the line.
+    * @return string The group for the line.
     * 
     * @access private
+    *
+    * @see _getTypeDef()
+    * @see splitBySemi()
     * 
     */
 
     function _getGroup($text)
     {
-        // split the text by semicolons
-        $split = $this->splitBySemi($text);
-        
         // find the first element (the typedef)
-        $tmp = $split[0];
+        $tmp = $text[0];
         
         // find a dot in the typedef
         $pos = strpos($tmp, '.');
         
         // is there a '.' in the typedef?
         if ($pos === false) {
-        	// no group
-        	return '';
+            // no group
+            return '';
         } else {
-        	// yes, return the group name
-        	return substr($tmp, 0, $pos);
+            // yes, return the group name
+            return substr($tmp, 0, $pos);
         }
     }
     
     
     /**
     * 
-	* Takes a line and extracts the Type-Definition for the line (not
-	* including the Group portion; e.g., in Group.ADR, only ADR is
-	* returned).
+    * Takes a line and extracts the Type-Definition for the line (not
+    * including the Group portion; e.g., in Group.ADR, only ADR is
+    * returned).
     *
-    * @param string A left-part (before-the-colon part) from a line.
+    * @param array Array containing left side (before colon) split by 
+    *              semi-colon from a line.
     * 
     * @return string The type definition for the line.
     * 
     * @access private
+    *
+    * @see _getGroup()
+    * @see splitBySemi()
     * 
     */
 
     function _getTypeDef($text)
     {
-        // split the text by semicolons
-        $split = $this->splitBySemi($text);
-        
         // find the first element (the typedef)
-        $tmp = $split[0];
+        $tmp = $text[0];
         
         // find a dot in the typedef
         $pos = strpos($tmp, '.');
         
         // is there a '.' in the typedef?
         if ($pos === false) {
-        	// no group
-        	return $tmp;
+            // no group
+            return $tmp;
         } else {
-        	// yes, return the typedef without the group name
-        	return substr($tmp, $pos + 1);
+            // yes, return the typedef without the group name
+            return substr($tmp, $pos + 1);
         }
     }
     
@@ -448,22 +499,22 @@ class File_IMC_Parse {
     * 
     * Finds the Type-Definition parameters for a line.
     * 
-    * @param string $text The left-part (before-the-colon part) of a line.
+    * @param array Array containing left side (before colon) split by 
+    *              semi-colon from a line.
     * 
     * @return array An array of parameters.
     * 
     * @access private
     * 
+    * @see splitBySemi()
+    *
     */
 
     function _getParams($text)
-    {
-        // split the text by semicolons into an array
-        $split = $this->splitBySemi($text);
-        
+    {   
         // drop the first element of the array (the type-definition)
-        array_shift($split);
-        
+        array_shift($text);
+
         // set up an array to retain the parameters, if any
         $params = array();
         
@@ -471,7 +522,7 @@ class File_IMC_Parse {
         // "TYPE=type1,type2,type3"
         //    ...or...
         // "TYPE=type1;TYPE=type2;TYPE=type3"
-        foreach ($split as $full) {
+        foreach ($text as $full) {
             
             // split the full parameter at the equal sign so we can tell
             // the parameter name from the parameter value

@@ -19,40 +19,54 @@
 // $Id$ 
 
 /**
- * Common parser for IMC files (vCard, vCalendar, iCalendar)
- *
- * This class provides the methods to parse a file into an array.
- * By extending the class, you are able to define functions to handle
- * specific elements that need special decoding.  For an example, see
- * File_IMC_Parse_vCard.
- *
- * @author Paul M. Jones <pjones@ciaweb.net>
- * @package File_IMC
- */
+* 
+* Common parser for IMC files (vCard, vCalendar, iCalendar)
+*
+* This class provides the methods to parse a file into an array.
+* By extending the class, you are able to define functions to handle
+* specific elements that need special decoding.  For an example, see
+* File_IMC_Parse_vCard.
+*
+* @author Paul M. Jones <pmjones@ciaweb.net>
+* 
+* @package File_IMC
+* 
+*/
+
 class File_IMC_Parse {
 
-   /**
+    /**
+    * 
     * Keeps track of the current line being parsed
     *
     * Starts at -1 so that the first line parsed is 0, since
     * _parseBlock() advances the counter by 1 at the beginning
     *
     * @see _parseBlock()
+    * 
     * @var int
+    * 
     */
-    var $count = -1;
 
-   /**
+    var $count = -1;
+    
+    
+    /**
     * Reads a file for parsing, then sends it to $this->fromText()
     * and returns the results.
     * 
     * @param array $filename The name of the file to read
+    * 
     * @return array An array of information extracted from the file.
     * 
     * @see fromText()
+    * 
     * @see _fromArray()
+    * 
     * @access public
+    * 
     */
+
     function fromFile($filename, $decode_qp = true)
     {
         // get the file data
@@ -61,17 +75,23 @@ class File_IMC_Parse {
         // dump to, and get return from, the fromText() method.
         return $this->fromText($text, $decode_qp);
     }
- 
-   /**
+     
+     
+    /**
+    * 
     * Prepares a block of text for parsing, then sends it through and
     * returns the results from $this->_fromArray().
     * 
     * @param array $text A block of text to read for information.
+    * 
     * @return array An array of information extracted from the source text.
     * 
     * @see _fromArray()
+    * 
     * @access public
+    * 
     */
+
     function fromText($text, $decode_qp = true) 
     {
         // convert all kinds of line endings to Unix-standard and get
@@ -90,8 +110,10 @@ class File_IMC_Parse {
         // parse the array of lines and return calendar info
         return $this->_fromArray($lines, $decode_qp);
     }
-
-   /**
+    
+    
+    /**
+    * 
     * Converts line endings in text.
     * 
     * Takes any text block and converts all line endings to UNIX
@@ -102,10 +124,13 @@ class File_IMC_Parse {
     * NOTE: Acts on the text block in-place; does not return a value.
     * 
     * @param string $text The string on which to convert line endings.
+    * 
     * @return void
     * 
     * @access public
+    * 
     */
+    
     function convertLineEndings(&$text)
     {
         // first, replace \r with \n to fix up from DOS and Mac
@@ -118,18 +143,24 @@ class File_IMC_Parse {
         $text = str_replace("\n\n", "\n", $text);
     }
     
-   /**
+    
+    /**
+    * 
     * Splits a string into an array at semicolons.  Honors backslash-
     * escaped semicolons (i.e., splits at ';' not '\;').
     * 
     * @param string $text The string to split into an array.
+    * 
     * @param bool $convertSingle If splitting the string results in a
     * single array element, return a string instead of a one-element
     * array.
+    * 
     * @return string|array An array of values, or a single string.
     * 
     * @access public
+    * 
     */
+
     function splitBySemi($text, $convertSingle = false)
     {
         // we use these double-backs (\\) because they get get converted
@@ -150,18 +181,23 @@ class File_IMC_Parse {
     }
     
     
-   /**
+    /**
+    * 
     * Splits a string into an array at commas.  Honors backslash-
     * escaped commas (i.e., splits at ',' not '\,').
     * 
     * @param string $text The string to split into an array.
+    * 
     * @param bool $convertSingle If splitting the string results in a
     * single array element, return a string instead of a one-element
     * array.
+    * 
     * @return string|array An array of values, or a single string.
     * 
     * @access public
+    * 
     */
+
     function splitByComma($text, $convertSingle = false)
     {
         // we use these double-backs (\\) because they get get converted
@@ -181,7 +217,9 @@ class File_IMC_Parse {
         }
     }
     
-   /**
+    
+    /**
+    * 
     * Used to make string human-readable after being a vCard value.
     * 
     * Converts...
@@ -190,10 +228,13 @@ class File_IMC_Parse {
     *     literal \n => newline
     * 
     * @param string|array $text The text to unescape.
+    * 
     * @return void
     * 
     * @access public
+    * 
     */
+
     function unescape(&$text)
     {
         if (is_array($text)) {
@@ -207,6 +248,7 @@ class File_IMC_Parse {
             $text = str_replace('\n', "\n", $text);
         }
     }
+    
     
     /**
     * 
@@ -224,19 +266,19 @@ class File_IMC_Parse {
     * source array.
     * 
     * @todo fix missing colon = skip line
+    * 
     */
     
     function _fromArray($source, $decode_qp = true)
     {
-        
         $this->_parseBlock($source);
-        
         $this->unescape($this->blocks);
         return $this->blocks;
-
     }
-
-   /**
+    
+    
+    /**
+    * 
     * Goes through the IMC file, recursively processing BEGIN-END blocks
     *
     * Handles nested blocks, such as vEvents (BEGIN:VEVENT) and vTodos
@@ -245,8 +287,11 @@ class File_IMC_Parse {
     * @param array Array of lines in the IMC file
     *
     * @access private
+    * 
     */
-    function _parseBlock(&$source) {
+
+    function _parseBlock(&$source)
+    {
         
         for ($this->count++; $this->count < count($source); $this->count++) {
         
@@ -322,14 +367,19 @@ class File_IMC_Parse {
         }
     }
     
-   /**
+    
+    /**
+    * 
     * Takes a line and extracts the Type-Definition for the line.
     *
     * @param string A left-part (before-the-colon part) from a line.
+    * 
     * @return string The type definition for the line.
     * 
     * @access private
+    * 
     */
+
     function _getTypeDef($text)
     {
         // split the text by semicolons
@@ -339,14 +389,19 @@ class File_IMC_Parse {
         return $split[0];
     }
     
-   /**
+    
+    /**
+    * 
     * Finds the Type-Definition parameters for a line.
     * 
     * @param string $text The left-part (before-the-colon part) of a line.
+    * 
     * @return array An array of parameters.
     * 
     * @access private
+    * 
     */
+
     function _getParams($text)
     {
         // split the text by semicolons into an array
@@ -408,8 +463,10 @@ class File_IMC_Parse {
         // return the parameters array.
         return $params;
     }
-
-   /**
+    
+    
+    /**
+    * 
     * Returns the parameter name for parameters given without names.
     *
     * The vCard 2.1 specification allows parameter values without a
@@ -421,11 +478,14 @@ class File_IMC_Parse {
     * 
     * @param string $value The first element in a parameter name-value
     * pair.
+    * 
     * @return string The proper parameter name (TYPE, ENCODING, or
     * VALUE).
     * 
     * @access private
+    * 
     */
+
     function _getParamName($value)
     {
         static $types = array (
@@ -468,15 +528,20 @@ class File_IMC_Parse {
         return $name;
     }
     
-   /**
+    
+    /**
+    * 
     * Looks at a line's parameters; if one of them is
     * ENCODING[] => QUOTED-PRINTABLE then decode the text in-place.
     * 
     * @param array $params A parameter array from a vCard line.
+    * 
     * @param string $text A right-part (after-the-colon part) from a line.
+    * 
     * @return void
     * 
     * @access private
+    * 
     */
     
     function _decode_qp(&$params, &$text)
@@ -500,7 +565,6 @@ class File_IMC_Parse {
             }
         }
     }
-    
 }
 
 ?>

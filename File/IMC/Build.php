@@ -18,6 +18,9 @@
 // 
 // $Id$ 
 
+require_once 'PEAR.php';
+
+
 /**
 * 
 * This class helps build files in the vCard and vCalendar formats.
@@ -41,7 +44,7 @@
 * 
 */
 
-class File_IMC_Build {
+class File_IMC_Build extends PEAR {
 
     /**
     * 
@@ -158,9 +161,9 @@ class File_IMC_Build {
     *     , => \,
     *     newline => literal \n
     * 
-    * @param  mixed  $text The string or array or strings to escape.
+    * @param mixed $text The string or array or strings to escape.
     * 
-    * @return mixed        Void on success, or a PEAR_Error object on failure.
+    * @return mixed Void on success, or a PEAR_Error object on failure.
     * 
     * @access public
     * 
@@ -176,6 +179,9 @@ class File_IMC_Build {
         
         } elseif (is_array($text)) {
             
+            // the "text" is really an array; recursively descend into
+            // the array and escape text as we go, then set the value
+            // of the current "text" (which is really an array).
             foreach ($text as $key => $val) {
                 $this->escape($val);
                 $text[$key] = $val;
@@ -183,6 +189,7 @@ class File_IMC_Build {
             
         } else {
         
+            // this is a text value.
             // escape semicolons not led by a backslash
             $regex = '(?<!\\\\)(\;)';
             $text = preg_replace("/$regex/i", "\\;", $text);
@@ -259,13 +266,14 @@ class File_IMC_Build {
         
         if (! is_integer($iter) || $iter < 0) {
         
-            return $this->raiseError("$iter is not a valid iteration number for $comp; must be a positive integer.");
+            return $this->raiseError("$iter is not a valid iteration number for $comp; must be a positive integer.",
+                'FILE_IMC_ERROR_INVALID_ITERATION');
             
         } else {
             
             $result = $this->validateParam($param_name, $param_value, $comp, $iter);
 
-            if (is_a($result, 'PEAR_Error')) {
+            if ($this->isError($result)) {
                 return $result;
             } else {
                 $this->param[$comp][$iter][$param_name][] = $param_value;
@@ -300,7 +308,10 @@ class File_IMC_Build {
       
     function validateParam($name, $text, $comp = null, $iter = null)
     {
-        // this must be overloaded in the drivers!
+        // this must be overloaded in the drivers! by default, nothing
+        // is valid (this is a reminder to at least write a stub method
+        // in your driver ;-).
+        return false;
     }
     
     
@@ -597,27 +608,5 @@ class File_IMC_Build {
     {
         // this method must be overloaded in a driver!
     }
-    
-    
-    /**
-    * 
-    * Raises PEAR errors.
-    *
-    * @param string $msg The text error message.
-    *
-    * @param int $code The error code.
-    *
-    * @return void
-    *
-    * @access public
-    * 
-    */
-    
-    function raiseError($msg, $code)
-    {
-        include_once 'PEAR.php';
-        PEAR::raiseError($msg, $code);
-    }
-
 }
 ?>

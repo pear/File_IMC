@@ -13,17 +13,27 @@
 // | obtain it through the world-wide-web, please send a note to          | 
 // | license@php.net so we can mail you a copy immediately.               | 
 // +----------------------------------------------------------------------+ 
-// | Authors: Paul M. Jones <pjones@ciaweb.net>                           | 
+// | Authors: Paul M. Jones <pmjones@ciaweb.net>                          | 
 // +----------------------------------------------------------------------+ 
 // 
 // $Id$ 
 
+
+/**
+*
+* The common IMC parser is needed
+*
+*/
+
+require_once 'File/IMC/Parse.php';
+
+
 /**
 * 
-* Parser for vCards.
+* This class is a parser for vCards.
 *
-* This class parses vCard 2.1 and 3.0 sources from file or text into a
-* structured array.
+* Parses vCard 2.1 and 3.0 sources from file or text into a structured
+* array.
 * 
 * Usage:
 * 
@@ -45,18 +55,15 @@
 * </code>
 * 
 *
-* @author Paul M. Jones <pjones@ciaweb.net>
+* @author Paul M. Jones <pmjones@ciaweb.net>
+*
 * @package File_IMC
 * 
 */
 
-/**
- * The common IMC parser is needed
- */
-require_once 'File/IMC/Parse.php';
-
 class File_IMC_Parse_vCard extends File_IMC_Parse {
-
+    
+    
     /**
     *
     * Parses a vCard line value identified as being of the "N"
@@ -73,15 +80,16 @@ class File_IMC_Parse_vCard extends File_IMC_Parse {
     * indicated in the vCard source.
     *
     */
+    
     function _parseN($text)
     {
         $tmp = $this->splitBySemi($text);
         return array(
-            $this->splitByComma($tmp[0]), // family (last)
-            $this->splitByComma($tmp[1]), // given (first)
-            $this->splitByComma($tmp[2]), // addl (middle)
-            $this->splitByComma($tmp[3]), // prefix
-            $this->splitByComma($tmp[4])  // suffix
+            $this->splitByComma($tmp[FILE_IMC_VCARD_N_FAMILY]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_N_GIVEN]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_N_ADDL]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_N_PREFIX]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_N_SUFFIX])
         );
     }
     
@@ -107,13 +115,13 @@ class File_IMC_Parse_vCard extends File_IMC_Parse {
     {
         $tmp = $this->splitBySemi($text);
         return array(
-            $this->splitByComma($tmp[0]), // pob
-            $this->splitByComma($tmp[1]), // extend
-            $this->splitByComma($tmp[2]), // street
-            $this->splitByComma($tmp[3]), // locality (city)
-            $this->splitByComma($tmp[4]), // region (state)
-            $this->splitByComma($tmp[5]), // postcode (ZIP)
-            $this->splitByComma($tmp[6])  // country
+            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_POB]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_EXTEND]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_STREET]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_LOCALITY]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_REGION]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_POSTCODE]),
+            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_COUNTRY])
         );
     }
     
@@ -204,8 +212,8 @@ class File_IMC_Parse_vCard extends File_IMC_Parse {
     {
         $tmp = $this->splitBySemi($text);
         return array(
-            array($tmp[0]), // lat
-            array($tmp[1])  // lon
+            array($tmp[FILE_IMC_VCARD_GEO_LAT]), // lat
+            array($tmp[FILE_IMC_VCARD_GEO_LON])  // lon
         );
     }
 }

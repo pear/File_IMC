@@ -37,7 +37,7 @@ if (!function_exists('is_a')) {
 
 /**
 * 
-* Constants for File_IMC.
+* Constants for File_IMC errors.
 * 
 */
 
@@ -47,6 +47,44 @@ define('FILE_IMC_ERROR_INVALID_PARAM',          102);
 define('FILE_IMC_ERROR_INVALID_VCARD_VERSION',  103);
 define('FILE_IMC_ERROR_PARAM_NOT_SET',          104);
 define('FILE_IMC_ERROR_INVALID_ITERATION',      105);
+
+
+/**
+* 
+* Constants for File_IMC vCard "N" component positions.
+* 
+*/
+
+define('FILE_IMC_VCARD_N_FAMILY',     0);
+define('FILE_IMC_VCARD_N_GIVEN',      1);
+define('FILE_IMC_VCARD_N_ADDL',       2);
+define('FILE_IMC_VCARD_N_PREFIX',     3);
+define('FILE_IMC_VCARD_N_SUFFIX',     4);
+
+
+/**
+* 
+* Constants for File_IMC vCard "ADR" component positions.
+* 
+*/
+
+define('FILE_IMC_VCARD_ADR_POB',      0);
+define('FILE_IMC_VCARD_ADR_EXTEND',   1);
+define('FILE_IMC_VCARD_ADR_STREET',   2);
+define('FILE_IMC_VCARD_ADR_LOCALITY', 3);
+define('FILE_IMC_VCARD_ADR_REGION',   4);
+define('FILE_IMC_VCARD_ADR_POSTCODE', 5);
+define('FILE_IMC_VCARD_ADR_COUNTRY',  6);
+
+
+/**
+* 
+* Constants for File_IMC vCard "GEO" component positions.
+* 
+*/
+
+define('FILE_IMC_VCARD_GEO_LAT',      0);
+define('FILE_IMC_VCARD_GEO_LON',      1);
 
 
 /**

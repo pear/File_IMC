@@ -113,8 +113,8 @@ define('FILE_IMC_VCARD_GEO_LON',      1);
 * The only difference is that this package uses a factory pattern:
 *
 * <code>
-*     $parse = File_IMC::parse('vCard');
-*     $build = File_IMC::build('vCard', '3.0');
+*     $parse =& File_IMC::parse('vCard');
+*     $build =& File_IMC::build('vCard', '3.0');
 * </code>
 * instead of
 * <code>
@@ -147,11 +147,12 @@ class File_IMC {
     * @return object
     */
     
-    function build($format, $version = null)
+    function &build($format, $version = null)
     {
-        $filename = 'File/IMC/Build/'. $format . '.php';
+    	$basepath = dirname(__FILE__);
+        $filename = $basepath . '/IMC/Build/'. $format . '.php';
         $classname = 'File_IMC_Build_'. $format;
-    
+        
         if (!file_exists($filename)) {
             return File_IMC::raiseError(
                 'No builder driver found for format: ' . $format,
@@ -190,11 +191,12 @@ class File_IMC {
     * 
     */
     
-    function parse($format)
+    function &parse($format)
     {
-        $filename = 'File/IMC/Parse/'. $format . '.php';
+    	$basepath = dirname(__FILE__);
+        $filename = $basepath . '/IMC/Parse/'. $format . '.php';
         $classname = 'File_IMC_Parse_'. $format;
-
+        
         if (!file_exists($filename)) {
             return File_IMC::raiseError(
                 'No builder driver exists for format: ' . $format,

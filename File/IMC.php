@@ -19,12 +19,35 @@
 //
 // $Id$
 
+
+/**
+*
+* Emulate is_a() for PHP < 4.2.0.
+*
+*/
+
+if (!function_exists('is_a')) {
+    function is_a($obj, $classname)
+    {
+        return get_class($obj) == strtolower($classname) ||
+            is_subclass_of($obj, $classname);
+    }
+}
+
+
+/**
+* 
+* Constants for File_IMC.
+* 
+*/
+
 define('FILE_IMC_ERROR',                        100);
 define('FILE_IMC_ERROR_INVALID_DRIVER',         101);
 define('FILE_IMC_ERROR_INVALID_PARAM',          102);
 define('FILE_IMC_ERROR_INVALID_VCARD_VERSION',  103);
 define('FILE_IMC_ERROR_PARAM_NOT_SET',          104);
 define('FILE_IMC_ERROR_INVALID_ITERATION',      105);
+
 
 /**
 * 

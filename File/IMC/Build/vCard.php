@@ -43,34 +43,6 @@
  */
 require_once 'File/IMC/Build.php';
 
-/**#@+
- * Part numbers for N components
- */
-define('VCARD_N_FAMILY',     0);
-define('VCARD_N_GIVEN',      1);
-define('VCARD_N_ADDL',       2);
-define('VCARD_N_PREFIX',     3);
-define('VCARD_N_SUFFIX',     4);
-/**#@-*/
-
-/**#@+
- * Part numbers for ADR components
- */
-define('VCARD_ADR_POB',      0);
-define('VCARD_ADR_EXTEND',   1);
-define('VCARD_ADR_STREET',   2);
-define('VCARD_ADR_LOCALITY', 3);
-define('VCARD_ADR_REGION',   4);
-define('VCARD_ADR_POSTCODE', 5);
-define('VCARD_ADR_COUNTRY',  6);
-/**#@-*/
-
-/**#@+
- * Part numbers for GEO components
- */
-define('VCARD_GEO_LAT',      0);
-define('VCARD_GEO_LON',      1);
-/**#@-*/
 
 class File_IMC_Build_vCard extends File_IMC_Build {
 
@@ -89,7 +61,7 @@ class File_IMC_Build_vCard extends File_IMC_Build {
         if ($text != '3.0' && $text != '2.1') {
             return $this->raiseError(
                 'Version must be 3.0 or 2.1 to be valid.',
-                FILE_IMC_ERROR_INVALID_VCARD_VERSION);
+                FILE_IMC_ERROR_INVALID_FILE_IMC_VCARD_VERSION);
         } else {
             $this->setValue('VERSION', 0, 0, $text);
         }
@@ -289,11 +261,11 @@ class File_IMC_Build_vCard extends File_IMC_Build {
     function setName($family, $given, $addl, $prefix, $suffix)
     {
         $this->autoparam = 'N';
-        $this->setValue('N', 0, VCARD_N_FAMILY, $family);
-        $this->setValue('N', 0, VCARD_N_GIVEN, $given);
-        $this->setValue('N', 0, VCARD_N_ADDL, $addl);
-        $this->setValue('N', 0, VCARD_N_PREFIX, $prefix);
-        $this->setValue('N', 0, VCARD_N_SUFFIX, $suffix);
+        $this->setValue('N', 0, FILE_IMC_VCARD_N_FAMILY, $family);
+        $this->setValue('N', 0, FILE_IMC_VCARD_N_GIVEN, $given);
+        $this->setValue('N', 0, FILE_IMC_VCARD_N_ADDL, $addl);
+        $this->setValue('N', 0, FILE_IMC_VCARD_N_PREFIX, $prefix);
+        $this->setValue('N', 0, FILE_IMC_VCARD_N_SUFFIX, $suffix);
     }
     
     
@@ -311,11 +283,11 @@ class File_IMC_Build_vCard extends File_IMC_Build {
     function getName()
     {
         return $this->getMeta('N', 0) .
-            $this->getValue('N', 0, VCARD_N_FAMILY) . ';' .
-            $this->getValue('N', 0, VCARD_N_GIVEN) . ';' .
-            $this->getValue('N', 0, VCARD_N_ADDL) . ';' .
-            $this->getValue('N', 0, VCARD_N_PREFIX) . ';' .
-            $this->getValue('N', 0, VCARD_N_SUFFIX);
+            $this->getValue('N', 0, FILE_IMC_VCARD_N_FAMILY) . ';' .
+            $this->getValue('N', 0, FILE_IMC_VCARD_N_GIVEN) . ';' .
+            $this->getValue('N', 0, FILE_IMC_VCARD_N_ADDL) . ';' .
+            $this->getValue('N', 0, FILE_IMC_VCARD_N_PREFIX) . ';' .
+            $this->getValue('N', 0, FILE_IMC_VCARD_N_SUFFIX);
     }
     
     
@@ -347,7 +319,7 @@ class File_IMC_Build_vCard extends File_IMC_Build {
                 
                 // build from N.
                 // first (given) name, first iteration, first repetition
-                $text .= $this->getValue('N', 0, VCARD_N_GIVEN, 0);
+                $text .= $this->getValue('N', 0, FILE_IMC_VCARD_N_GIVEN, 0);
             
                 // add a space after, if there was text
                 if ($text != '') {
@@ -355,7 +327,7 @@ class File_IMC_Build_vCard extends File_IMC_Build {
                 }
                 
                 // last (family) name, first iteration, first repetition
-                $text .= $this->getValue('N', 0, VCARD_N_FAMILY, 0);
+                $text .= $this->getValue('N', 0, FILE_IMC_VCARD_N_FAMILY, 0);
                 
                 // add a space after, if there was text
                 if ($text != '') {
@@ -363,7 +335,7 @@ class File_IMC_Build_vCard extends File_IMC_Build {
                 }
                 
                 // last-name suffix, first iteration, first repetition
-                $text .= $this->getValue('N', 0, VCARD_N_SUFFIX, 0);
+                $text .= $this->getValue('N', 0, FILE_IMC_VCARD_N_SUFFIX, 0);
                 
                 
             } else {
@@ -1154,8 +1126,8 @@ class File_IMC_Build_vCard extends File_IMC_Build {
     function setGeo($lat, $lon)
     {
         $this->autoparam = 'GEO';
-        $this->setValue('GEO', 0, VCARD_GEO_LAT, $lat);
-        $this->setValue('GEO', 0, VCARD_GEO_LON, $lon);
+        $this->setValue('GEO', 0, FILE_IMC_VCARD_GEO_LAT, $lat);
+        $this->setValue('GEO', 0, FILE_IMC_VCARD_GEO_LON, $lon);
     }
     
     
@@ -1173,8 +1145,8 @@ class File_IMC_Build_vCard extends File_IMC_Build {
     function getGeo()
     {
         return $this->getMeta('GEO', 0) .
-            $this->getValue('GEO', 0, VCARD_GEO_LAT, 0) . ';' .
-            $this->getValue('GEO', 0, VCARD_GEO_LON, 0);
+            $this->getValue('GEO', 0, FILE_IMC_VCARD_GEO_LAT, 0) . ';' .
+            $this->getValue('GEO', 0, FILE_IMC_VCARD_GEO_LON, 0);
     }
 
     /**
@@ -1220,13 +1192,13 @@ class File_IMC_Build_vCard extends File_IMC_Build {
     {
         $this->autoparam = 'ADR';
         $iter = count($this->value['ADR']);
-        $this->setValue('ADR', $iter, VCARD_ADR_POB,       $pob);
-        $this->setValue('ADR', $iter, VCARD_ADR_EXTEND,    $extend);
-        $this->setValue('ADR', $iter, VCARD_ADR_STREET,    $street);
-        $this->setValue('ADR', $iter, VCARD_ADR_LOCALITY,  $locality);
-        $this->setValue('ADR', $iter, VCARD_ADR_REGION,    $region);
-        $this->setValue('ADR', $iter, VCARD_ADR_POSTCODE,  $postcode);
-        $this->setValue('ADR', $iter, VCARD_ADR_COUNTRY,   $country);
+        $this->setValue('ADR', $iter, FILE_IMC_VCARD_ADR_POB,       $pob);
+        $this->setValue('ADR', $iter, FILE_IMC_VCARD_ADR_EXTEND,    $extend);
+        $this->setValue('ADR', $iter, FILE_IMC_VCARD_ADR_STREET,    $street);
+        $this->setValue('ADR', $iter, FILE_IMC_VCARD_ADR_LOCALITY,  $locality);
+        $this->setValue('ADR', $iter, FILE_IMC_VCARD_ADR_REGION,    $region);
+        $this->setValue('ADR', $iter, FILE_IMC_VCARD_ADR_POSTCODE,  $postcode);
+        $this->setValue('ADR', $iter, FILE_IMC_VCARD_ADR_COUNTRY,   $country);
     }
     
     
@@ -1255,13 +1227,13 @@ class File_IMC_Build_vCard extends File_IMC_Build {
         } else {
             
             return $this->getMeta('ADR', $iter) .
-                $this->getValue('ADR', $iter, VCARD_ADR_POB) . ';' .
-                $this->getValue('ADR', $iter, VCARD_ADR_EXTEND) . ';' .
-                $this->getValue('ADR', $iter, VCARD_ADR_STREET) . ';' .
-                $this->getValue('ADR', $iter, VCARD_ADR_LOCALITY) . ';' .
-                $this->getValue('ADR', $iter, VCARD_ADR_REGION) . ';' .
-                $this->getValue('ADR', $iter, VCARD_ADR_POSTCODE) . ';' .
-                $this->getValue('ADR', $iter, VCARD_ADR_COUNTRY);
+                $this->getValue('ADR', $iter, FILE_IMC_VCARD_ADR_POB) . ';' .
+                $this->getValue('ADR', $iter, FILE_IMC_VCARD_ADR_EXTEND) . ';' .
+                $this->getValue('ADR', $iter, FILE_IMC_VCARD_ADR_STREET) . ';' .
+                $this->getValue('ADR', $iter, FILE_IMC_VCARD_ADR_LOCALITY) . ';' .
+                $this->getValue('ADR', $iter, FILE_IMC_VCARD_ADR_REGION) . ';' .
+                $this->getValue('ADR', $iter, FILE_IMC_VCARD_ADR_POSTCODE) . ';' .
+                $this->getValue('ADR', $iter, FILE_IMC_VCARD_ADR_COUNTRY);
         }
     }
     

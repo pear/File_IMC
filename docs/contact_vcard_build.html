@@ -1,0 +1,383 @@
+<html>
+	<head>
+		<title>Contact_Vcard_Build</title>
+	</head>
+	<body>
+
+
+<h1>Contact_Vcard_Build</h1>
+
+<ol>
+	<li><a href="#quick">Quick Instructions</a></li>
+	<li><a href="#intro">Introduction to vCard</a></li>
+	<li><a href="#using">Using Contact_Vcard_Build</a></li>
+	<li><a href="#known">Known Issues and Bug Reports</a></li>
+	<li><a href="#other">Other vCard Projects</a></li>
+</ol>
+
+
+<h2><a name="quick">Quick Instructions</a></h2>
+
+<p>For the impatient.  :-)</p>
+
+<ol>
+	<li>Download and un-compress <a href="http://pear.php.net/get/Contact_Vcard_Build">Contact_Vcard_Build</a> from the <a href="http://pear.php.net">PEAR</a> archive.</li>
+	<li>Include <code>Contact_Vcard_Build.php</code> in your PHP script.</li>
+	<li>Instantiate a new Contact_Vcard_Build object (by default, the vCard version is 3.0, but 2.1 vCards are also supported).</li>
+	<li>Set or add values and parameters that you want in the vCard.</li>
+	<li>Fetch the completed vCard, then use print_r() to view the results.</li>
+</ol>
+
+<p>Example code:</p>
+
+<pre>&lt;?php
+    
+    // include the class file
+    require_once 'Contact_Vcard_Build.php';
+    
+    // instantiate a builder object
+    // (defaults to version 3.0)
+    $vcard = new Contact_Vcard_Build();
+    
+    // set a formatted name
+    $vcard->setFormattedName('Bolivar Shagnasty');
+    
+    // set the structured name parts
+    $vcard->setName('Shagnasty', 'Bolivar', 'Odysseus',
+        'Mr.', 'III');
+    
+    // add a work email.  note that we add the value
+    // first and the param after -- Contact_Vcard_Build
+    // is smart enough to add the param in the correct
+    // place.
+    $vcard->addEmail('boshag@example.com');
+    $vcard->addParam('TYPE', 'WORK');
+    
+    // add a home/preferred email
+    $vcard->addEmail('bolivar@example.net');
+    $vcard->addParam('TYPE', 'HOME');
+    $vcard->addParam('TYPE', 'PREF');
+    
+    // add a work address
+    $vcard->addAddress('POB 101', 'Suite 202', '123 Main',
+        'Beverly Hills', 'CA', '90210', 'US');
+    $vcard->addParam('TYPE', 'WORK');
+    
+    // get back the vCard and print it
+    $text = $vcard->fetch();
+    echo '&lt;pre&gt;';
+    print_r($text);
+    echo '&lt;/pre&gt;';
+    
+?&gt;</pre>
+
+<h2><a name="intro">Introduction to vCard</a></h2>
+
+<p>For a full overview of the vCard 3.0 specification, refer to <a href="http://www.ietf.org/rfc/rfc2426.txt">Internet Engineering Task Force RFC 2426</a>.</p>
+
+<p>For a full overview of the vCard 2.1 specification (version 2.1), refer to the Internet Mail Consortium <a href="http://www.imc.org/pdi/pdiproddev.html">Product Developer Information</a> web page.</p>
+
+<p>Basically, a vCard is a plain text file that contains an "electronic business card" of contact information suitable for including in an address book.  The vCard format is a standardized way of trading personal and organizational contact information.</p>
+
+<h3>What's In A vCard Entry?</h3>
+
+<p>These are some, but not all, of the components of a vCard:</p>
+<ul>
+
+	<li><b>N:</b> The name of the person or organization represented by the vCard, in a structured format: family name, given name, additional (middle) names, any honorific prefixes (Mr., Dr., Miss, etc), and any honorific suffixes (Jr., III, Ph.D., etc).</li>
+	
+	<li><b>ADR:</b> Physical address.  There may be one or more addresses in a vCard; one for home, one for work, one for deliveries, and so on.  The ADR element has structured components for p.o. box, extended information, street, city/locality, state/region, postal code, and country.</li>
+	
+	<li><b>TEL:</b> Telephone.  There may be one or more telephone numbers in a vCard; one for home, one for work, one for fax, and so on.  The TEL element has a single text value indicating the phone number.</li>
+	
+	<li><b>EMAIL:</b> Email address.  There may be one or more email addresses in a vCard; one for home, one for work, and so on.  The EMAIL element has a single text value indicating the email address.</li>
+	
+	<li><b>URL:</b> One URL associated with this vCard; e.g., a personal or organizational home page.</li>
+	
+	<li><b>ORG:</b> The organization in which this vCard is a part.  There may be one or more suborgnizations as well.</li>
+	
+	<li><b>TITLE:</b> A single job title.</li>
+	
+	<li><b>ROLE:</b> A single, longer description of the job role.  Whereas TITLE might be "Senior VP Of Custodial Enforcement" the ROLE might be "Sweep floors, empty trash, etc."</li>
+	
+	<li><b>CATEGORIES:</b>  The category or categories of this vCard: Personal, Business, Family, and so on.</li>
+	
+	<li><b>BDAY:</b> Birthday in yyyy-mm-dd format.  It might also have additional time and timezone information.</li>
+	
+	<li><b>PHOTO, LOGO, KEY, SOUND:</b>  Respectively, a binary-encoded file for a personal photo, corporate logo, encryption key, or name-pronounciation sound associated with the vCard.  The information may also be a URI link to a binary file.</li>
+	
+	<li><b>NOTE:</b> Any other arbitrary information you might want to keep with the vCard.</li>
+	
+</ul>
+
+
+<h3>What's My Line? (Typedefs, Params, and Values)</h3>
+
+<p>Each line in a vCard is a separate component of the vCard.  A component line consists of three things:
+
+<ul>
+	<li>the component type-defnition (N, ADR, TEL, etc);</li>
+	<li>optionally, parameters for the component, such as whether or not the data is binary-encoded, or the type of data (home/work/preferred/etc), and so on; and
+	<li>the component value (which may be a single text value, repeated text values, or a structured text value).
+</ul>
+
+<p>For example, consider the following component lines:</p>
+
+<ol>
+	<li><code>ADR;TYPE=WORK,PREF:;;123 Main;Beverly Hills;CA;90210;US</code></li>
+	<li><code>EMAIL;TYPE=HOME;TYPE=INTERNET:nobody@example.com</code></li>
+	<li><code>CATEGORIES:Personal,Business,Family</code></li>
+	<li><code>PHOTO;TYPE=JPEG;VALUE=URI:http://example.com/photo.jpg</code></li>
+</ol>
+
+<p>Component line 1 has an ADR type-definition (meaning a delivery address).  It has a TYPE parameter of WORK and PREF, indicating that this a work address and is the preferred address for deliveries.  Finally, the value of the component is a structured text value.  Structured text value parts are delimited by semicolons; in the case of ADR components, the structured value parts are p.o. box, extended address, street address, city/locality, state/region, zip/postal code, and country.</p>
+
+<p>Component line 2 has an EMAIL type-definition (meaning an email address).  It has a TYPE parameter of HOME and INTERNET (meaning an internet email address for home).  The component value is a single text value indicating the email address.</p>
+
+<p>Component line 3 has a CATEGORIES type-definition (meaning the general categories of of this vCard).  There are no parameters for this component.  The component value is a repeating-text value.  Repeated text values a delimited by commas.
+
+<p>Component line 4 has a PHOTO type-definition (meaning a personal photograph).  The parameters indicate that the photo TYPE is JPEG (giving a hint to vCard decoders how to handle the PHOTO value) and that the component VALUE will be a URI (that is, a link to an external photo file).  Finally, the component value is a single text value, revealing in this case the URI of the photo.
+
+
+<h3>Differences Between vCard 2.1 and vCard 3.0</h3>
+
+<p>The 2.1 specification uses CRLF to terminate lines (\r\n).  It allows the following components and parameters:</p>
+
+<ul>
+	<li>Parameters:</li>
+	<ul>
+		<li><b>TYPE</b> of DOM, INTL, POSTAL, PARCEL,HOME, WORK,
+                PREF, VOICE, FAX, MSG, CELL, PAGER,
+                BBS, MODEM, CAR, ISDN, VIDEO,
+                AOL, APPLELINK, ATTMAIL, CIS, EWORLD,
+                INTERNET, IBMMAIL, MCIMAIL,
+                POWERSHARE, PRODIGY, TLX, X400,
+                GIF, CGM, WMF, BMP, MET, PMB, DIB,
+                PICT, TIFF, PDF, PS, JPEG, QTIME,
+                MPEG, MPEG2, AVI,
+                WAVE, AIFF, PCM,
+                X509, or PGP.</li>
+		<li><b>ENCODING</b> of 7BIT, 8BIT, BASE64, QUOTED-PRINTABLE</li>
+		<li><b>VALUE</b> of INLINE, CONTENT-ID, CID, URL, VCARD</li>
+		<li><b>CHARSET</b> of any ISO charset specification.</li>
+		<li><b>LANGUAGE</b> is very lenient, basically anything so long as it uses only the characters a-z, A-Z, 0-9, and dash (-).</li>
+	</ul>
+	<br />
+	<li>Components and Methods:</li>
+	<ul>
+		<li>VERSION (setVersion)</li>
+		<li>FN (setFormattedName)</li>
+		<li>N (setName)</li>
+		<li>PHOTO (setPhoto)</li>
+		<li>BDAY (setBirthday)</li>
+		<li>ADR (addAddress)</li>
+		<li>LABEL (addLabel)</li>
+		<li>TEL (addTelephone)</li>
+		<li>EMAIL (addEmail)</li>
+		<li>MAILER (setMailer)</li>
+		<li>TZ (setTZ)</li>
+		<li>GEO (setGeo)</li>
+		<li>TITLE (setTitle)</li>
+		<li>ROLE (setRole)</li>
+		<li>LOGO (setLogo)</li>
+		<li>AGENT (setAgent)</li>
+		<li>ORG (addOrganization)</li>
+		<li>NOTE (setNote)</li>
+		<li>REV (setRevision)</li>
+		<li>SOUND (setSound)</li>
+		<li>URL (setURL)</li>
+		<li>KEY (setKey)</li>
+	</ul>
+</ul>
+
+<p>The 3.0 specification uses LF to terminate lines (\n).  It allows the following components and parameters:</p>
+
+<ul>
+	<li>Parameters:</li>
+	<ul>
+		<li><b>TYPE</b> of any of the 2.1 TYPE values, or any other value so long as it uses only the characters a-z, A-Z, 0-9, and dash (-).</li>
+		<li><b>ENCODING</b> of 8BIT and B ("binary").</li>
+			<li><b>VALUE</b> of BINARY, PHONE-NUMBER, TEXT, URI, UTC-OFFSET, or VCARD.</li>
+	</ul>
+	<br />
+	<li>Components and Methods:</li>
+	<ul>
+		<li>VERSION (setVersion)</li>
+		<li>FN (setFormattedName)</li>
+		<li>N (setName)</li>
+		<li>NAME (setSourceName)</li>
+		<li>SOURCE (setSource)</li>
+		<li>NICKNAME (addNickname)</li>
+		<li>PHOTO (setPhoto)</li>
+		<li>BDAY (setBirthday)</li>
+		<li>ADR (addAddress)</li>
+		<li>LABEL (addLabel)</li>
+		<li>TEL (addTelephone)</li>
+		<li>EMAIL (addEmail)</li>
+		<li>MAILER (setMailer)</li>
+		<li>TZ (setTZ)</li>
+		<li>GEO (setGeo)</li>
+		<li>TITLE (setTitle)</li>
+		<li>ROLE (setRole)</li>
+		<li>LOGO (setLogo)</li>
+		<li>AGENT (setAgent)</li>
+		<li>ORG (addOrganization)</li>
+		<li>CATEGORIES (addCategories)</li>
+		<li>NOTE (setNote)</li>
+		<li>PRODID (setProductID)</li>
+		<li>REV (setRevision)</li>
+		<li>SORT-STRING (setSortString)</li>
+		<li>SOUND (setSound)</li>
+		<li>UID (setUniqueID)</li>
+		<li>URL (setURL)</li>
+		<li>CLASS (setClass)</li>
+		<li>KEY (setKey)</li>
+	</ul>
+</ul>
+
+
+<h2><a name="using">Using Contact_Vcard_Build</a></h2>
+
+<p>As shown in the quick instruction above, the basic use of Contact_Vcard_Build is straightforward: instantiate a builder object, add values and parameters, then fetch the resulting vCard.<p>
+
+<h3>Instantiation</h3>
+
+<p>To create an instance of a Contact_Vcard_Build ("builder") object, include the class file and issue a <code>new</code> directive:</p>
+
+<pre>
+    require_once 'Contact_Vcard_Build.php';
+    $vcard = new Contact_Vcard_Build();
+</pre>
+
+<p>By default, this creates a builder object that will allow you to fetch a version 3.0 vCard.  If you want to build a version 2.1 vCard, pass '2.1' as the only constructor argument:</p>
+
+<pre>
+    $vcard = new Contact_Vcard_Build('2.1');
+</pre>
+
+<h3>How To Set A Component Value</h3>
+
+<p>There are two ways to set the value of a component: use the method specifically for the component you want to add, or use the generic <code>setValue()</code> and <code>addValue()</code> methods.  While the generic methods allow you direct control over every individual component, iteration, structured part, and value repetition, the component-specific methods are often easier to use.</p>
+
+<p>Note: you <b>must</b> set the FN (formatted name) and N (personal name) components; these are required by both 2.1 and 3.0 version vCards.</p>
+
+<p>For example, if you want to add two ADR components to the vCard, you can do it with the ADR-specific method...</p>
+
+<pre>
+    // add first address iteration
+    $vcard->addAddress($pobox0, $extend0, $street0, $city0, 
+        $state0, $zip0, $country0);
+    
+    // add second address iteration
+    $vcard->addAddress($pobox1, $extend1, $street1, $city1, 
+        $state1, $zip1, $country1);
+</pre>
+
+<p>...or you can use the generic methods:</p>
+
+<pre>
+    // add first address (iteration = 0)
+    $vcard->addValue('ADR', 0, VCARD_ADR_POB,      $pobox0);
+    $vcard->addValue('ADR', 0, VCARD_ADR_EXTEND,   $extend0);
+    $vcard->addValue('ADR', 0, VCARD_ADR_STREET,   $street0);
+    $vcard->addValue('ADR', 0, VCARD_ADR_LOCALITY, $city0);
+    $vcard->addValue('ADR', 0, VCARD_ADR_REGION,   $state0);
+    $vcard->addValue('ADR', 0, VCARD_ADR_POSTCODE, $zip0);
+    $vcard->addValue('ADR', 0, VCARD_ADR_COUNTRY,  $country0);
+    
+    // add second address (iteration = 1)
+    $vcard->addValue('ADR', 1, VCARD_ADR_POB,      $pobox1);
+    $vcard->addValue('ADR', 1, VCARD_ADR_EXTEND,   $extend1);
+    $vcard->addValue('ADR', 1, VCARD_ADR_STREET,   $street1);
+    $vcard->addValue('ADR', 1, VCARD_ADR_LOCALITY, $city1);
+    $vcard->addValue('ADR', 1, VCARD_ADR_REGION,   $state1);
+    $vcard->addValue('ADR', 1, VCARD_ADR_POSTCODE, $zip1);
+    $vcard->addValue('ADR', 1, VCARD_ADR_COUNTRY,  $country1);
+</pre>
+
+<p>Please see the <code>Contact_Vcard_Build.php</code> inline comments for descriptions of how to use each component-specific method.</p>
+
+
+<h3>How To Set A Parameter Value</h3>
+
+<p>There is only one way to add a parameter: use the <code>addParam()</code> method.  Unlike with adding values, there are no component-specifc methods to add parameters.</p>
+
+<p>In general, you should add the parameters of a component <b>immediately after</b> you add the complete value of a component, because the builder object keeps track of what was the last component value added.  (This is why there are no component-specific add-parameter methods.)</p>
+
+<p>For example, we can set the params for the ADR components as in the above code:</p>
+
+<pre>
+    // add first address iteration
+    $vcard->addAddress($pobox0, $extend0, $street0, $city0, 
+        $state0, $zip0, $country0);
+    
+    // add parameters to the first address
+    $vcard->addParam('TYPE', 'HOME');
+    $vcard->addParam('TYPE', 'PREF');
+    
+    // add second address iteration
+    $vcard->addAddress($pobox1, $extend1, $street1, $city1, 
+        $state1, $zip1, $country1);
+    
+    // add parameters to the second address
+    $vcard->addParam('TYPE', 'WORK');
+</pre>
+
+<p>Thus, the first address will have <code>TYPE=HOME,PREF</code> and the second will have <code>TYPE=WORK</code> as their parameters.</p>
+
+<p>Alternatively, you can add parameters directly using the same <code>addParam()</code> method, with some additional arguments:</p>
+
+<pre>
+    // add parameters to the first address iteration
+    // (component = ADR, iteration = 0)
+    $vcard->addParam('TYPE', 'HOME', 'ADR', 0);
+    $vcard->addParam('TYPE', 'PREF', 'ADR', 0);
+    
+    // add parameters to the second address iteration
+    // (component = ADR, iteration = 1)
+    $vcard->addParam('TYPE', 'WORK', 'ADR', 1);
+</pre>
+
+<p>This does the same thing as the earlier <code>addParam()</code> code.</p>
+
+
+<p>Note: Although the version 2.1 specification optionally allows parameter values to be indicated without without specified types (i.e,, "HOME" instead of "TYPE=HOME") the Contact_Vcard_Build class is not so lenient.  With Contact_Vcard_Builder, you <b>must</b> set both the parameter kind and parameter value.</p>
+
+
+<h3>How To Fetch A vCard</h3>
+
+<p>After you have added all the values and parameters that you want, you get back the vCard using the <code>fetch()</code> method.  This will return the components, parameters, and values (including BEGIN:VCARD and END:VCARD) in proper format for the vCard version.</p>
+
+<pre>
+    $text = $vcard->fetch();
+</pre>
+
+<p>Note 1: if you set values and parameters for components that are not part of the selected vCard version, they will not be included in the fetched vCard text.</p>
+
+<p>Note 2: you <b>must</b> have set the FN (formatted name) and N (personal name) components, or the fetch() method will return a PEAR_Error object.  The FN and N components are required by both 2.1 and 3.0 version vCards.</p>
+
+
+<h2><a name="known">Known Issues and Bug Reports</a></h2>
+
+<p>There are no known bugs or outstanding issues at this time.</p>
+
+<p>If you discover a new bug or want to contribute code to Contact_Vcard_Build, contact Paul M. Jones at <a href="mailto:pjones@ciaweb.net">pjones at ciaweb dot net</a>; the subject line should start with [VCARD].</p>
+
+
+
+<h2><a name="other">Other vCard Projects</a></h2>
+
+<p> Contact_Vcard_Parse is a companion to Contact_Vcard_Build.  Whereas Build makes new vCards, Parse reads existing vCards into an array.  See the documentation page <a href="http://ciaweb.net/free/contact_vcard_parse.php">here</a>.</p>
+
+<p>Frank Hellwig has a 2.1/3.0 parser and address-book page generator.  See his site at <a href="http://vcardphp.sourceforge.net/">http://vcardphp.sourceforge.net/</a>. </p>
+
+<p>Kai Blankenhorn has a 2.1 card generator (not a parser). See his work at <a href="http://www.bitfolge.de/?s=phpvcard">http://www.bitfolge.de/?s=phpvcard</a>.</p>
+
+<p>Flaimo has a vCard generator, too.  <a href="http://flaimo.com/php_scripts.php">http://flaimo.com/php_scripts.php</a> (scroll down past the iCalendar stuff).</p>
+
+<p>HORDE has a vCard data element in their application framework, but I don't quite see how to use it outside that framework.  The doc pages for it are at <a href="http://dev.horde.org/api/horde/dev-doxygen/html/classData__vcard.html">http://dev.horde.org/api/horde/dev-doxygen/html/classData__vcard.html</a>.</p>
+
+<p>Of course, you can always Google for more vCard stuff under PHP, too: <a href="http://www.google.com/search?q=vcard+php">http://www.google.com/search?q=vcard+php</a>.</p>
+
+	</body>
+</html>

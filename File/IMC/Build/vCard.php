@@ -53,6 +53,24 @@ require_once 'File/IMC/Build.php';
 
 class File_IMC_Build_vCard extends File_IMC_Build {
 
+    /**
+    *
+    * Constructor
+    *
+    * @param string $version The vCard version to build; affects which
+    * parameters are allowed and which components are returned by
+    * fetch().
+    *
+    * @return void
+    *
+    * @see fetch()
+    *
+    */
+
+    function File_IMC_Build_vCard($version = '3.0')
+    {
+        $this->reset($version);
+    }
     
     /**
     * 

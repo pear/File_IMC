@@ -78,30 +78,9 @@ class File_IMC_Build {
     */
     
     var $autoparam = null;
-    
-    
-    /**
-    * 
-    * Constructor
-    *
-    * @param string $version The vCard version to build; affects which
-    * parameters are allowed and which components are returned by
-    * fetch().
-    * 
-    * @return void
-    *
-    * @see fetch()
-    * 
-    */
-    
-    function File_IMC_Build_vCard($version = '3.0')
-    {
-        $this->reset($version);
-    }
 
-    
-    /**
-    * 
+   /**
+    *
     * Resets the vCard values and params to be blank.
     * 
     * @param string $version The vCard version to reset to ('2.1' or
@@ -134,11 +113,11 @@ class File_IMC_Build {
     * Sets the version of the specification to use.  Only one iteration.
     *
     * Overload this function in the driver to validate and set the version
-    * 
+    *
     * @param string $text The text value of the verson text (e.g. '3.0' or '2.1').
     * 
     * @return mixed Void on success, or a PEAR_Error object on failure.
-    * 
+    *
     * @access public
     * 
     * @abstract
@@ -147,14 +126,7 @@ class File_IMC_Build {
     
     function setVersion($text)
     {
-        $this->autoparam = 'VERSION';
-        if ($text != '3.0' && $text != '2.1') {
-            return $this->raiseError(
-                'Version must be 3.0 or 2.1 to be valid.',
-                FILE_IMC_ERROR_INVALID_VCARD_VERSION);
-        } else {
-            $this->setValue('VERSION', 0, 0, $text);
-        }
+        // overload in driver to check for valid versions
     }
     
     
@@ -552,7 +524,7 @@ class File_IMC_Build {
     * $info = $parse->fromFile('sample.vcf'); // parse file
     * 
     * $vcard = File_IMC::build('vCard'); // new builder
-    * $vcard->setFromArray($info[0]); // [0] is the first card
+    * $vcard->setFromArray($info);
     * 
     * @param  array  $src One vCard entry as parsed using File_IMC::parse()
     * 
@@ -571,34 +543,37 @@ class File_IMC_Build {
         // reset to a blank values and params
         $this->value = array();
         $this->param = array();
-        
-        // loop through components (N, ADR, TEL, etc)
-        foreach ($src AS $comp => $comp_val) {
-            
-            // set the autoparam property. not really needed, but let's
-            // behave after an expected fashion, shall we?  ;-)
-            $this->autoparam = $comp; 
-            
-            // iteration number of each component
-            foreach ($comp_val AS $iter => $iter_val) {
-                
-                // value or param?
-                foreach ($iter_val AS $kind => $kind_val) {
-                
-                    // part number
-                    foreach ($kind_val AS $part => $part_val) {
-                        
-                        // repetition number and text value
-                        foreach ($part_val AS $rept => $text) {
-                            
-                            // ignore data when $kind is neither 'value'
-                            // nor 'param'
-                            if (strtolower($kind) == 'value') {
-                                $this->value[strtoupper($comp)][$iter][$part][$rept] = $text;
-                            } elseif (strtolower($kind) == 'param') {
-                                $this->param[strtoupper($comp)][$iter][$part][$rept] = $text;
+
+        foreach ($src as $card => $card_val) {
+
+            // loop through components (N, ADR, TEL, etc)
+            foreach ($card_val AS $comp => $comp_val) {
+
+                // set the autoparam property. not really needed, but let's
+                // behave after an expected fashion, shall we?  ;-)
+                $this->autoparam = $comp;
+
+                // iteration number of each component
+                foreach ($comp_val AS $iter => $iter_val) {
+
+                    // value or param?
+                    foreach ($iter_val AS $kind => $kind_val) {
+
+                        // part number
+                        foreach ($kind_val AS $part => $part_val) {
+
+                            // repetition number and text value
+                            foreach ($part_val AS $rept => $text) {
+
+                                // ignore data when $kind is neither 'value'
+                                // nor 'param'
+                                if (strtolower($kind) == 'value') {
+                                    $this->value[strtoupper($comp)][$iter][$part][$rept] = $text;
+                                } elseif (strtolower($kind) == 'param') {
+                                    $this->param[strtoupper($comp)][$iter][$part][$rept] = $text;
+                                }
+
                             }
-                            
                         }
                     }
                 }

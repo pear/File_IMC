@@ -83,7 +83,8 @@ class File_IMC_Parse_vCard extends File_IMC_Parse {
     
     function _parseN($text)
     {
-        $tmp = $this->splitBySemi($text);
+    	// array_pad makes sure there are the right number of elements
+        $tmp = array_pad($this->splitBySemi($text), 5, '');
         return array(
             $this->splitByComma($tmp[FILE_IMC_VCARD_N_FAMILY]),
             $this->splitByComma($tmp[FILE_IMC_VCARD_N_GIVEN]),
@@ -113,7 +114,8 @@ class File_IMC_Parse_vCard extends File_IMC_Parse {
     
     function _parseADR($text)
     {
-        $tmp = $this->splitBySemi($text);
+    	// array_pad makes sure there are the right number of elements
+        $tmp = array_pad($this->splitBySemi($text), 7, '');
         return array(
             $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_POB]),
             $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_EXTEND]),
@@ -210,7 +212,8 @@ class File_IMC_Parse_vCard extends File_IMC_Parse {
     
     function _parseGEO($text)
     {
-        $tmp = $this->splitBySemi($text);
+    	// array_pad makes sure there are the right number of elements
+        $tmp = array_pad($this->splitBySemi($text), 2, '');
         return array(
             array($tmp[FILE_IMC_VCARD_GEO_LAT]), // lat
             array($tmp[FILE_IMC_VCARD_GEO_LON])  // lon

@@ -190,6 +190,10 @@ class File_IMC_Build extends PEAR {
         } else {
         
             // this is a text value.
+            // escape colons not led by a backslash
+            $regex = '(?<!\\\\)(\:)';
+            $text = preg_replace("/$regex/i", "\\:", $text);
+            
             // escape semicolons not led by a backslash
             $regex = '(?<!\\\\)(\;)';
             $text = preg_replace("/$regex/i", "\\;", $text);

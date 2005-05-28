@@ -350,6 +350,7 @@ class File_IMC_Parse {
                 $text[$key] = $val;
             }
         } else {
+            $text = str_replace('\:', ':', $text);
             $text = str_replace('\;', ';', $text);
             $text = str_replace('\,', ',', $text);
             $text = str_replace('\n', "\n", $text);

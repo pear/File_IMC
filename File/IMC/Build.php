@@ -189,7 +189,7 @@ class File_IMC_Build extends PEAR {
             
         } else {
         
-            // this is a text value.
+            /*
             // escape colons not led by a backslash
             $regex = '(?<!\\\\)(\:)';
             $text = preg_replace("/$regex/i", "\\:", $text);
@@ -205,6 +205,11 @@ class File_IMC_Build extends PEAR {
             // escape newlines
             $regex = '\\n';
             $text = preg_replace("/$regex/i", "\\n", $text);
+            */
+            
+            // combined (per note from Daniel Convissor)
+            $regex = '(?<!\\\\)([\:\;\,\\n])';
+            $text = preg_replace("/$regex/", '\\\$1', $text);
             
         }
     }

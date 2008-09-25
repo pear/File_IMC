@@ -57,8 +57,8 @@
 * 
 */
 
-class File_IMC_Parse {
-
+class File_IMC_Parse
+{
     /**
     * 
     * Keeps track of the current line being parsed

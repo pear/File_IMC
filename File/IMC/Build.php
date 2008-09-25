@@ -43,12 +43,6 @@
  */
 
 /**
- * PEAR
- * @ignore
- */
-require_once 'PEAR.php';
-
-/**
 * 
 * This class helps build files in the vCard and vCalendar formats.
 *
@@ -71,7 +65,8 @@ require_once 'PEAR.php';
 * 
 */
 
-class File_IMC_Build extends PEAR {
+class File_IMC_Build
+{
 
     /**
     * 
@@ -190,7 +185,9 @@ class File_IMC_Build extends PEAR {
     * 
     * @param mixed $text The string or array or strings to escape.
     * 
-    * @return mixed Void on success, or a PEAR_Error object on failure.
+    * @return mixed Void on success
+    * @throws File_IMC_Exception on failure.
+    * 
     * 
     * @access public
     * 
@@ -200,9 +197,9 @@ class File_IMC_Build extends PEAR {
     {
         if (is_object($text)) {
         
-            return $this->raiseError(
+            throw new File_IMC_Exception(
                 'The escape() method works only with string literals and arrays.', 
-                FILE_IMC_ERROR_INVALID_PARAM_TYPE);
+                FILE_IMC::ERROR_INVALID_PARAM_TYPE);
         
         } elseif (is_array($text)) {
             
@@ -273,7 +270,8 @@ class File_IMC_Build extends PEAR {
     * the parameter will be added to the last component iteration
     * available.
     * 
-    * @return mixed Void on success, or a PEAR_Error object on failure.
+    * @return mixed Void on success
+    * @throws File_IMC_Excpetion on failure.
     * 
     * @access public
     * 
@@ -302,22 +300,19 @@ class File_IMC_Build extends PEAR {
         
         if (! is_integer($iter) || $iter < 0) {
         
-            return $this->raiseError("$iter is not a valid iteration number for $comp; must be a positive integer.",
-                'FILE_IMC_ERROR_INVALID_ITERATION');
-            
-        } else {
-            
-            $result = $this->validateParam($param_name, $param_value, $comp, $iter);
-
-            if ($this->isError($result)) {
-                return $result;
-            } else {
-                $this->param[$comp][$iter][$param_name][] = $param_value;
-            }
+            throw new File_IMC_Exception("$iter is not a valid iteration number for $comp; must be a positive integer.",
+                FILE_IMC::ERROR_INVALID_ITERATION);
             
         }
+
+        try {
+            $result = $this->validateParam($param_name, $param_value, $comp, $iter);
+        } catch (File_IMC_Exception $e) {
+            throw $e; // FIXME: check later
+        }
+
+        $this->param[$comp][$iter][$param_name][] = $param_value;
     }
-    
     
     /**
     * 
@@ -333,8 +328,8 @@ class File_IMC_Build extends PEAR {
     * @param string $iter Optional, the iteration of the component. Only
     * used for error messaging.
     * 
-    * @return mixed Boolean true if the parameter is valid, or a
-    * PEAR_Error object if not.
+    * @return mixed Boolean true if the parameter is valid
+    * @throws File_IMC_Exception if not.
     * 
     * @access public
     * 

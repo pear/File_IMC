@@ -1,7 +1,7 @@
 <?php
 /* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */ 
 /**+----------------------------------------------------------------------+
- * | PHP version 4                                                        |
+ * | PHP version 5                                                        |
  * +----------------------------------------------------------------------+
  * | Copyright (c) 1997-2008 The PHP Group                                |
  * +----------------------------------------------------------------------+
@@ -88,8 +88,6 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * Parses a vCard line value identified as being of the "N"
     * (structured name) type-defintion.
     *
-    * @access private
-    *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
     * 
@@ -99,17 +97,16 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * indicated in the vCard source.
     *
     */
-    
-    function _parseN($text)
+    protected function _parseN($text)
     {
     	// array_pad makes sure there are the right number of elements
         $tmp = array_pad($this->splitBySemi($text), 5, '');
         return array(
-            $this->splitByComma($tmp[FILE_IMC_VCARD_N_FAMILY]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_N_GIVEN]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_N_ADDL]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_N_PREFIX]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_N_SUFFIX])
+            $this->splitByComma($tmp[FILE_IMC::VCARD_N_FAMILY]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_N_GIVEN]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_N_ADDL]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_N_PREFIX]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_N_SUFFIX])
         );
     }
     
@@ -119,8 +116,6 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * Parses a vCard line value identified as being of the "ADR"
     * (structured address) type-defintion.
     *
-    * @access private
-    *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
     * 
@@ -130,19 +125,18 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * indicated in the vCard source.
     *
     */
-    
-    function _parseADR($text)
+    protected function _parseADR($text)
     {
     	// array_pad makes sure there are the right number of elements
         $tmp = array_pad($this->splitBySemi($text), 7, '');
         return array(
-            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_POB]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_EXTEND]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_STREET]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_LOCALITY]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_REGION]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_POSTCODE]),
-            $this->splitByComma($tmp[FILE_IMC_VCARD_ADR_COUNTRY])
+            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_POB]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_EXTEND]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_STREET]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_LOCALITY]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_REGION]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_POSTCODE]),
+            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_COUNTRY])
         );
     }
     
@@ -152,16 +146,13 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * Parses a vCard line value identified as being of the "NICKNAME"
     * (informal or descriptive name) type-defintion.
     *
-    * @access private
-    * 
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
     * 
     * @return array An array of nicknames.
     *
     */
-    
-    function _parseNICKNAME($text)
+    protected function _parseNICKNAME($text)
     {
         return array($this->splitByComma($text));
     }
@@ -172,8 +163,6 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * Parses a vCard line value identified as being of the "ORG"
     * (organizational info) type-defintion.
     *
-    * @access private
-    *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
     * 
@@ -182,8 +171,7 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * sub-organizations.
     *
     */
-    
-    function _parseORG($text)
+    protected function _parseORG($text)
     {
         $tmp = $this->splitbySemi($text);
         $list = array();
@@ -200,16 +188,13 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * Parses a vCard line value identified as being of the "CATEGORIES"
     * (card-category) type-defintion.
     *
-    * @access private
-    * 
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
     * 
     * @return mixed An array of categories.
     *
     */
-    
-    function _parseCATEGORIES($text)
+    protected function _parseCATEGORIES($text)
     {
         return array($this->splitByComma($text));
     }
@@ -220,24 +205,19 @@ class File_IMC_Parse_vCard extends File_IMC_Parse
     * Parses a vCard line value identified as being of the "GEO"
     * (geographic coordinate) type-defintion.
     *
-    * @access private
-    *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
     * 
     * @return mixed An array of lat-lon geocoords.
     *
-    */
-    
-    function _parseGEO($text)
+    */    
+    protected function _parseGEO($text)
     {
     	// array_pad makes sure there are the right number of elements
         $tmp = array_pad($this->splitBySemi($text), 2, '');
         return array(
-            array($tmp[FILE_IMC_VCARD_GEO_LAT]), // lat
-            array($tmp[FILE_IMC_VCARD_GEO_LON])  // lon
+            array($tmp[FILE_IMC::VCARD_GEO_LAT]), // lat
+            array($tmp[FILE_IMC::VCARD_GEO_LON])  // lon
         );
     }
 }
-
-?>

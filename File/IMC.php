@@ -1,7 +1,7 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 /**+----------------------------------------------------------------------+
- * | PHP version 4                                                        |
+ * | PHP version 5                                                        |
  * +----------------------------------------------------------------------+
  * | Copyright (c) 1997-2008 The PHP Group                                |
  * +----------------------------------------------------------------------+
@@ -42,47 +42,6 @@
  * @version  CVS: $Id$
  * @link     http://pear.php.net/package/File_IMC
  */
-
-/**
- * Constants for File_IMC errors.
- */
-define('FILE_IMC_ERROR',                        100);
-define('FILE_IMC_ERROR_INVALID_DRIVER',         101);
-define('FILE_IMC_ERROR_INVALID_PARAM',          102);
-define('FILE_IMC_ERROR_INVALID_VCARD_VERSION',  103);
-define('FILE_IMC_ERROR_PARAM_NOT_SET',          104);
-define('FILE_IMC_ERROR_INVALID_ITERATION',      105);
-
-/**
- * Constants for File_IMC vCard "N" component positions.
- */
-define('FILE_IMC_VCARD_N_FAMILY',     0);
-define('FILE_IMC_VCARD_N_GIVEN',      1);
-define('FILE_IMC_VCARD_N_ADDL',       2);
-define('FILE_IMC_VCARD_N_PREFIX',     3);
-define('FILE_IMC_VCARD_N_SUFFIX',     4);
-
-
-/**
- * Constants for File_IMC vCard "ADR" component positions.
- */
-define('FILE_IMC_VCARD_ADR_POB',      0);
-define('FILE_IMC_VCARD_ADR_EXTEND',   1);
-define('FILE_IMC_VCARD_ADR_STREET',   2);
-define('FILE_IMC_VCARD_ADR_LOCALITY', 3);
-define('FILE_IMC_VCARD_ADR_REGION',   4);
-define('FILE_IMC_VCARD_ADR_POSTCODE', 5);
-define('FILE_IMC_VCARD_ADR_COUNTRY',  6);
-
-
-/**
-* 
-* Constants for File_IMC vCard "GEO" component positions.
-* 
-*/
-
-define('FILE_IMC_VCARD_GEO_LAT',      0);
-define('FILE_IMC_VCARD_GEO_LON',      1);
 
 
 /**
@@ -130,9 +89,49 @@ define('FILE_IMC_VCARD_GEO_LON',      1);
 * 
 */
 
-class File_IMC {
+class File_IMC
+{    
+    /**
+     * Constants for File_IMC errors.
+     * @global
+     */
+    const ERROR                       = 100;
+    const ERROR_INVALID_DRIVER        = 101;
+    const ERROR_INVALID_PARAM         = 102;
+    const ERROR_INVALID_VCARD_VERSION = 103;
+    const ERROR_PARAM_NOT_SET         = 104;
+    const ERROR_INVALID_ITERATION     = 105;
+    
+    /**
+     * Constants for File_IMC vCard "N" component positions.
+     * @global
+     */
+    const VCARD_N_FAMILY = 0;
+    const VCARD_N_GIVEN  = 1;
+    const VCARD_N_ADDL   = 2;
+    const VCARD_N_PREFIX = 3;
+    const VCARD_N_SUFFIX = 4;
+    
+    /**
+     * Constants for File_IMC vCard "ADR" component positions.
+     * @global
+     */
+    const VCARD_ADR_POB      = 0;
+    const VCARD_ADR_EXTEND   = 1;
+    const VCARD_ADR_STREET   = 2;
+    const VCARD_ADR_LOCALITY = 3;
+    const VCARD_ADR_REGION   = 4;
+    const VCARD_ADR_POSTCODE = 5;
+    const VCARD_ADR_COUNTRY  = 6;
     
     
+    /**
+     * Constants for File_IMC vCard "GEO" component positions.
+     * @global
+     */
+    const VCARD_GEO_LAT = 0;
+    const VCARD_GEO_LON = 1;
+
     /**
     * 
     * Builder factory
@@ -148,13 +147,13 @@ class File_IMC {
     function &build($format, $version = null)
     {
     	$basepath = dirname(__FILE__);
-        $filename = $basepath . '/IMC/Build/'. $format . '.php';
+        $filename = $basepath . '/IMC/Build/'. $format . '.php'; // FIXME
         $classname = 'File_IMC_Build_'. $format;
         
         if (!file_exists($filename)) {
             return File_IMC::raiseError(
                 'No builder driver found for format: ' . $format,
-                FILE_IMC_ERROR_INVALID_DRIVER);
+                self::ERROR_INVALID_DRIVER);
         }
 
         include_once $filename;
@@ -162,7 +161,7 @@ class File_IMC {
         if (!class_exists($classname)) {
             return File_IMC::raiseError(
                 'No builder driver exists for format: ' . $format,
-                FILE_IMC_ERROR_INVALID_DRIVER);
+                self::ERROR_INVALID_DRIVER);
         }
 
         if ($version !== null) {
@@ -198,7 +197,7 @@ class File_IMC {
         if (!file_exists($filename)) {
             return File_IMC::raiseError(
                 'No builder driver exists for format: ' . $format,
-                FILE_IMC_ERROR_INVALID_DRIVER);
+                self::ERROR_INVALID_DRIVER);
         }
 
         include_once $filename;
@@ -206,7 +205,7 @@ class File_IMC {
         if (!class_exists($classname)) {
             return File_IMC::raiseError(
                 'No parser driver exists for format: ' . $format, 
-                FILE_IMC_ERROR_INVALID_DRIVER);
+                self::ERROR_INVALID_DRIVER);
         }
         
         $class = new $classname;
@@ -236,7 +235,4 @@ class File_IMC {
         include_once 'PEAR.php';
         return PEAR::raiseError($msg, $code, PEAR_ERROR_PRINT);
     }
-
 }
-
-?>

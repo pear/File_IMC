@@ -1,68 +1,93 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<package version="1.0">
-  <name>File_IMC</name>
-  <summary>Create and parse Internet Mail Consortium-style files (like vCard and vCalendar)</summary>
-  <description>Allows you to programmatically create a vCard or vCalendar, and fetch the text.
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.7.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+ <name>File_IMC</name>
+ <channel>pear.php.net</channel>
+ <summary>Create and parse Internet Mail Consortium-style files (like vCard and vCalendar)</summary>
+ <description>Allows you to programmatically create a vCard or vCalendar, and fetch the text.
 
 IMPORTANT: The array structure has changed slightly from Contact_Vcard_Parse.
 See the example output for the new structure.  Also different from Contact_Vcard
 is the use of a factory pattern.  Again, see the examples.
-  </description>
-  <license>PHP License</license>
-  <maintainers>
-    <maintainer>
-      <user>pmjones</user>
-      <name>Paul M. Jones</name>
-      <email>pjones@ciaweb.net</email>
-      <role>lead</role>
-    </maintainer>
-    <maintainer>
-      <user>mroch</user>
-      <name>Marshall Roch</name>
-      <email>mroch@php.net</email>
-      <role>lead</role>
-    </maintainer>
-  </maintainers>
-  <release>
-    <version>0.3</version>
-    <date>2003-09-30</date>
-    <state>beta</state>
-    <notes>
-* Added file_exists() check to prevent E_NOTICE errors in factory if file doesn't exist (thanks, Davey)
+  
+ </description>
+ <lead>
+  <name>Paul M. Jones</name>
+  <user>pmjones</user>
+  <email>pjones@ciaweb.net</email>
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Marshall Roch</name>
+  <user>mroch</user>
+  <email>mroch@php.net</email>
+  <active>yes</active>
+ </lead>
+ <date>2008-09-25</date>
+ <time>11:15:32</time>
+ <version>
+  <release>0.3</release>
+  <api>0.3</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="http://www.php.net/license">PHP License</license>
+ <notes>* Added file_exists() check to prevent E_NOTICE errors in factory if file doesn&apos;t exist (thanks, Davey)
 * Cleaned up error handling to let the user app have control (File_IMC_Build::raiseError() no longer passes a PEAR_ERROR_* to PEAR::raiseError()) (thanks, Greg)
 * Minor documentation additions/modifications (thanks, Greg)
-    </notes>
-    <filelist>
-      <dir name="/" role="doc">
-        <file name="vcard_build_example.php" />
-        <file name="vcard_parse_example.php" />
-        <file name="vcalendar_parse_example.php" />
-        <file name="sample.vcf" />
-        <file name="sample.vcs" />
-      </dir>
-      <dir name="File">
-        <file role="php" name="IMC.php" />
-        <dir name="IMC">
-          <file role="php" name="Parse.php" />
-          <file role="php" name="Build.php" />
-          <dir name="Parse">
-            <file role="php" name="vCard.php" />
-            <file role="php" name="vCalendar.php" />
-          </dir>
-          <dir name="Build">
-            <file role="php" name="vCard.php" />
-          </dir>
-        </dir>
-      </dir>
-    </filelist>
-  </release>
-  <changelog>
+    
+ </notes>
+ <contents>
+  <dir name="/">
+   <dir name="File">
+    <dir name="IMC">
+     <dir name="Build">
+      <file name="vCard.php" role="php" />
+     </dir> <!-- //File/IMC/Build -->
+     <dir name="Parse">
+      <file name="vCalendar.php" role="php" />
+      <file name="vCard.php" role="php" />
+     </dir> <!-- //File/IMC/Parse -->
+     <file name="Build.php" role="php" />
+     <file name="Parse.php" role="php" />
+    </dir> <!-- //File/IMC -->
+    <file name="IMC.php" role="php" />
+   </dir> <!-- //File -->
+   <file name="sample.vcf" role="doc" />
+   <file name="sample.vcs" role="doc" />
+   <file name="vcalendar_parse_example.php" role="doc" />
+   <file name="vcard_build_example.php" role="doc" />
+   <file name="vcard_parse_example.php" role="doc" />
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>4.0.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
   <release>
-    <version>0.2</version>
-    <date>2003-09-22</date>
-    <state>beta</state>
-    <notes>
-* Added preliminary vCalendar parsing support.  Has yet to be tested with complex input files.
+   <version>
+    <release>0.2</release>
+    <api>0.2</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2003-09-22</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>* Added preliminary vCalendar parsing support.  Has yet to be tested with complex input files.
 * Added vCard build support from Contact_Vcard_Build.
 * File_IMC_Parse can now handle nested BEGIN/END blocks (to support vCal).
 * Included example scripts and sample vCard and vCalendar files.
@@ -70,13 +95,22 @@ is the use of a factory pattern.  Again, see the examples.
 IMPORTANT: The array structure has changed slightly from Contact_Vcard_Parse.
 See the example output for the new structure.  Also different from Contact_Vcard
 is the use of a factory pattern.  Again, see the examples.
-    </notes>
+    
+   </notes>
   </release>
   <release>
-      <version>0.1</version>
-      <date>2003-09-20</date>
-      <state>beta</state>
-      <notes>Initial release, moved from Contact_Vcard_Parse</notes>
-    </release>  
-  </changelog>
+   <version>
+    <release>0.1</release>
+    <api>0.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2003-09-20</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>Initial release, moved from Contact_Vcard_Parse
+   </notes>
+  </release>
+ </changelog>
 </package>

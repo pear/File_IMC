@@ -43,6 +43,10 @@
  * @link     http://pear.php.net/package/File_IMC
  */
 
+/**
+ * File_IMC_Exception
+ */
+require_once 'File/IMC/Exception.php';
 
 /**
 * 
@@ -88,7 +92,6 @@
 * @author Marshall Roch <mroch@php.net>
 * 
 */
-
 class File_IMC
 {    
     /**
@@ -133,7 +136,6 @@ class File_IMC
     const VCARD_GEO_LON = 1;
 
     /**
-    * 
     * Builder factory
     *
     * Creates an instance of the correct parser class, based on the
@@ -141,35 +143,30 @@ class File_IMC
     * a new object to parse a vCard file.
     *
     * @param string Type of file to parse, vCard or vCalendar
-    * @return object
+    * 
+    * @return mixed
+    * @throws File_IMC_Exception In case the driver is not found/available.
     */
-    
-    function &build($format, $version = null)
+    public static function build($format, $version = null)
     {
-    	$basepath = dirname(__FILE__);
-        $filename = $basepath . '/IMC/Build/'. $format . '.php'; // FIXME
-        $classname = 'File_IMC_Build_'. $format;
+        $fileName  = 'File/IMC/Build/'. $format . '.php';
+        $className = 'File_IMC_Build_'. $format;
         
-        if (!file_exists($filename)) {
-            return File_IMC::raiseError(
-                'No builder driver found for format: ' . $format,
-                self::ERROR_INVALID_DRIVER);
+        if (!class_exists($className)) {
+            include_once $fileName;
         }
 
-        include_once $filename;
-
-        if (!class_exists($classname)) {
-            return File_IMC::raiseError(
+        if (!class_exists($className)) {
+            throw new File_IMC_Exception(
                 'No builder driver exists for format: ' . $format,
                 self::ERROR_INVALID_DRIVER);
         }
 
         if ($version !== null) {
-            $class = new $classname($version);    
+            $class = new $className($version);    
         } else {
-            $class = new $classname;
+            $class = new $className;
         }
-
         return $class;
     }
     
@@ -184,55 +181,24 @@ class File_IMC
     *
     * @param string Type of file to parse, vCard or vCalendar
     * 
-    * @return object
-    * 
+    * @return mixed
+    * @throws File_IMC_Exception If no parse is found/available.
     */
-    
-    function &parse($format)
+    public static function parse($format)
     {
-    	$basepath = dirname(__FILE__);
-        $filename = $basepath . '/IMC/Parse/'. $format . '.php';
-        $classname = 'File_IMC_Parse_'. $format;
+        $fileName  = 'File/IMC/Parse/'. $format . '.php';
+        $className = 'File_IMC_Parse_'. $format;
         
-        if (!file_exists($filename)) {
-            return File_IMC::raiseError(
-                'No builder driver exists for format: ' . $format,
-                self::ERROR_INVALID_DRIVER);
+        if (!class_exists($className)) {
+            include_once $fileName;
         }
-
-        include_once $filename;
         
-        if (!class_exists($classname)) {
-            return File_IMC::raiseError(
+        if (!class_exists($className)) {
+            throw new File_IMC_Exception(
                 'No parser driver exists for format: ' . $format, 
                 self::ERROR_INVALID_DRIVER);
         }
         
-        $class = new $classname;
-        
-        return $class;
-    }
-    
-    
-    /**
-    * 
-    * Raises a PEAR error message
-    *
-    * Returns a PEAR_Error.  Doing it this way instead of extending
-    * the PEAR class means that the extra overhead of the PEAR class
-    * is only included when needed to throw an error.
-    *
-    * @param string Error message to display
-    * 
-    * @param int    Error code
-    * 
-    * @return object PEAR_Error
-    * 
-    */
-    
-    function raiseError($msg, $code)
-    {
-        include_once 'PEAR.php';
-        return PEAR::raiseError($msg, $code, PEAR_ERROR_PRINT);
-    }
+        return new $className;
+    }    
 }

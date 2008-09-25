@@ -28,8 +28,8 @@ is the use of a factory pattern.  Again, see the examples.
  <date>2008-09-25</date>
  <time>11:15:32</time>
  <version>
-  <release>0.3</release>
-  <api>0.3</api>
+  <release>0.3.0</release>
+  <api>0.3.0</api>
  </version>
  <stability>
   <release>beta</release>
@@ -57,11 +57,13 @@ is the use of a factory pattern.  Again, see the examples.
     </dir> <!-- //File/IMC -->
     <file name="IMC.php" role="php" />
    </dir> <!-- //File -->
-   <file name="sample.vcf" role="doc" />
-   <file name="sample.vcs" role="doc" />
-   <file name="vcalendar_parse_example.php" role="doc" />
-   <file name="vcard_build_example.php" role="doc" />
-   <file name="vcard_parse_example.php" role="doc" />
+   <dir name="docs">
+    <file name="sample.vcf" role="doc" />
+    <file name="sample.vcs" role="doc" />
+    <file name="vcalendar_parse_example.php" role="doc" />
+    <file name="vcard_build_example.php" role="doc" />
+    <file name="vcard_parse_example.php" role="doc" />
+   </dir>
   </dir> <!-- / -->
  </contents>
  <dependencies>

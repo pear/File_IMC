@@ -73,7 +73,7 @@ require_once 'File/IMC/Build.php';
 * @package File_IMC
 *
 */
-class File_IMC_Build_vCard extends File_IMC_Build
+class File_IMC_Build_Vcard extends File_IMC_Build
 {
     /**
     *
@@ -88,8 +88,7 @@ class File_IMC_Build_vCard extends File_IMC_Build
     * @see fetch()
     *
     */
-
-    function File_IMC_Build_vCard($version = '3.0')
+    function __construct($version = '3.0')
     {
         $this->reset($version);
     }

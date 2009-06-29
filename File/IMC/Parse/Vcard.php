@@ -79,7 +79,7 @@ require_once 'File/IMC/Parse.php';
  * @package File_IMC
  * 
  */
-class File_IMC_Parse_vCard extends File_IMC_Parse
+class File_IMC_Parse_Vcard extends File_IMC_Parse
 {
     
     

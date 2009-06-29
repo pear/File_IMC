@@ -78,7 +78,7 @@
  */
 require_once 'File/IMC/Parse.php';
 
-class File_IMC_Parse_vCalendar extends File_IMC_Parse
+class File_IMC_Parse_Vcalendar extends File_IMC_Parse
 {
     // nothing has needed parsing so far.
 }

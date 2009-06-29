@@ -149,6 +149,14 @@ class File_IMC
     */
     public static function build($format, $version = null)
     {
+        $format = trim($format);
+        if (empty($format)) {
+            throw new File_IMC_Exception('No driver.', self::ERROR_INVALID_DRIVER);
+        }
+
+        // fix^H^H^H^force case
+        $format = ucfirst(strtolower($format));
+
         $fileName  = 'File/IMC/Build/'. $format . '.php';
         $className = 'File_IMC_Build_'. $format;
         
@@ -186,6 +194,14 @@ class File_IMC
     */
     public static function parse($format)
     {
+        $format = trim($format);
+        if (empty($format)) {
+            throw new File_IMC_Exception('No driver.', self::ERROR_INVALID_DRIVER);
+        }
+
+        // fix^H^H^H^force case
+        $format = ucfirst(strtolower($format));
+
         $fileName  = 'File/IMC/Parse/'. $format . '.php';
         $className = 'File_IMC_Parse_'. $format;
         

@@ -43,6 +43,11 @@
  */
 
 /**
+ * @ignore PEAR_Exception
+ */
+require_once 'PEAR/Exception.php';
+
+/**
  * File_IMC_Exception
  * 
  * @category File_Formats

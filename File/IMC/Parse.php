@@ -244,28 +244,27 @@ class File_IMC_Parse
             // text.  return the text as it is.
             return array($text);
             
-        } else {
-            
-            // find the portions of the text to the left and the
-            // right of the delimiter
-            $left = trim(substr($text, 0, $pos));
-            $right = trim(substr($text, $pos+1, strlen($text)));
-            
-            // should we recursively parse the rest of the text?
-            if ($recurse) {
-                
-                // parse the right portion for the same delimiter, and
-                // merge the results with the left-portion.
-                return array_merge(
-                    array($left),
-                    $this->splitByDelim($right, $delim, $recurse)
-                );
-                
-            } else {
-                // no recursion
-                return array($left, $right);
-            }
         }
+            
+        // find the portions of the text to the left and the
+        // right of the delimiter
+        $left = trim(substr($text, 0, $pos));
+        $right = trim(substr($text, $pos+1, strlen($text)));
+            
+        // should we recursively parse the rest of the text?
+        if ($recurse) {
+                
+            // parse the right portion for the same delimiter, and
+            // merge the results with the left-portion.
+            return array_merge(
+                array($left),
+                $this->splitByDelim($right, $delim, $recurse)
+            );
+                
+        }
+
+        // no recursion
+        return array($left, $right);
     }
 
     /**

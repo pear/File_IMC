@@ -14,43 +14,50 @@ is the use of a factory pattern.  Again, see the examples.
   
  </description>
  <lead>
+  <name>Till Klampaeckel</name>
+  <user>till</user>
+  <email>till@php.net</email>
+  <active>yes</active>
+ </lead>
+ <lead>
   <name>Paul M. Jones</name>
   <user>pmjones</user>
   <email>pjones@ciaweb.net</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
  <lead>
   <name>Marshall Roch</name>
   <user>mroch</user>
   <email>mroch@php.net</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
- <date>2008-09-25</date>
- <time>11:15:32</time>
+ <date>2009-06-29</date>
+ <time>21:00:00</time>
  <version>
-  <release>0.3.0</release>
-  <api>0.3.0</api>
+  <release>0.4.0</release>
+  <api>0.4.0</api>
  </version>
  <stability>
   <release>beta</release>
   <api>beta</api>
  </stability>
- <license uri="http://www.php.net/license">PHP License</license>
- <notes>* Added file_exists() check to prevent E_NOTICE errors in factory if file doesn&apos;t exist (thanks, Davey)
-* Cleaned up error handling to let the user app have control (File_IMC_Build::raiseError() no longer passes a PEAR_ERROR_* to PEAR::raiseError()) (thanks, Greg)
-* Minor documentation additions/modifications (thanks, Greg)
-    
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
+ <notes>
+* #15608: fixed file loading (again)
+* fixed class-/file-naming (a slight BC break)
+* raised dependency to PHP5
+* changed license from PHP to BSD
  </notes>
  <contents>
   <dir name="/">
    <dir name="File">
     <dir name="IMC">
      <dir name="Build">
-      <file name="vCard.php" role="php" />
+      <file name="Vcard.php" role="php" />
      </dir> <!-- //File/IMC/Build -->
      <dir name="Parse">
-      <file name="vCalendar.php" role="php" />
-      <file name="vCard.php" role="php" />
+      <file name="Vcalendar.php" role="php" />
+      <file name="Vcard.php" role="php" />
      </dir> <!-- //File/IMC/Parse -->
      <file name="Build.php" role="php" />
      <file name="Parse.php" role="php" />
@@ -69,15 +76,31 @@ is the use of a factory pattern.  Again, see the examples.
  <dependencies>
   <required>
    <php>
-    <min>4.0.0</min>
+    <min>5.0.0</min>
    </php>
    <pearinstaller>
-    <min>1.4.0b1</min>
+    <min>1.6.0</min>
    </pearinstaller>
   </required>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>0.3</release>
+    <api>0.3</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2003-09-30</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>* Added file_exists() check to prevent E_NOTICE errors in factory if file doesn&apos;t exist (thanks, Davey)
+* Cleaned up error handling to let the user app have control (File_IMC_Build::raiseError() no longer passes a PEAR_ERROR_* to PEAR::raiseError()) (thanks, Greg)
+* Minor documentation additions/modifications (thanks, Greg)
+   </notes>
+  </release>
   <release>
    <version>
     <release>0.2</release>

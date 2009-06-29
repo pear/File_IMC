@@ -80,9 +80,7 @@ require_once 'File/IMC/Parse.php';
  * 
  */
 class File_IMC_Parse_Vcard extends File_IMC_Parse
-{
-    
-    
+{    
     /**
     *
     * Parses a vCard line value identified as being of the "N"

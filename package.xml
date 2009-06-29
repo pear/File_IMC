@@ -52,6 +52,7 @@ is the use of a factory pattern.  Again, see the examples.
   <dir name="/">
    <dir name="File">
     <dir name="IMC">
+     <file name="Exception.php" role="php" />
      <dir name="Build">
       <file name="Vcard.php" role="php" />
      </dir> <!-- //File/IMC/Build -->

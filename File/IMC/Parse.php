@@ -198,7 +198,7 @@ class File_IMC_Parse
         $prevIsBackslash = false;
         
         // are we currently inside a quoted passage?
-        $inQuotes == false;
+        $inQuotes = false;
         
         // the length of the text to be parsed
         $len = strlen($text);
@@ -404,8 +404,7 @@ class File_IMC_Parse
     * 
     * @todo fix missing colon = skip line
     * 
-    */
-    
+    */    
     function _fromArray($source, $decode_qp = true)
     {
         $parsed = $this->_parseBlock($source);

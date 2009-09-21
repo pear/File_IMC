@@ -11,12 +11,12 @@
  * send a note to license@php.net so we can mail you a copy immediately.
  *
  * @category  File_Formats
- * @package   Contact_Vcard_Parse
+ * @package   File_IMC
  * @author    Till Klampaeckel <till@php.net>
  * @copyright Copyright (c) 2007 Contaxis Limited
  * @license   http://www.php.net/license/2_02.txt  PHP License 2.0
  * @version   CVS: $Id$
- * @link      http://pear.php.net/package/Contact_Vcard_Parse
+ * @link      http://pear.php.net/package/File_IMC
  */
 
 /**
@@ -26,23 +26,23 @@
 require_once 'PHPUnit/Framework/TestCase.php';
 
 /**
- * Contact_Vcard_Parse
+ * File_IMC
  */
-require_once "Contact/Vcard/Parse.php";
+require_once "File/IMC.php";
 
 /**
- * Tests for Contact_Vcard_Parse.
+ * Tests for File_IMC.
  *
  * @category  File_Formats
- * @package   Contact_Vcard_Parse
+ * @package   File_IMC
  * @author    Till Klampaeckel <till@php.net>
  * @copyright Copyright (c) 2007 Contaxis Limited
  * @license   http://www.php.net/license/2_02.txt  PHP License 2.0
  * @version   Release: @package_version@
- * @link      http://pear.php.net/package/Contact_Vcard_Parse
+ * @link      http://pear.php.net/package/File_IMC
  * @todo      Make protected functions dataproviders.
  */
-class ContactVcardParseTest extends PHPUnit_Framework_TestCase
+class FileIMCTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var string
@@ -51,7 +51,7 @@ class ContactVcardParseTest extends PHPUnit_Framework_TestCase
     protected $vcard;
 
     /**
-     * @var Contact_Vcard_Parse
+     * @var File_IMC
      * @see self::setUp()
      */
     protected $parser;
@@ -93,7 +93,7 @@ class ContactVcardParseTest extends PHPUnit_Framework_TestCase
             $suffix . "\n\r" .
             "END:VCARD";
 
-        $this->parser = new Contact_Vcard_Parse();
+        $this->parser = File_IMC::factory('parse');
     }
 
     /**

@@ -286,7 +286,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     *
     * @return void
     */
-    public function setName($family, $given, $addl, $prefix, $suffix)
+    public function setName($family, $given, $addl = '', $prefix = '', $suffix = '')
     {
         $this->autoparam = 'N';
         $this->setValue('N', 0, FILE_IMC::VCARD_N_FAMILY, $family);

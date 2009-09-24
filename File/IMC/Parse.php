@@ -356,8 +356,9 @@ class File_IMC_Parse
     *
     * @param array Array of lines in the IMC file
     *
+    * @return array
     */
-    protected function _parseBlock(&$source)
+    protected function _parseBlock(array $source)
     {
         $max = count($source);
 
@@ -411,7 +412,7 @@ class File_IMC_Parse
                 // the typedef
                 $func = '_parse' . strtoupper($typedef);
 
-                if (method_exists(&$this, $func)) {
+                if (method_exists($this, $func)) {
                     $value = $this->$func($right);
                 } else {
 

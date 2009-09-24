@@ -159,7 +159,7 @@ class File_IMC
         $className = 'File_IMC_Build_'. $format;
 
         if (!class_exists($className)) {
-            include_once $fileName;
+            @include_once $fileName;
         }
 
         if (!class_exists($className)) {
@@ -203,7 +203,7 @@ class File_IMC
         $className = 'File_IMC_Parse_'. $format;
 
         if (!class_exists($className)) {
-            include_once $fileName;
+            @include_once $fileName;
         }
 
         if (!class_exists($className)) {

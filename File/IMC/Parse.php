@@ -73,14 +73,14 @@ class File_IMC_Parse
     * Reads a file for parsing, then sends it to $this->fromText()
     * and returns the results.
     *
-    * @param array $filename The name of the file to read
+    * @param string $filename The name of the file to read
     *
     * @return array An array of information extracted from the file.
     *
     * @see self::fromText()
     * @see self::_fromArray()
     */
-    public function fromFile(array $filename, $decode_qp = true)
+    public function fromFile($filename, $decode_qp = true)
     {
         // get the file data
         $text = implode('', file($filename));

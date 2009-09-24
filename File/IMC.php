@@ -49,27 +49,26 @@
 require_once 'File/IMC/Exception.php';
 
 /**
-* 
 * This class handles vCard and vCalendar files, formats designed by the
 * Internet Mail Consortium (IMC).
 *
-* vCard automates the exchange of personal information typically found 
+* vCard automates the exchange of personal information typically found
 * on a traditional business card. vCard is used in applications such as
-* Internet mail, voice mail, Web browsers, telephony applications, call 
-* centers, video conferencing, PIMs (Personal Information Managers), 
-* PDAs (Personal Data Assistants), pagers, fax, office equipment, and 
+* Internet mail, voice mail, Web browsers, telephony applications, call
+* centers, video conferencing, PIMs (Personal Information Managers),
+* PDAs (Personal Data Assistants), pagers, fax, office equipment, and
 * smart cards.
 *
-* vCalendar defines a transport and platform-independent format for 
-* exchanging calendaring and scheduling information in an easy, automated, 
-* and consistent manner. It captures information about event and "to-do" 
-* items that are normally used by applications such as a personal 
-* information managers (PIMs) and group schedulers. Programs that use 
-* vCalendar can exchange important data about events so that you can 
+* vCalendar defines a transport and platform-independent format for
+* exchanging calendaring and scheduling information in an easy, automated,
+* and consistent manner. It captures information about event and "to-do"
+* items that are normally used by applications such as a personal
+* information managers (PIMs) and group schedulers. Programs that use
+* vCalendar can exchange important data about events so that you can
 * schedule meetings with anyone who has a vCalendar-aware program.
 *
-* This class is capable of building and parsing vCard 2.1, vCard 3.0, and 
-* vCalendar files.  The vCard code was moved from Contact_Vcard_Build 
+* This class is capable of building and parsing vCard 2.1, vCard 3.0, and
+* vCalendar files.  The vCard code was moved from Contact_Vcard_Build
 * and Contact_Vcard_Parse, and the API remains basically the same.
 * The only difference is that this package uses a factory pattern:
 *
@@ -90,10 +89,9 @@ require_once 'File/IMC/Exception.php';
 * @author Paul M. Jones <pmjones@ciaweb.net>
 *
 * @author Marshall Roch <mroch@php.net>
-* 
 */
 class File_IMC
-{    
+{
     /**
      * Constants for File_IMC errors.
      * @global
@@ -104,7 +102,7 @@ class File_IMC
     const ERROR_INVALID_VCARD_VERSION = 103;
     const ERROR_PARAM_NOT_SET         = 104;
     const ERROR_INVALID_ITERATION     = 105;
-    
+
     /**
      * Constants for File_IMC vCard "N" component positions.
      * @global
@@ -114,7 +112,7 @@ class File_IMC
     const VCARD_N_ADDL   = 2;
     const VCARD_N_PREFIX = 3;
     const VCARD_N_SUFFIX = 4;
-    
+
     /**
      * Constants for File_IMC vCard "ADR" component positions.
      * @global
@@ -126,8 +124,7 @@ class File_IMC
     const VCARD_ADR_REGION   = 4;
     const VCARD_ADR_POSTCODE = 5;
     const VCARD_ADR_COUNTRY  = 6;
-    
-    
+
     /**
      * Constants for File_IMC vCard "GEO" component positions.
      * @global
@@ -142,8 +139,9 @@ class File_IMC
     * parameter passed. For example, File_IMC::parse('vCard') creates
     * a new object to parse a vCard file.
     *
-    * @param string Type of file to parse, vCard or vCalendar
-    * 
+    * @param string $format  Type of file to parse, vCard or vCalendar
+    * @param mixed  $version Optionally, the version.
+    *
     * @return mixed
     * @throws File_IMC_Exception In case the driver is not found/available.
     */
@@ -159,7 +157,7 @@ class File_IMC
 
         $fileName  = 'File/IMC/Build/'. $format . '.php';
         $className = 'File_IMC_Build_'. $format;
-        
+
         if (!class_exists($className)) {
             include_once $fileName;
         }
@@ -171,16 +169,15 @@ class File_IMC
         }
 
         if ($version !== null) {
-            $class = new $className($version);    
+            $class = new $className($version);
         } else {
             $class = new $className;
         }
         return $class;
     }
-    
-    
+
     /**
-    * 
+    *
     * Parser factory
     *
     * Creates an instance of the correct parser class, based on the
@@ -188,7 +185,7 @@ class File_IMC
     * a new object to parse a vCard file.
     *
     * @param string Type of file to parse, vCard or vCalendar
-    * 
+    *
     * @return mixed
     * @throws File_IMC_Exception If no parse is found/available.
     */
@@ -204,17 +201,16 @@ class File_IMC
 
         $fileName  = 'File/IMC/Parse/'. $format . '.php';
         $className = 'File_IMC_Parse_'. $format;
-        
+
         if (!class_exists($className)) {
             include_once $fileName;
         }
-        
+
         if (!class_exists($className)) {
             throw new File_IMC_Exception(
-                'No parser driver exists for format: ' . $format, 
+                'No parser driver exists for format: ' . $format,
                 self::ERROR_INVALID_DRIVER);
         }
-        
         return new $className;
-    }    
+    }
 }

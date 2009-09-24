@@ -52,27 +52,22 @@
 * File_IMC_Parse_vCard.
 *
 * @author Paul M. Jones <pmjones@ciaweb.net>
-* 
+*
 * @package File_IMC
-* 
 */
-
 class File_IMC_Parse
 {
     /**
-    * 
     * Keeps track of the current line being parsed
     *
     * Starts at -1 so that the first line parsed is 0, since
     * _parseBlock() advances the counter by 1 at the beginning
     *
-    * @see _parseBlock()
-    * 
+    * @see self::_parseBlock()
+    *
     * @var int
-    * 
     */
-
-    var $count = -1;
+    protected $count = -1;
 
     /**
     * Reads a file for parsing, then sends it to $this->fromText()
@@ -82,8 +77,8 @@ class File_IMC_Parse
     *
     * @return array An array of information extracted from the file.
     *
-    * @see fromText()
-    * @see _fromArray()
+    * @see self::fromText()
+    * @see self::_fromArray()
     */
     public function fromFile(array $filename, $decode_qp = true)
     {
@@ -102,7 +97,7 @@ class File_IMC_Parse
     *
     * @return array An array of information extracted from the source text.
     *
-    * @see _fromArray()
+    * @see self::_fromArray()
     */
     public function fromText($text, $decode_qp = true)
     {
@@ -250,7 +245,7 @@ class File_IMC_Parse
     *
     * @return string|array An array of values, or a single string.
     *
-    * @see splitByDelim()
+    * @see self::splitByDelim()
     */
     public function splitBySemi($text, $recurse = true)
     {
@@ -268,7 +263,7 @@ class File_IMC_Parse
     *
     * @return string|array An array of values, or a single string.
     *
-    * @see splitByDelim()
+    * @see self::splitByDelim()
     */
     public function splitByComma($text, $recurse = true)
     {
@@ -447,13 +442,13 @@ class File_IMC_Parse
     * identified as a prefix-with-dot to the Type-Definition; e.g.,
     * Group.ADR or Group.ORG).
     *
-    * @param array Array containing left side (before colon) split by 
-    *              semi-colon from a line.
+    * @param array $text Array containing left side (before colon) split by
+    *                    semi-colon from a line.
     *
     * @return string The group for the line.
     *
-    * @see _getTypeDef()
-    * @see splitBySemi()
+    * @see self::_getTypeDef()
+    * @see self::splitBySemi()
     */
     protected function _getGroup(array $text)
     {
@@ -467,10 +462,10 @@ class File_IMC_Parse
         if ($pos === false) {
             // no group
             return '';
-        } else {
-            // yes, return the group name
-            return substr($tmp, 0, $pos);
         }
+
+        // yes, return the group name
+        return substr($tmp, 0, $pos);
     }
 
     /**
@@ -483,8 +478,8 @@ class File_IMC_Parse
     *
     * @return string The type definition for the line.
     *
-    * @see _getGroup()
-    * @see splitBySemi()
+    * @see self::_getGroup()
+    * @see self::splitBySemi()
     */
     protected function _getTypeDef(array $text)
     {
@@ -498,10 +493,10 @@ class File_IMC_Parse
         if ($pos === false) {
             // no group
             return $tmp;
-        } else {
-            // yes, return the typedef without the group name
-            return substr($tmp, $pos + 1);
         }
+
+        // yes, return the typedef without the group name
+        return substr($tmp, $pos + 1);
     }
 
     /**
@@ -512,7 +507,7 @@ class File_IMC_Parse
     *
     * @return array An array of parameters.
     *
-    * @see splitBySemi()
+    * @see self::splitBySemi()
     */
     protected function _getParams(array $text)
     {

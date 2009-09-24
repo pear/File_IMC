@@ -1,5 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */ 
+/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */
 /**+----------------------------------------------------------------------+
  * | PHP version 5                                                        |
  * +----------------------------------------------------------------------+
@@ -48,39 +48,36 @@
 require_once 'File/IMC/Parse.php';
 
 /**
- * 
  * This class is a parser for vCards.
  *
  * Parses vCard 2.1 and 3.0 sources from file or text into a structured
  * array.
- * 
+ *
  * Usage:
- * 
  * <code>
  *     // include this class file
  *     require_once 'File/IMC.php';
- *     
+ *
  *     // instantiate a parser object
  *     $parse = new File_IMC::parse('vCard');
- *     
+ *
  *     // parse a vCard file and store the data
  *     // in $cardinfo
  *     $cardinfo = $parse->fromFile('sample.vcf');
- *     
+ *
  *     // view the card info array
  *     echo '<pre>';
  *     print_r($cardinfo);
  *     echo '</pre>';
  * </code>
- * 
  *
  * @author Paul M. Jones <pmjones@ciaweb.net>
  *
  * @package File_IMC
- * 
+ *
  */
 class File_IMC_Parse_Vcard extends File_IMC_Parse
-{    
+{
     /**
     *
     * Parses a vCard line value identified as being of the "N"
@@ -88,7 +85,7 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
-    * 
+    *
     * @return array An array of key-value pairs where the key is the
     * portion-name and the value is the portion-value.  The value itself
     * may be an array as well if multiple comma-separated values were
@@ -107,16 +104,14 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
             $this->splitByComma($tmp[FILE_IMC::VCARD_N_SUFFIX])
         );
     }
-    
-    
+
     /**
-    *
     * Parses a vCard line value identified as being of the "ADR"
     * (structured address) type-defintion.
     *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
-    * 
+    *
     * @return array An array of key-value pairs where the key is the
     * portion-name and the value is the portion-value.  The value itself
     * may be an array as well if multiple comma-separated values were
@@ -137,16 +132,14 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
             $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_COUNTRY])
         );
     }
-    
-    
+
     /**
-    * 
     * Parses a vCard line value identified as being of the "NICKNAME"
     * (informal or descriptive name) type-defintion.
     *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
-    * 
+    *
     * @return array An array of nicknames.
     *
     */
@@ -154,16 +147,14 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     {
         return array($this->splitByComma($text));
     }
-    
-    
+
     /**
-    * 
     * Parses a vCard line value identified as being of the "ORG"
     * (organizational info) type-defintion.
     *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
-    * 
+    *
     * @return array An array of organizations; each element of the array
     * is itself an array, which indicates primary organization and
     * sub-organizations.
@@ -176,19 +167,16 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
         foreach ($tmp as $val) {
             $list[] = array($val);
         }
-        
         return $list;
     }
-    
-    
+
     /**
-    * 
     * Parses a vCard line value identified as being of the "CATEGORIES"
     * (card-category) type-defintion.
     *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
-    * 
+    *
     * @return mixed An array of categories.
     *
     */
@@ -196,19 +184,16 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     {
         return array($this->splitByComma($text));
     }
-    
-    
+
     /**
-    * 
     * Parses a vCard line value identified as being of the "GEO"
     * (geographic coordinate) type-defintion.
     *
     * @param string $text The right-part (after-the-colon part) of a
     * vCard line.
-    * 
-    * @return mixed An array of lat-lon geocoords.
     *
-    */    
+    * @return mixed An array of lat-lon geocoords.
+    */
     protected function _parseGEO($text)
     {
     	// array_pad makes sure there are the right number of elements

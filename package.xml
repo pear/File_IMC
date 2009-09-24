@@ -43,9 +43,10 @@ is the use of a factory pattern.  Again, see the examples.
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
  <notes>
-* CS fixes
-* implemented visibility
-* File_IMC_Build is now an abstract class
+ * CS fixes
+ * implemented visibility in all classes
+ * File_IMC_Build is now an abstract class
+ * File_IMC_Build_Vcard has a fluent interface
 
  </notes>
  <contents>

@@ -280,7 +280,7 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
      */
     public function testExceptionIfNoFormatIsProvided()
     {
-        $foo = new File_IMC::parse('');
+        $foo = File_IMC::parse('');
     }
 
     /**
@@ -288,6 +288,6 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
      */
     public function testExceptionIfInvalidFormatIsProvided()
     {
-        $foo = new File_IMC::parse('bar');
+        $foo = File_IMC::parse('bar');
     }
 }

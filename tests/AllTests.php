@@ -59,7 +59,15 @@ require_once 'PHPUnit/Extensions/PhptTestSuite.php';
  */
 define('File_IMC_DIR_PHPT', dirname(__FILE__));
 
+/**
+ * FileIMCTest
+ */
 require_once 'FileIMCTest.php';
+
+/**
+ * File_IMC_BuildTest
+ */
+require_once 'File_IMC_BuildTest.php';
 
 /**
  * Master Unit Test Suite class for File_IMC
@@ -109,6 +117,7 @@ class File_IMC_AllTests
          * You must add each additional class-level test suite name here
          */
         $suite->addTestSuite('FileIMCTest');
+        $suite->addTestSuite('File_IMC_BuildTest');
 
         /*
          * add PHPT tests

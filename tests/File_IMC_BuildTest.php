@@ -72,7 +72,7 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->vcard = new File_IMC::build('vcard');
+        $this->vcard = File_IMC::build('vcard');
     }
 
     /**
@@ -80,7 +80,7 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
      */
     public function testExceptionIfNoFormatIsProvided()
     {
-        $foo = new File_IMC::build('');
+        $foo = File_IMC::build('');
     }
 
     /**
@@ -88,6 +88,6 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
      */
     public function testExceptionIfInvalidFormatIsProvided()
     {
-        $foo = new File_IMC::build('bar');
+        $foo = File_IMC::build('bar');
     }
 }

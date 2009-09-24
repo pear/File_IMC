@@ -274,4 +274,20 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
         );
         return $data;
     }
+
+    /**
+     * @expectedException File_IMC_Exception
+     */
+    public function testExceptionIfNoFormatIsProvided()
+    {
+        $foo = new File_IMC::parse('');
+    }
+
+    /**
+     * @expectedException File_IMC_Exception
+     */
+    public function testExceptionIfInvalidFormatIsProvided()
+    {
+        $foo = new File_IMC::parse('bar');
+    }
 }

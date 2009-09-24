@@ -73,96 +73,84 @@ class File_IMC_Parse
     */
 
     var $count = -1;
-    
-    
+
     /**
     * Reads a file for parsing, then sends it to $this->fromText()
     * and returns the results.
-    * 
+    *
     * @param array $filename The name of the file to read
-    * 
+    *
     * @return array An array of information extracted from the file.
-    * 
+    *
     * @see fromText()
-    * 
     * @see _fromArray()
-    * 
     */
-    public function fromFile($filename, $decode_qp = true)
+    public function fromFile(array $filename, $decode_qp = true)
     {
         // get the file data
         $text = implode('', file($filename));
-        
+
         // dump to, and get return from, the fromText() method.
         return $this->fromText($text, $decode_qp);
     }
-     
-     
+
     /**
-    * 
     * Prepares a block of text for parsing, then sends it through and
     * returns the results from $this->_fromArray().
-    * 
-    * @param array $text A block of text to read for information.
-    * 
+    *
+    * @param string $text A block of text to read for information.
+    *
     * @return array An array of information extracted from the source text.
-    * 
+    *
     * @see _fromArray()
     */
     public function fromText($text, $decode_qp = true)
     {
         // convert all kinds of line endings to Unix-standard and get
         // rid of double blank lines.
-        $this->convertLineEndings($text);
-        
+        $text = $this->convertLineEndings($text);
+
         // unfold lines.  concat two lines where line 1 ends in \n and
         // line 2 starts with any amount of whitespace.  only removes
         // the first whitespace character, leaves others in place.
         $fold_regex = '(\n)([ |\t])';
-        $text = preg_replace("/$fold_regex/i", "", $text);
-        
+        $text       = preg_replace("/$fold_regex/i", "", $text);
+
         // convert the resulting text to an array of lines
         $lines = explode("\n", $text);
-        
+
         // parse the array of lines and return info
         return $this->_fromArray($lines, $decode_qp);
     }
-    
-    
+
     /**
-    * 
     * Converts line endings in text.
-    * 
+    *
     * Takes any text block and converts all line endings to UNIX
     * standard. DOS line endings are \r\n, Mac are \r, and UNIX is \n.
     * As a side-effect, all double-newlines (\n\n) are converted to a
     * single-newline.
     *
     * NOTE: Acts on the text block in-place; does not return a value.
-    * 
+    *
     * @param string $text The string on which to convert line endings.
-    * 
+    *
     * @return void
     */
-    public function convertLineEndings(&$text)
+    public function convertLineEndings($text)
     {
-        // first, replace \r with \n to fix up from DOS and Mac
+        // first, replace \r\n with \n to fix up from DOS and Mac
+        $text = str_replace("\r\n", "\n", $text);
         $text = str_replace("\r", "\n", $text);
 
-        // now eliminate all instances of double-newlines that result
-        // from having converted \r\n to \n\n (from DOS).  note that
-        // this removes newlines in general, not only if they resulted
-        // from the earlier conversion of \r.
-        $text = str_replace("\n\n", "\n", $text);
+        return $text;
     }
-    
-    
+
     /**
-    * 
     * Splits a string into an array.  Honors backslash-escaped 
     * delimiters, (i.e., splits at ';' not '\;') and double-quotes
     * (will not break inside double-quotes ("")).
-    * 
+    *
     * @param string $text The string to split into an array.
     *
     * @param string $delim Character to split string at.
@@ -170,36 +158,36 @@ class File_IMC_Parse
     * @param bool $recurse If true, recursively parse the entire text
     * for all occurrences of the delimiter; if false, only parse for
     * the first occurrence.  Defaults to true.
-    * 
+    *
     * @return string|array An array of values, or a single string.
     */
     public function splitByDelim($text, $delim, $recurse = true)
     {
         // where in the string is the delimiter?
         $pos = false;
-        
+
         // was the previously-read character a backslash?
         // (used for tracking escaped characters)
         $prevIsBackslash = false;
-        
+
         // are we currently inside a quoted passage?
         $inQuotes = false;
-        
+
         // the length of the text to be parsed
         $len = strlen($text);
-        
+
         // go through the text character by character, find the 
         // first occurrence of the delimiter, save it, and
         // recursively parse the rest of the text
         for ($i = 0; $i < $len; $i++) {
-            
+
             // if the current char is a double-quote, and the
             // previous char was _not_ an escaping backslash,
             // then note that we are now inside a quoted passage.
             if ($text{$i} == '"' && $prevIsBackslash == false) {
                 ($inQuotes == true) ? $inQuotes = false : $inQuotes = true;
             }
-            
+
             // if the current char is the delimiter, and we are _not_
             // inside quotes, and the delimiter has not been backslash-
             // escaped, then note the position of the delimiter and
@@ -207,12 +195,11 @@ class File_IMC_Parse
             if ($text{$i} == $delim &&
                 $inQuotes == false &&
                 $prevIsBackslash == false) {
-                
+
                 $pos = $i;
                 break;
-                
             }
-            
+
             // we have not found quotes, or the delimiter.
             // is the current char an escaping backslash?
             if ($text{$i} == "\\") {
@@ -221,31 +208,27 @@ class File_IMC_Parse
                 $prevIsBackslash = false;
             }
         }
-        
+
         // have we found the delimiter in the text?
         if ($pos === false) {
-        
             // we have not found the delimiter anywhere in the
             // text.  return the text as it is.
             return array($text);
-            
         }
-            
+
         // find the portions of the text to the left and the
         // right of the delimiter
         $left = trim(substr($text, 0, $pos));
         $right = trim(substr($text, $pos+1, strlen($text)));
-            
+
         // should we recursively parse the rest of the text?
         if ($recurse) {
-                
             // parse the right portion for the same delimiter, and
             // merge the results with the left-portion.
             return array_merge(
                 array($left),
                 $this->splitByDelim($right, $delim, $recurse)
             );
-                
         }
 
         // no recursion
@@ -253,11 +236,10 @@ class File_IMC_Parse
     }
 
     /**
-    * 
     * Splits a string into an array at semicolons.
-    * 
+    *
     * @param string $text The string to split into an array.
-    * 
+    *
     * @param bool $convertSingle If splitting the string results in a
     * single array element, return a string instead of a one-element
     * array.
@@ -265,7 +247,7 @@ class File_IMC_Parse
     * @param bool $recurse If true, recursively parse the entire text
     * for all occurrences of the delimiter; if false, only parse for
     * the first occurrence.  Defaults to true.
-    * 
+    *
     * @return string|array An array of values, or a single string.
     *
     * @see splitByDelim()
@@ -276,15 +258,14 @@ class File_IMC_Parse
     }
 
     /**
-    * 
     * Splits a string into an array at commas.
-    * 
+    *
     * @param string $text The string to split into an array.
     *
     * @param bool $recurse If true, recursively parse the entire text
     * for all occurrences of the delimiter; if false, only parse for
     * the first occurrence.  Defaults to true.
-    * 
+    *
     * @return string|array An array of values, or a single string.
     *
     * @see splitByDelim()
@@ -293,8 +274,7 @@ class File_IMC_Parse
     {
         return $this->splitByDelim($text, ",", $recurse);
     }
-    
-    
+
     /**
     *
     * Splits the line into types/parameters and values.
@@ -317,22 +297,20 @@ class File_IMC_Parse
     {
         return $this->splitByDelim($text, ":", $recurse);
     }
-    
-    
+
     /**
-    * 
     * Used to make string human-readable after being a vCard value.
-    * 
+    *
     * Converts...
     *     \; => ;
     *     \, => ,
     *     literal \n => newline
-    * 
+    *
     * @param string|array $text The text to unescape.
-    * 
-    * @return void
+    *
+    * @return mixed
     */
-    public function unescape(&$text)
+    public function unescape($text)
     {
         if (is_array($text)) {
             foreach ($text as $key => $val) {
@@ -351,11 +329,10 @@ class File_IMC_Parse
             $replace = array(':',  ';',  ',',  "\n");
             $text    = str_replace($find, $replace, $text);
         }
+        return $text;
     }
-    
-    
+
     /**
-    * 
     * Parses an array of source lines and returns an array of vCards.
     * Each element of the array is itself an array expressing the types,
     * parameters, and values of each part of the vCard. Processes both
@@ -372,13 +349,11 @@ class File_IMC_Parse
     protected function _fromArray($source, $decode_qp = true)
     {
         $parsed = $this->_parseBlock($source);
-        $this->unescape($parsed);
+        $parsed = $this->unescape($parsed);
         return $parsed;
     }
-    
-    
+
     /**
-    * 
     * Goes through the IMC file, recursively processing BEGIN-END blocks
     *
     * Handles nested blocks, such as vEvents (BEGIN:VEVENT) and vTodos
@@ -390,16 +365,16 @@ class File_IMC_Parse
     protected function _parseBlock(&$source)
     {
         $max = count($source);
-        
+
         for ($this->count++; $this->count < $max; $this->count++) {
-        
+
             $line = $source[$this->count];
-            
+
             // if the line is blank, skip it.
             if (trim($line) == '') {
                 continue;
             }
-            
+
             // get the left and right portions. The part
             // to the left of the colon is the type and parameters;
             // the part to the right of the colon is the value data.
@@ -407,48 +382,49 @@ class File_IMC_Parse
                 // colon not found, skip whole line
                 continue;
             }
-            
+
             if (strtoupper($left) == "BEGIN") {
-                
+
                 $block[$right][] = $this->_parseBlock($source);
-                                
+
             } elseif (strtoupper($left) == "END") {
 
                 return $block;
-            
+
             } else {
-                    
+
                 // we're not on an ending line, so collect info from
                 // this line into the current card. split the
                 // left-portion of the line into a type-definition
                 // (the kind of information) and parameters for the
                 // type.
-                $tmp = $this->splitBySemi($left);
-                $group = $this->_getGroup($tmp);
+                $tmp     = $this->splitBySemi($left);
+                $group   = $this->_getGroup($tmp);
                 $typedef = $this->_getTypeDef($tmp);
-                $params = $this->_getParams($tmp);
+                $params  = $this->_getParams($tmp);
 
                 // if we are decoding quoted-printable, do so now.
                 // QUOTED-PRINTABLE is not allowed in version 3.0,
                 // but we don't check for versioning, so we do it
                 // regardless.  ;-)
-                $this->_decode_qp($params, $right);
-                    
+                $resp = $this->_decode_qp($params, $right);
+
+                $params = $resp[0];
+                $right  = $resp[1];
+
                 // now get the value-data from the line, based on
                 // the typedef
                 $func = '_parse' . strtoupper($typedef);
-                
+
                 if (method_exists(&$this, $func)) {
-                
                     $value = $this->$func($right);
-                    
                 } else {
-                
+
                     // by default, just grab the plain value. keep
                     // as an array to make sure *all* values are
                     // arrays.  for consistency. ;-)
                     $value = array(array($right));
-                    
+
                 }
 
                 // add the type, parameters, and value to the
@@ -465,30 +441,28 @@ class File_IMC_Parse
         }
         return $block;
     }
-    
-    
+
     /**
-    * 
     * Takes a line and extracts the Group for the line (a group is
     * identified as a prefix-with-dot to the Type-Definition; e.g.,
     * Group.ADR or Group.ORG).
     *
     * @param array Array containing left side (before colon) split by 
     *              semi-colon from a line.
-    * 
+    *
     * @return string The group for the line.
-    * 
+    *
     * @see _getTypeDef()
     * @see splitBySemi()
     */
-    protected function _getGroup($text)
+    protected function _getGroup(array $text)
     {
         // find the first element (the typedef)
         $tmp = $text[0];
-        
+
         // find a dot in the typedef
         $pos = strpos($tmp, '.');
-        
+
         // is there a '.' in the typedef?
         if ($pos === false) {
             // no group
@@ -498,30 +472,28 @@ class File_IMC_Parse
             return substr($tmp, 0, $pos);
         }
     }
-    
-    
+
     /**
-    * 
     * Takes a line and extracts the Type-Definition for the line (not
     * including the Group portion; e.g., in Group.ADR, only ADR is
     * returned).
     *
-    * @param array Array containing left side (before colon) split by 
-    *              semi-colon from a line.
-    * 
+    * @param array $text Array containing left side (before colon) split by
+    *                    semi-colon from a line.
+    *
     * @return string The type definition for the line.
-    * 
+    *
     * @see _getGroup()
     * @see splitBySemi()
     */
-    protected function _getTypeDef($text)
+    protected function _getTypeDef(array $text)
     {
         // find the first element (the typedef)
         $tmp = $text[0];
-        
+
         // find a dot in the typedef
         $pos = strpos($tmp, '.');
-        
+
         // is there a '.' in the typedef?
         if ($pos === false) {
             // no group
@@ -531,53 +503,51 @@ class File_IMC_Parse
             return substr($tmp, $pos + 1);
         }
     }
-    
-    
+
     /**
-    * 
     * Finds the Type-Definition parameters for a line.
-    * 
+    *
     * @param array Array containing left side (before colon) split by 
     *              semi-colon from a line.
-    * 
+    *
     * @return array An array of parameters.
     *
     * @see splitBySemi()
     */
-    protected function _getParams($text)
-    {   
+    protected function _getParams(array $text)
+    {
         // drop the first element of the array (the type-definition)
         array_shift($text);
 
         // set up an array to retain the parameters, if any
         $params = array();
-        
+
         // loop through each parameter.  the params may be in the format...
         // "TYPE=type1,type2,type3"
         //    ...or...
         // "TYPE=type1;TYPE=type2;TYPE=type3"
         foreach ($text as $full) {
-            
+
             // split the full parameter at the equal sign so we can tell
             // the parameter name from the parameter value
             $tmp = explode("=", $full, 2);
-            
+
             // the key is the left portion of the parameter (before
             // '='). if in 2.1 format, the key may in fact be the
             // parameter value, not the parameter name.
             $key = strtoupper(trim($tmp[0]));
-            
+
             // get the parameter name by checking to see if it's in
             // vCard 2.1 or 3.0 format.
             $name = $this->_getParamName($key);
-            
+
             // list of all parameter values
             $listall = trim($tmp[1]);
-            
+
             // if there is a value-list for this parameter, they are
             // separated by commas, so split them out too.
             $list = $this->splitByComma($listall);
-            
+
             // now loop through each value in the parameter and retain
             // it.  if the value is blank, that means it's a 2.1-style
             // param, and the key itself is the value.
@@ -590,7 +560,7 @@ class File_IMC_Parse
                     $params[$name][] = $key;
                 }
             }
-            
+
             // if, after all this, there are no parameter values for the
             // parameter name, retain no info about the parameter (saves
             // ram and checking-time later).
@@ -598,26 +568,24 @@ class File_IMC_Parse
                 unset($params[$name]);
             }
         }
-        
+
         // return the parameters array.
         return $params;
     }
-    
-    
+
     /**
-    * 
     * Returns the parameter name for parameters given without names.
     *
     * The vCard 2.1 specification allows parameter values without a
     * name. The parameter name is then determined from the unique
     * parameter value.
-    * 
+    *
     * Shamelessly lifted from Frank Hellwig <frank@hellwig.org> and his
     * vCard PHP project <http://vcardphp.sourceforge.net>.
-    * 
+    *
     * @param string $value The first element in a parameter name-value
     * pair.
-    * 
+    *
     * @return string The proper parameter name (TYPE, ENCODING, or
     * VALUE).
     */
@@ -636,22 +604,22 @@ class File_IMC_Parse
             'WAVE', 'AIFF', 'PCM',
             'X509', 'PGP'
         );
-        
+
         // CONTENT-ID added by pmj
         static $values = array (
             'INLINE', 'URL', 'CID', 'CONTENT-ID'
         );
-        
+
         // 8BIT added by pmj
         static $encodings = array (
             '7BIT', '8BIT', 'QUOTED-PRINTABLE', 'BASE64'
         );
-        
+
         // changed by pmj to the following so that the name defaults to
         // whatever the original value was.  Frank Hellwig's original
         // code was "$name = 'UNKNOWN'".
         $name = $value;
-        
+
         if (in_array($value, $types)) {
             $name = 'TYPE';
         } elseif (in_array($value, $values)) {
@@ -659,34 +627,31 @@ class File_IMC_Parse
         } elseif (in_array($value, $encodings)) {
             $name = 'ENCODING';
         }
-        
+
         return $name;
     }
-    
-    
+
     /**
-    * 
     * Looks at a line's parameters; if one of them is
     * ENCODING[] => QUOTED-PRINTABLE then decode the text in-place.
-    * 
+    *
     * @param array $params A parameter array from a vCard line.
-    * 
+    *
     * @param string $text A right-part (after-the-colon part) from a line.
-    * 
+    *
     * @return void
-    * 
     */
-    protected function _decode_qp(&$params, &$text)
+    protected function _decode_qp(array $params, $text)
     {
         // loop through each parameter
         foreach ($params as $param_key => $param_val) {
-            
+
             // check to see if it's an encoding param
             if (trim(strtoupper($param_key)) == 'ENCODING') {
-            
+
                 // loop through each encoding param value
                 foreach ($param_val as $enc_key => $enc_val) {
-                
+
                     // if any of the values are QP, decode the text
                     // in-place and return
                     if (trim(strtoupper($enc_val)) == 'QUOTED-PRINTABLE') {
@@ -696,5 +661,6 @@ class File_IMC_Parse
                 }
             }
         }
+        return array($params, $text);
     }
 }

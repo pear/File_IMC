@@ -1,11 +1,11 @@
 <?php
 /**
  * Master Unit Test Suite file for File_IMC
- * 
- * This top-level test suite file organizes 
- * all class test suite files, 
- * so that the full suite can be run 
- * by PhpUnit or via "pear run-tests -u". 
+ *
+ * This top-level test suite file organizes
+ * all class test suite files,
+ * so that the full suite can be run
+ * by PhpUnit or via "pear run-tests -u".
  *
  * PHP version 5
  *
@@ -59,13 +59,15 @@ require_once 'PHPUnit/Extensions/PhptTestSuite.php';
  */
 define('File_IMC_DIR_PHPT', dirname(__FILE__));
 
+require_once 'FileIMCTest.php';
+
 /**
  * Master Unit Test Suite class for File_IMC
- * 
- * This top-level test suite class organizes 
- * all class test suite files, 
- * so that the full suite can be run 
- * by PhpUnit or via "pear run-tests -up File_IMC". 
+ *
+ * This top-level test suite class organizes
+ * all class test suite files,
+ * so that the full suite can be run
+ * by PhpUnit or via "pear run-tests -up File_IMC".
  *
  * @category   File
  * @package    File_IMC
@@ -106,7 +108,7 @@ class File_IMC_AllTests
         /*
          * You must add each additional class-level test suite name here
          */
-        // there are no PhpUnit test files... only PHPTs.. so nothing is listed here
+        $suite->addTestSuite('FileIMCTest');
 
         /*
          * add PHPT tests

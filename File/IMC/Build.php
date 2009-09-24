@@ -120,7 +120,7 @@ abstract class File_IMC_Build
     *
     * @return mixed Void on success, or a PEAR_Error object on failure.
     */
-    abstract function setVersion($text);
+    abstract function setVersion($text = '3.0');
 
     /**
     *

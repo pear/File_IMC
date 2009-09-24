@@ -87,11 +87,8 @@ class File_IMC_Parse
     * 
     * @see _fromArray()
     * 
-    * @access public
-    * 
     */
-
-    function fromFile($filename, $decode_qp = true)
+    public function fromFile($filename, $decode_qp = true)
     {
         // get the file data
         $text = implode('', file($filename));
@@ -111,12 +108,8 @@ class File_IMC_Parse
     * @return array An array of information extracted from the source text.
     * 
     * @see _fromArray()
-    * 
-    * @access public
-    * 
     */
-
-    function fromText($text, $decode_qp = true) 
+    public function fromText($text, $decode_qp = true)
     {
         // convert all kinds of line endings to Unix-standard and get
         // rid of double blank lines.
@@ -150,12 +143,8 @@ class File_IMC_Parse
     * @param string $text The string on which to convert line endings.
     * 
     * @return void
-    * 
-    * @access public
-    * 
     */
-    
-    function convertLineEndings(&$text)
+    public function convertLineEndings(&$text)
     {
         // first, replace \r with \n to fix up from DOS and Mac
         $text = str_replace("\r", "\n", $text);
@@ -183,12 +172,8 @@ class File_IMC_Parse
     * the first occurrence.  Defaults to true.
     * 
     * @return string|array An array of values, or a single string.
-    * 
-    * @access public
-    * 
     */
-    
-    function splitByDelim($text, $delim, $recurse = true)
+    public function splitByDelim($text, $delim, $recurse = true)
     {
         // where in the string is the delimiter?
         $pos = false;
@@ -282,19 +267,14 @@ class File_IMC_Parse
     * the first occurrence.  Defaults to true.
     * 
     * @return string|array An array of values, or a single string.
-    * 
-    * @access public
     *
     * @see splitByDelim()
-    * 
     */
-
-    function splitBySemi($text, $recurse = true)
+    public function splitBySemi($text, $recurse = true)
     {
         return $this->splitByDelim($text, ";", $recurse);
     }
-    
-    
+
     /**
     * 
     * Splits a string into an array at commas.
@@ -306,14 +286,10 @@ class File_IMC_Parse
     * the first occurrence.  Defaults to true.
     * 
     * @return string|array An array of values, or a single string.
-    * 
-    * @access public
     *
     * @see splitByDelim()
-    * 
     */
-
-    function splitByComma($text, $recurse = true)
+    public function splitByComma($text, $recurse = true)
     {
         return $this->splitByDelim($text, ",", $recurse);
     }
@@ -336,12 +312,8 @@ class File_IMC_Parse
     * @return array The first element contains types and parameters
     * (before the colon). The second element contains the line's value
     * (after the colon).
-    *
-    * @access public
-    *
     */
-    
-    function splitByColon($text, $recurse = false)
+    public function splitByColon($text, $recurse = false)
     {
         return $this->splitByDelim($text, ":", $recurse);
     }
@@ -359,12 +331,8 @@ class File_IMC_Parse
     * @param string|array $text The text to unescape.
     * 
     * @return void
-    * 
-    * @access public
-    * 
     */
-
-    function unescape(&$text)
+    public function unescape(&$text)
     {
         if (is_array($text)) {
             foreach ($text as $key => $val) {
@@ -393,18 +361,15 @@ class File_IMC_Parse
     * parameters, and values of each part of the vCard. Processes both
     * 2.1 and 3.0 vCard sources.
     *
-    * @access private
-    *
     * @param array $source An array of lines to be read for vCard
     * information.
-    * 
+    *
     * @return array An array of of vCard information extracted from the
     * source array.
-    * 
+    *
     * @todo fix missing colon = skip line
-    * 
-    */    
-    function _fromArray($source, $decode_qp = true)
+    */
+    protected function _fromArray($source, $decode_qp = true)
     {
         $parsed = $this->_parseBlock($source);
         $this->unescape($parsed);
@@ -421,11 +386,8 @@ class File_IMC_Parse
     *
     * @param array Array of lines in the IMC file
     *
-    * @access private
-    * 
     */
-
-    function _parseBlock(&$source)
+    protected function _parseBlock(&$source)
     {
         $max = count($source);
         
@@ -516,14 +478,10 @@ class File_IMC_Parse
     * 
     * @return string The group for the line.
     * 
-    * @access private
-    *
     * @see _getTypeDef()
     * @see splitBySemi()
-    * 
     */
-
-    function _getGroup($text)
+    protected function _getGroup($text)
     {
         // find the first element (the typedef)
         $tmp = $text[0];
@@ -553,14 +511,10 @@ class File_IMC_Parse
     * 
     * @return string The type definition for the line.
     * 
-    * @access private
-    *
     * @see _getGroup()
     * @see splitBySemi()
-    * 
     */
-
-    function _getTypeDef($text)
+    protected function _getTypeDef($text)
     {
         // find the first element (the typedef)
         $tmp = $text[0];
@@ -587,14 +541,10 @@ class File_IMC_Parse
     *              semi-colon from a line.
     * 
     * @return array An array of parameters.
-    * 
-    * @access private
-    * 
-    * @see splitBySemi()
     *
+    * @see splitBySemi()
     */
-
-    function _getParams($text)
+    protected function _getParams($text)
     {   
         // drop the first element of the array (the type-definition)
         array_shift($text);
@@ -670,12 +620,8 @@ class File_IMC_Parse
     * 
     * @return string The proper parameter name (TYPE, ENCODING, or
     * VALUE).
-    * 
-    * @access private
-    * 
     */
-
-    function _getParamName($value)
+    protected function _getParamName($value)
     {
         static $types = array (
             'DOM', 'INTL', 'POSTAL', 'PARCEL','HOME', 'WORK',
@@ -729,11 +675,8 @@ class File_IMC_Parse
     * 
     * @return void
     * 
-    * @access private
-    * 
     */
-    
-    function _decode_qp(&$params, &$text)
+    protected function _decode_qp(&$params, &$text)
     {
         // loop through each parameter
         foreach ($params as $param_key => $param_val) {
@@ -755,5 +698,3 @@ class File_IMC_Parse
         }
     }
 }
-
-?>

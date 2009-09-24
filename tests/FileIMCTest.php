@@ -125,7 +125,7 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    protected function getPropertyGroupVcard()
+    public static function getPropertyGroupVcard()
     {
         $vcard  = "BEGIN:VCARD" . "\n";
         $vcard .= "VERSION:3.0" . "\n";

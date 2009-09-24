@@ -123,7 +123,7 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
     /**
      * @link http://bugs.horde.org/view.php?actionID=view_file&type=vcf&file=SFMA.vcf&ticket=8366
      *
-     * @return string
+     * @return array
      */
     protected function getPropertyGroupVcard()
     {
@@ -141,13 +141,20 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
         $vcard .= "X-ABUID:8291364B-FCBF-4577-8294-166AC0E8B9C7\:ABPerson" . "\n";
         $vcard .= "END:VCARD";
 
-        return $vcard;
+        return array(
+            array($vcard),
+        );
     }
 
     /**
-     * This test doesn't make any sense.
+     * This test doesn't make any sense (yet).
+     *
+     * @param  string $vcard
+     * @return void
+     *
+     * @dataProvider getPropertyGroupVcard
      */
-    public function testPropertyGroups()
+    public function testPropertyGroups($vcard)
     {
         $this->markTestIncomplete("Property groups are not yet implemented and this test didn't make any sense!");
         return;
@@ -266,24 +273,5 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
             array('setName', 'getName', array('Doe', 'John')),
         );
         return $data;
-    }
-
-    /**
-     * @dataProvider provideInterfaceTestData()
-     */
-    public function testFluentInterface($set, $get, $value)
-    {
-        $this->markTestIncomplete("This will have to wait.");
-
-        $build = File_IMC::build('vcard');
-
-        if (is_array($value)) {
-            $object = call_user_func_array(array($build, $set), $value);
-        } else {
-            $object = call_user_func(array($build, $set), $value);
-        }
-        $resp = call_user_func(array($object, $get));
-
-        $this->assertSame($value, $resp['value'][$type][0][0][0]);
     }
 }

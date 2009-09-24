@@ -25,6 +25,11 @@
  */
 require_once 'PHPUnit/Framework/TestCase.php';
 
+set_include_path(
+    realpath(dirname(__FILE__) . '/../')
+    . ':' . get_include_path()
+);
+
 /**
  * File_IMC
  */
@@ -93,7 +98,7 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
             $suffix . "\n\r" .
             "END:VCARD";
 
-        $this->parser = File_IMC::factory('parse');
+        $this->parser = File_IMC::parse('vcard');
     }
 
     /**
@@ -173,7 +178,8 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
     {
         $this->markTestIncomplete("Not done yet!");
 
-        list($ret) = $this->parser->fromText($this->vcard);
+        $ret = $this->parser->fromText($this->vcard);
+        //var_dump($ret); exit;
 
         list($data) = $ret["A.N"];
 
@@ -191,37 +197,39 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
      */
     public static function exampleProvider()
     {
-        $vcard  = self::getExampleVcard();
-        $parser = new Contact_Vcard_Parse();
-        $parsed = $parser->fromText($vcard);
+        $data   = self::getExampleVcard();
+        $parser = File_IMC::parse('vcard');
+        $parsed = $parser->fromText($data);
+
+        $vcard = $parsed['VCARD'][0];
 
         $data = array(
 
-            array('3.0', $parsed[0]['VERSION'][0]['value'][0][0]),
-            array('Shagnasty', $parsed[0]['N'][0]['value'][0][0]),
-            array('Bolivar', $parsed[0]['N'][0]['value'][1][0]),
-            array('Odysseus', $parsed[0]['N'][0]['value'][2][0]),
-            array('Mr.', $parsed[0]['N'][0]['value'][3][0]),
-            array('III', $parsed[0]['N'][0]['value'][4][0]),
-            array('B.S.', $parsed[0]['N'][0]['value'][4][1]),
-            array('Bolivar Shagnasty', $parsed[0]['FN'][0]['value'][0][0]),
+            array('3.0',               $vcard['VERSION'][0]['value'][0][0]),
+            array('Shagnasty',         $vcard['N'][0]['value'][0][0]),
+            array('Bolivar',           $vcard['N'][0]['value'][1][0]),
+            array('Odysseus',          $vcard['N'][0]['value'][2][0]),
+            array('Mr.',               $vcard['N'][0]['value'][3][0]),
+            array('III',               $vcard['N'][0]['value'][4][0]),
+            array('B.S.',              $vcard['N'][0]['value'][4][1]),
+            array('Bolivar Shagnasty', $vcard['FN'][0]['value'][0][0]),
 
         // Address
-            array('HOME', $parsed[0]['ADR'][0]['param']['TYPE'][0]),
-            array('WORK', $parsed[0]['ADR'][0]['param']['TYPE'][1]),
-            array('123 Main', $parsed[0]['ADR'][0]['value'][2][0]),
-            array('Apartment 101', $parsed[0]['ADR'][0]['value'][2][1]),
-            array('Beverly Hills', $parsed[0]['ADR'][0]['value'][3][0]),
-            array('CA', $parsed[0]['ADR'][0]['value'][4][0]),
-            array('90210', $parsed[0]['ADR'][0]['value'][5][0]),
-            array('', $parsed[0]['ADR'][0]['value'][6][0]),
+            array('HOME',          $vcard['ADR'][0]['param']['TYPE'][0]),
+            array('WORK',          $vcard['ADR'][0]['param']['TYPE'][1]),
+            array('123 Main',      $vcard['ADR'][0]['value'][2][0]),
+            array('Apartment 101', $vcard['ADR'][0]['value'][2][1]),
+            array('Beverly Hills', $vcard['ADR'][0]['value'][3][0]),
+            array('CA',            $vcard['ADR'][0]['value'][4][0]),
+            array('90210',         $vcard['ADR'][0]['value'][5][0]),
+            array('',              $vcard['ADR'][0]['value'][6][0]),
 
         // Email
-            array('HOME', $parsed[0]['EMAIL'][0]['param']['TYPE'][0]),
-            array('WORK', $parsed[0]['EMAIL'][0]['param']['TYPE'][1]),
-            array('boshag@example.com', $parsed[0]['EMAIL'][0]['value'][0][0]),
-            array('PREF', $parsed[0]['EMAIL'][1]['param']['TYPE'][0]),
-            array('boshag@ciaweb.net', $parsed[0]['EMAIL'][1]['value'][0][0]),
+            array('HOME',               $vcard['EMAIL'][0]['param']['TYPE'][0]),
+            array('WORK',               $vcard['EMAIL'][0]['param']['TYPE'][1]),
+            array('boshag@example.com', $vcard['EMAIL'][0]['value'][0][0]),
+            array('PREF',               $vcard['EMAIL'][1]['param']['TYPE'][0]),
+            array('boshag@ciaweb.net',  $vcard['EMAIL'][1]['value'][0][0]),
 
         );
 
@@ -241,8 +249,41 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
      */
     public function testExampleParser($expect, $actual)
     {
-        $this->markTestIncomplete("Not done yet!").
+        //$this->markTestIncomplete("Not done yet!").
 
         $this->assertSame($expect, $actual);
+    }
+
+    /**
+     * Data provider
+     *
+     * @see self::testFluentInterface()
+     */
+    public static function provideInterfaceTestData()
+    {
+        $data = array(
+            array('setVersion', 'getVersion', '3.0'),
+            array('setName', 'getName', array('Doe', 'John')),
+        );
+        return $data;
+    }
+
+    /**
+     * @dataProvider provideInterfaceTestData()
+     */
+    public function testFluentInterface($set, $get, $value)
+    {
+        $this->markTestIncomplete("This will have to wait.");
+
+        $build = File_IMC::build('vcard');
+
+        if (is_array($value)) {
+            $object = call_user_func_array(array($build, $set), $value);
+        } else {
+            $object = call_user_func(array($build, $set), $value);
+        }
+        $resp = call_user_func(array($object, $get));
+
+        $this->assertSame($value, $resp['value'][$type][0][0][0]);
     }
 }

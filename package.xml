@@ -81,7 +81,7 @@ is the use of a factory pattern.  Again, see the examples.
    <dir name="tests">
     <file name="AllTests.php" role="test" />
     <file name="File_IMC_BuildTest.php" role="test" />
-    <file name="FileIMCTest.php" role="test" />
+    <file name="File_IMC_ParseTest.php" role="test" />
     <file name="sample.vcf" role="test" />
     <file name="vcard-parse.phpt" role="test" />
    </dir> <!-- //tests -->

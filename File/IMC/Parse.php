@@ -43,7 +43,6 @@
  */
 
 /**
-* 
 * Common parser for IMC files (vCard, vCalendar, iCalendar)
 *
 * This class provides the methods to parse a file into an array.
@@ -643,7 +642,9 @@ class File_IMC_Parse
     *
     * @param string $text A right-part (after-the-colon part) from a line.
     *
-    * @return void
+    * @return array
+    *
+    * @uses quoted_printable_decode()
     */
     protected function _decode_qp(array $params, $text)
     {
@@ -651,17 +652,18 @@ class File_IMC_Parse
         foreach ($params as $param_key => $param_val) {
 
             // check to see if it's an encoding param
-            if (trim(strtoupper($param_key)) == 'ENCODING') {
+            if (trim(strtoupper($param_key)) != 'ENCODING') {
+                continue;
+            }
 
-                // loop through each encoding param value
-                foreach ($param_val as $enc_key => $enc_val) {
+            // loop through each encoding param value
+            foreach ($param_val as $enc_key => $enc_val) {
 
-                    // if any of the values are QP, decode the text
-                    // in-place and return
-                    if (trim(strtoupper($enc_val)) == 'QUOTED-PRINTABLE') {
-                        $text = quoted_printable_decode($text);
-                        return;
-                    }
+                // if any of the values are QP, decode the text
+                // in-place and return
+                if (trim(strtoupper($enc_val)) == 'QUOTED-PRINTABLE') {
+                    $text = quoted_printable_decode($text);
+                    return array($params, $text);
                 }
             }
         }

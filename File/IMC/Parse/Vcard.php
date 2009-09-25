@@ -79,6 +79,16 @@ require_once 'File/IMC/Parse.php';
 class File_IMC_Parse_Vcard extends File_IMC_Parse
 {
     /**
+     * Return version.
+     *
+     * @uses parent::$data
+     */
+    public function getVersion()
+    {
+        return $this->data['VCARD'][0]['VERSION'][0]['value'][0][0];
+    }
+
+    /**
     *
     * Parses a vCard line value identified as being of the "N"
     * (structured name) type-defintion.

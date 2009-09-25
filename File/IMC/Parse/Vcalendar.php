@@ -80,5 +80,8 @@ require_once 'File/IMC/Parse.php';
 
 class File_IMC_Parse_Vcalendar extends File_IMC_Parse
 {
-    // nothing was needed parsing so far.
+    public function getVersion()
+    {
+        return $this->data['VCALENDAR'][0]['VERSION'][0]['value'][0][0];
+    }
 }

@@ -52,9 +52,15 @@
 *
 * @author Paul M. Jones <pmjones@ciaweb.net>
 *
-* @package File_IMC
+* @category File_Formats
+* @package  File_IMC
+* @author   Paul M. Jones <pmjones@ciaweb.net>
+* @author   Till Klampaeckel <till@php.net>
+* @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
+* @version  Release: @package_version@
+* @link     http://pear.php.net/package/File_IMC
 */
-class File_IMC_Parse
+abstract class File_IMC_Parse
 {
     /**
     * Keeps track of the current line being parsed
@@ -67,6 +73,11 @@ class File_IMC_Parse
     * @var int
     */
     protected $count = -1;
+
+    /**
+     * @var array
+     */
+    protected $data;
 
     /**
     * Reads a file for parsing, then sends it to $this->fromText()
@@ -122,8 +133,11 @@ class File_IMC_Parse
         $lines = explode("\n", $text);
 
         // parse the array of lines and return info
-        return $this->_fromArray($lines, $decode_qp);
+        $this->data = $this->_fromArray($lines, $decode_qp);
+        return $this->data;
     }
+
+    abstract function getVersion();
 
     /**
     * Converts line endings in text.

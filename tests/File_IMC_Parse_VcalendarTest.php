@@ -71,6 +71,7 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
     public function testVersion()
     {
         $this->assertSame('1.0', self::$calendar['VERSION'][0]['value'][0][0]);
+        $this->assertSame(self::$calendar['VERSION'][0]['value'][0][0], self::$parser->getVersion());
     }
 
     public static function eventProvider()

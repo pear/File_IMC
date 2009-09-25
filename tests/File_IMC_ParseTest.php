@@ -280,6 +280,20 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test version in array data, vs. new public method getVersion()
+     */
+    public function testGetVersion()
+    {
+        $data  = self::getExampleVcard();
+        $vcard = $this->parser->fromText($data);
+
+        $this->assertSame(
+            $vcard['VCARD'][0]['VERSION'][0]['value'][0][0],
+            $this->parser->getVersion()
+        );
+    }
+
+    /**
      * Data provider
      *
      * @see self::testFluentInterface()

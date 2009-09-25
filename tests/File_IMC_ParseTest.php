@@ -260,6 +260,27 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Small test to cover {@link File_IMC_Parse_Vcard::fromFile()}.
+     *
+     * More details are covered in {@link self::testExampleParser()} because
+     * internally {@link File_IMC_Parse_Vcard::fromText()} is used.
+     *
+     * @return void
+     */
+    public function testFromFile()
+    {
+        $parser = File_IMC::parse('vcard');
+        $parsed = $parser->fromFile(dirname(__FILE__) . '/sample.vcf');
+
+        $vcard = $parsed['VCARD'][0];
+
+        $this->assertSame('3.0',       $vcard['VERSION'][0]['value'][0][0]);
+        $this->assertSame('Shagnasty', $vcard['N'][0]['value'][0][0]);
+        $this->assertSame('Bolivar',   $vcard['N'][0]['value'][1][0]);
+        $this->assertSame('Odysseus',  $vcard['N'][0]['value'][2][0]);
+    }
+
+    /**
      * Data provider
      *
      * @see self::testFluentInterface()

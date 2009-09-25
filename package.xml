@@ -46,6 +46,9 @@ is the use of a factory pattern.  Again, see the examples.
  * this release heavily breaks BC to previous releases
   * no longer PHP4 compatible
   * implemented visibility in all classes
+  * updates to class methods:
+    * methods only used internally are not public anymore (but protected)
+    * changes in visiblity also lead to a lot of changes in naming
   * File_IMC_Build is now an abstract class
  * CS fixes
  * File_IMC_Build_Vcard implements a fluent interface

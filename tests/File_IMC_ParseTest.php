@@ -38,16 +38,14 @@ require_once "File/IMC.php";
 /**
  * Tests for File_IMC.
  *
- * @category  File_Formats
- * @package   File_IMC
- * @author    Till Klampaeckel <till@php.net>
- * @copyright Copyright (c) 2007 Contaxis Limited
- * @license   http://www.php.net/license/2_02.txt  PHP License 2.0
- * @version   Release: @package_version@
- * @link      http://pear.php.net/package/File_IMC
- * @todo      Make protected functions dataproviders.
+ * @category File_Formats
+ * @package  File_IMC
+ * @author   Till Klampaeckel <till@php.net>
+ * @license  http://www.php.net/license/2_02.txt  PHP License 2.0
+ * @version  Release: @package_version@
+ * @link     http://pear.php.net/package/File_IMC
  */
-class FileIMCTest extends PHPUnit_Framework_TestCase
+class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var string
@@ -191,7 +189,7 @@ class FileIMCTest extends PHPUnit_Framework_TestCase
         list($data) = $ret["A.N"];
 
         $expected = array("PARAM1" => array("PARAMVALUE1"),
-                          "PARAM2" => array("PARAMVALUE2"), 
+                          "PARAM2" => array("PARAMVALUE2"),
                           'TYPE' => array("PARAMVALUE3"));
 
         $this->assertSame($expected, $data['param']);

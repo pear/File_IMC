@@ -38,14 +38,9 @@
  * @package  File_IMC
  * @author   Paul M. Jones <pmjones@ciaweb.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  CVS: $Id$
+ * @version  SVN: $Id$
  * @link     http://pear.php.net/package/File_IMC
  */
-
-/**
- * The common IMC parser is needed
- */
-require_once 'File/IMC/Parse.php';
 
 /**
  * This class is a parser for vCards.

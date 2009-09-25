@@ -43,12 +43,6 @@
  */
 
 /**
-* The common builder functions are required
-*/
-require_once 'File/IMC/Build.php';
-
-
-/**
 * This class builds a single vCard (version 3.0 or 2.1).
 *
 * General note: we use the terms "set", "add", and "get" as function

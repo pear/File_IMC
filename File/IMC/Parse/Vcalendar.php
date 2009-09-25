@@ -43,11 +43,6 @@
  */
 
 /**
- * The common IMC parser is needed
- */
-require_once 'File/IMC/Parse.php';
-
-/**
 *
 * Parser for vCalendars.
 *

@@ -1,7 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4: */
-/**+----------------------------------------------------------------------+
- * | PHP version 5                                                        |
+/**
  * +----------------------------------------------------------------------+
  * | Copyright (c) 1997-2008 The PHP Group                                |
  * +----------------------------------------------------------------------+
@@ -34,12 +32,14 @@
  * | POSSIBILITY OF SUCH DAMAGE.                                          |
  * +----------------------------------------------------------------------+
  *
+ * PHP Version 5
+ *
  * @category File_Formats
  * @package  File_IMC
  * @author   Paul M. Jones <pmjones@ciaweb.net>
  * @author   Marshall Roch <mroch@php.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  CVS: $Id$
+ * @version  SVN: $Id$
  * @link     http://pear.php.net/package/File_IMC
  */
 
@@ -82,13 +82,14 @@ require_once 'File/IMC/Exception.php';
 *     $build = new Contact_Vcard_Build('3.0');
 * </code>
 *
-* @link http://www.imc.org/pdi/ IMC's vCard and vCalendar info page
-*
-* @package File_IMC
-*
-* @author Paul M. Jones <pmjones@ciaweb.net>
-*
-* @author Marshall Roch <mroch@php.net>
+* @category File_Formats
+* @package  File_IMC
+* @author   Paul M. Jones <pmjones@ciaweb.net>
+* @author   Marshall Roch <mroch@php.net>
+* @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
+* @version  Release: @package_version@
+* @link     http://pear.php.net/package/File_IMC
+* @link     http://www.imc.org/pdi/ IMC's vCard and vCalendar info page
 */
 class File_IMC
 {
@@ -177,14 +178,13 @@ class File_IMC
     }
 
     /**
-    *
     * Parser factory
     *
     * Creates an instance of the correct parser class, based on the
     * parameter passed. For example, File_IMC::parse('vCard') creates
     * a new object to parse a vCard file.
     *
-    * @param string Type of file to parse, vCard or vCalendar
+    * @param string $format Type of file to parse, vCard or vCalendar
     *
     * @return mixed
     * @throws File_IMC_Exception If no parse is found/available.

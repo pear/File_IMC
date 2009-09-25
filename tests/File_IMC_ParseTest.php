@@ -309,4 +309,42 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
     {
         $foo = File_IMC::parse('bar');
     }
+
+    public function testVcalendarParsing()
+    {
+        $parser  = File_IMC::parse('vcalendar');
+        $calinfo = $parser->fromFile('sample.vcs');
+
+        $calendar = $calinfo['VCALENDAR'][0];
+        $events   = $calendar['VEVENT'];
+
+        $event1 = $events[0];
+        $event2 = $events[1];
+        $event3 = $events[2];
+
+        //var_dump($event1, $event2, $event3); exit;
+
+        $this->assertSame('1.0', $calendar['VERSION'][0]['value'][0][0]);
+        $this->assertSame(3, count($events));
+
+        // event1
+        $this->assertSame('New Volunteer Orientation', $event1['SUMMARY'][0]['value'][0][0]);
+        $this->assertSame(
+            null,
+            $event1['DESCRIPTION'][0]['value'][0][0]
+        );
+
+        // event2
+        $this->assertSame('Test Event 2', $event2['SUMMARY'][0]['value'][0][0]);
+        $this->assertSame(
+            "Blah blah blah! This one doesn't have any linebreaks, so it's not quoted-printable",
+            $event2['DESCRIPTION'][0]['value'][0][0]
+        );
+        // event3
+        $this->assertSame('Test Event 3', $event3['SUMMARY'][0]['value'][0][0]);
+        $this->assertSame(
+            null,
+            $event3['DESCRIPTION'][0]['value'][0][0]
+        );
+    }
 }

@@ -91,17 +91,19 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     * may be an array as well if multiple comma-separated values were
     * indicated in the vCard source.
     *
+    * @see parent::_splitBySemi()
+    * @see parent::_splitByComma()
     */
     protected function _parseN($text)
     {
     	// array_pad makes sure there are the right number of elements
-        $tmp = array_pad($this->splitBySemi($text), 5, '');
+        $tmp = array_pad($this->_splitBySemi($text), 5, '');
         return array(
-            $this->splitByComma($tmp[FILE_IMC::VCARD_N_FAMILY]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_N_GIVEN]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_N_ADDL]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_N_PREFIX]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_N_SUFFIX])
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_FAMILY]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_GIVEN]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_ADDL]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_PREFIX]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_SUFFIX])
         );
     }
 
@@ -121,15 +123,15 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     protected function _parseADR($text)
     {
     	// array_pad makes sure there are the right number of elements
-        $tmp = array_pad($this->splitBySemi($text), 7, '');
+        $tmp = array_pad($this->_splitBySemi($text), 7, '');
         return array(
-            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_POB]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_EXTEND]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_STREET]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_LOCALITY]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_REGION]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_POSTCODE]),
-            $this->splitByComma($tmp[FILE_IMC::VCARD_ADR_COUNTRY])
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_POB]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_EXTEND]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_STREET]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_LOCALITY]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_REGION]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_POSTCODE]),
+            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_COUNTRY])
         );
     }
 
@@ -145,7 +147,7 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     */
     protected function _parseNICKNAME($text)
     {
-        return array($this->splitByComma($text));
+        return array($this->_splitByComma($text));
     }
 
     /**
@@ -162,7 +164,7 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     */
     protected function _parseORG($text)
     {
-        $tmp = $this->splitbySemi($text);
+        $tmp = $this->_splitbySemi($text);
         $list = array();
         foreach ($tmp as $val) {
             $list[] = array($val);
@@ -182,7 +184,7 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     */
     protected function _parseCATEGORIES($text)
     {
-        return array($this->splitByComma($text));
+        return array($this->_splitByComma($text));
     }
 
     /**
@@ -197,7 +199,7 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
     protected function _parseGEO($text)
     {
     	// array_pad makes sure there are the right number of elements
-        $tmp = array_pad($this->splitBySemi($text), 2, '');
+        $tmp = array_pad($this->_splitBySemi($text), 2, '');
         return array(
             array($tmp[FILE_IMC::VCARD_GEO_LAT]), // lat
             array($tmp[FILE_IMC::VCARD_GEO_LON])  // lon

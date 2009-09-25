@@ -76,12 +76,20 @@ class File_IMC_Parse
     * @param string $filename The name of the file to read
     *
     * @return array An array of information extracted from the file.
+    * @throws File_IMC_Exception If the file does not exist.
+    * @throws File_IMC_Exception If the file is not readable.
     *
     * @see self::fromText()
     * @see self::_fromArray()
     */
     public function fromFile($filename, $decode_qp = true)
     {
+        if (!file_exists($filename)) {
+            throw new File_IMC_Exception("File {$filename} does not exist.");
+        }
+        if (!is_readable($filename)) {
+            throw new File_IMC_Exception("Could not open {$filename}.");
+        }
         // get the file data
         $text = implode('', file($filename));
 
@@ -103,7 +111,7 @@ class File_IMC_Parse
     {
         // convert all kinds of line endings to Unix-standard and get
         // rid of double blank lines.
-        $text = $this->convertLineEndings($text);
+        $text = $this->_convertLineEndings($text);
 
         // unfold lines.  concat two lines where line 1 ends in \n and
         // line 2 starts with any amount of whitespace.  only removes
@@ -132,7 +140,7 @@ class File_IMC_Parse
     *
     * @return void
     */
-    public function convertLineEndings($text)
+    protected function _convertLineEndings($text)
     {
         // first, replace \r\n with \n to fix up from DOS and Mac
         $text = str_replace("\r\n", "\n", $text);
@@ -156,7 +164,7 @@ class File_IMC_Parse
     *
     * @return string|array An array of values, or a single string.
     */
-    public function splitByDelim($text, $delim, $recurse = true)
+    public function _splitByDelim($text, $delim, $recurse = true)
     {
         // where in the string is the delimiter?
         $pos = false;
@@ -222,7 +230,7 @@ class File_IMC_Parse
             // merge the results with the left-portion.
             return array_merge(
                 array($left),
-                $this->splitByDelim($right, $delim, $recurse)
+                $this->_splitByDelim($right, $delim, $recurse)
             );
         }
 
@@ -245,11 +253,11 @@ class File_IMC_Parse
     *
     * @return string|array An array of values, or a single string.
     *
-    * @see self::splitByDelim()
+    * @see self::_splitByDelim()
     */
-    public function splitBySemi($text, $recurse = true)
+    protected function _splitBySemi($text, $recurse = true)
     {
-        return $this->splitByDelim($text, ";", $recurse);
+        return $this->_splitByDelim($text, ";", $recurse);
     }
 
     /**
@@ -263,11 +271,11 @@ class File_IMC_Parse
     *
     * @return string|array An array of values, or a single string.
     *
-    * @see self::splitByDelim()
+    * @see self::_splitByDelim()
     */
-    public function splitByComma($text, $recurse = true)
+    protected function _splitByComma($text, $recurse = true)
     {
-        return $this->splitByDelim($text, ",", $recurse);
+        return $this->_splitByDelim($text, ",", $recurse);
     }
 
     /**
@@ -282,15 +290,15 @@ class File_IMC_Parse
     * @param bool $recurse If true, recursively parse the entire text
     * for all occurrences of the delimiter; if false, only parse for
     * the first occurrence.  Defaults to false (this is different from
-    * splitByCommon and splitBySemi).
+    * {@link self::_splitByCommon()} and {@link self::_splitBySemi()}).
     *
     * @return array The first element contains types and parameters
     * (before the colon). The second element contains the line's value
     * (after the colon).
     */
-    public function splitByColon($text, $recurse = false)
+    protected function _splitByColon($text, $recurse = false)
     {
-        return $this->splitByDelim($text, ":", $recurse);
+        return $this->_splitByDelim($text, ":", $recurse);
     }
 
     /**
@@ -305,11 +313,11 @@ class File_IMC_Parse
     *
     * @return mixed
     */
-    public function unescape($text)
+    protected function _unescape($text)
     {
         if (is_array($text)) {
             foreach ($text as $key => $val) {
-                $this->unescape($val);
+                $this->_unescape($val);
                 $text[$key] = $val;
             }
         } else {
@@ -344,7 +352,7 @@ class File_IMC_Parse
     protected function _fromArray($source, $decode_qp = true)
     {
         $parsed = $this->_parseBlock($source);
-        $parsed = $this->unescape($parsed);
+        $parsed = $this->_unescape($parsed);
         return $parsed;
     }
 
@@ -374,7 +382,7 @@ class File_IMC_Parse
             // get the left and right portions. The part
             // to the left of the colon is the type and parameters;
             // the part to the right of the colon is the value data.
-            if (!(list($left, $right) = $this->splitByColon($line))) {
+            if (!(list($left, $right) = $this->_splitByColon($line))) {
                 // colon not found, skip whole line
                 continue;
             }
@@ -394,7 +402,7 @@ class File_IMC_Parse
                 // left-portion of the line into a type-definition
                 // (the kind of information) and parameters for the
                 // type.
-                $tmp     = $this->splitBySemi($left);
+                $tmp     = $this->_splitBySemi($left);
                 $group   = $this->_getGroup($tmp);
                 $typedef = $this->_getTypeDef($tmp);
                 $params  = $this->_getParams($tmp);
@@ -449,7 +457,7 @@ class File_IMC_Parse
     * @return string The group for the line.
     *
     * @see self::_getTypeDef()
-    * @see self::splitBySemi()
+    * @see self::_splitBySemi()
     */
     protected function _getGroup(array $text)
     {
@@ -480,7 +488,7 @@ class File_IMC_Parse
     * @return string The type definition for the line.
     *
     * @see self::_getGroup()
-    * @see self::splitBySemi()
+    * @see self::_splitBySemi()
     */
     protected function _getTypeDef(array $text)
     {
@@ -508,7 +516,7 @@ class File_IMC_Parse
     *
     * @return array An array of parameters.
     *
-    * @see self::splitBySemi()
+    * @see self::_splitBySemi()
     */
     protected function _getParams(array $text)
     {
@@ -542,7 +550,7 @@ class File_IMC_Parse
 
             // if there is a value-list for this parameter, they are
             // separated by commas, so split them out too.
-            $list = $this->splitByComma($listall);
+            $list = $this->_splitByComma($listall);
 
             // now loop through each value in the parameter and retain
             // it.  if the value is blank, that means it's a 2.1-style

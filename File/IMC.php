@@ -44,11 +44,6 @@
  */
 
 /**
- * File_IMC_Exception
- */
-require_once 'File/IMC/Exception.php';
-
-/**
 * This class handles vCard and vCalendar files, formats designed by the
 * Internet Mail Consortium (IMC).
 *
@@ -134,6 +129,16 @@ class File_IMC
     const VCARD_GEO_LON = 1;
 
     /**
+     * @param string $className Name of the class to load.
+     *
+     * @return boolean
+     */
+    public static function autoload($className)
+    {
+        return require str_replace('_', '/', $className) . '.php';
+    }
+
+    /**
     * Builder factory
     *
     * Creates an instance of the correct parser class, based on the
@@ -159,11 +164,11 @@ class File_IMC
         $fileName  = 'File/IMC/Build/'. $format . '.php';
         $className = 'File_IMC_Build_'. $format;
 
-        if (!class_exists($className)) {
+        if (!class_exists($className, false)) {
             @include_once $fileName;
         }
 
-        if (!class_exists($className)) {
+        if (!class_exists($className, false)) {
             throw new File_IMC_Exception(
                 'No builder driver exists for format: ' . $format,
                 self::ERROR_INVALID_DRIVER);
@@ -202,11 +207,11 @@ class File_IMC
         $fileName  = 'File/IMC/Parse/'. $format . '.php';
         $className = 'File_IMC_Parse_'. $format;
 
-        if (!class_exists($className)) {
+        if (!class_exists($className, false)) {
             @include_once $fileName;
         }
 
-        if (!class_exists($className)) {
+        if (!class_exists($className, false)) {
             throw new File_IMC_Exception(
                 'No parser driver exists for format: ' . $format,
                 self::ERROR_INVALID_DRIVER);
@@ -214,3 +219,5 @@ class File_IMC
         return new $className;
     }
 }
+
+spl_autoload_register(array('File_IMC', 'autoload'));

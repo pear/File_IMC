@@ -53,7 +53,7 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
     {
         self::$parser = File_IMC::parse('vcalendar');
 
-        $calinfo = self::$parser->fromFile('sample.vcs');
+        $calinfo = self::$parser->fromFile(dirname(__FILE__) . '/sample.vcs');
 
         self::$calendar = $calinfo['VCALENDAR'][0];
     }
@@ -76,7 +76,7 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
     public static function eventProvider()
     {
         $parser   = File_IMC::parse('vcalendar');
-        $calinfo  = $parser->fromFile('sample.vcs');
+        $calinfo  = $parser->fromFile(dirname(__FILE__) . '/sample.vcs');
         $calendar = $calinfo['VCALENDAR'][0];
 
         $events = $calendar['VEVENT'];
@@ -86,23 +86,30 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
         $event3 = $events[2];
 
         //var_dump(self::$calendar, $events, $event1, $event2, $event3); exit;
+        //var_dump($event2); exit;
+
+        $event1_desc  = "Interested in becoming a volunteer for the Sacramento SPCA? We'd love to have you join our team! Please download a volunteer application from this website, and when you mail it in, indicate that you'd like to attend this orientation.";
+        $event1_desc .= "\n\n";
+        $event1_desc .= "Contact Dee Dee Drake for more information.";
+
+        $event2_desc = "Blah blah blah! This one doesn't have any linebreaks, so it's not quoted-printable";
+
+        $event3_desc = "Lorem ipsum dolor sit amet!";
 
         return array(
 
         // event 1
             array('New Volunteer Orientation', $event1['SUMMARY'][0]['value'][0][0]),
-            array(null, $event1['DESCRIPTION'][0]['value'][0][0]),
+            //array($event1_desc, $event1['DESCRIPTION'][0]['value'][0][0]),
 
         // event 2
             array('Test Event 2', $event2['SUMMARY'][0]['value'][0][0]),
-            array(
-                "Blah blah blah! This one doesn't have any linebreaks, so it's not quoted-printable",
-                $event2['DESCRIPTION'][0]['value'][0][0]
-            ),
+            array($event2_desc, $event2['DESCRIPTION'][0]['value'][0][0]),
+            array('"http://www.example.com"', $event2['DESCRIPTION'][0]['param']['ALTREP'][0]),
 
         // event 3
             array('Test Event 3', $event3['SUMMARY'][0]['value'][0][0]),
-            array(null, $event3['DESCRIPTION'][0]['value'][0][0]),
+            array($event3_desc, $event3['DESCRIPTION'][0]['value'][0][0]),
         );
     }
 

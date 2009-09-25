@@ -43,36 +43,7 @@
  */
 
 /**
- * The common IMC parser is needed
- */
-require_once 'File/IMC/Parse.php';
-
-/**
-*
-* Parser for vCalendars.
-*
-* This class parses vCalendar sources from file or text into a
-* structured array.
-*
-* Usage:
-*
-* <code>
-*     // include this class file
-*     require_once 'File/IMC.php';
-*
-*     // instantiate a parser object
-*     $parse = new File_IMC::parse('vCalendar');
-*
-*     // parse a vCalendar file and store the data
-*     // in $calinfo
-*     $calinfo = $parse->fromFile('sample.vcs');
-*
-*     // view the card info array
-*     echo '<pre>';
-*     print_r($calinfo);
-*     echo '</pre>';
-* </code>
-*
+* File_IMC_Parse_Vcalendar_Events
 *
 * @category File_Formats
 * @package  File_IMC
@@ -82,26 +53,25 @@ require_once 'File/IMC/Parse.php';
 * @version  Release: @package_version@
 * @link     http://pear.php.net/package/File_IMC
 */
-class File_IMC_Parse_Vcalendar extends File_IMC_Parse
+class File_IMC_Parse_Vcalendar_Events implements Countable
 {
-    /**
-     * Get all events, wrapped in a class.
-     *
-     * @return File_IMC_Parse_Vcalendar
-     * @uses   parent::$data
-     */
-    public function getEvents()
+    protected $data;
+
+    public function __construct(array $data)
     {
-        return new File_IMC_Parse_Vcalendar_Events($this->data['VCALENDAR'][0]['VEVENT']);
+        $this->data = $data;
     }
 
-    /**
-     * Return the version.
-     *
-     * @return string
-     */
-    public function getVersion()
+    public function count()
     {
-        return $this->data['VCALENDAR'][0]['VERSION'][0]['value'][0][0];
+        return count($this->data);
+    }
+
+    public function get($index)
+    {
+        if (isset($this->data[$index])) {
+            return $this->data[$index];
+        }
+        throw File_IMC_Exception("Invalid index.");
     }
 }

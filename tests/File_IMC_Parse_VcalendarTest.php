@@ -67,7 +67,8 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
         $events = self::$calendar['VEVENT'];
         $this->assertEquals(3, count($events));
 
-        $this->assertEquals(3, count(self::$parser->getEvents()));
+        $events = self::$parser->getEvents();
+        $this->assertEquals(3, count($events));
     }
 
     public function testVersion()

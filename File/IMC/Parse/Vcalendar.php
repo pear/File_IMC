@@ -38,9 +38,14 @@
  * @package  File_Formats
  * @author   Marshall Roch <mroch@php.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  CVS: $Id$
+ * @version  SVN: $Id$
  * @link     http://pear.php.net/package/File_IMC
  */
+
+/**
+ * The common IMC parser is needed
+ */
+require_once 'File/IMC/Parse.php';
 
 /**
 *
@@ -69,17 +74,31 @@
 * </code>
 *
 *
-* @author Paul M. Jones <pjones@ciaweb.net>
-* @package File_IMC
+* @category File_Formats
+* @package  File_IMC
+* @author   Paul M. Jones <pjones@ciaweb.net>
+* @author   Till Klampaeckel <till@php.net>
+* @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
+* @version  Release: @package_version@
+* @link     http://pear.php.net/package/File_IMC
 */
-
-/**
- * The common IMC parser is needed
- */
-require_once 'File/IMC/Parse.php';
-
 class File_IMC_Parse_Vcalendar extends File_IMC_Parse
 {
+    /**
+     * Get all events.
+     *
+     * @return array
+     */
+    public function getEvents()
+    {
+        return $this->data['VCALENDAR'][0]['VEVENT'];
+    }
+
+    /**
+     * Return the version.
+     *
+     * @return string
+     */
     public function getVersion()
     {
         return $this->data['VCALENDAR'][0]['VERSION'][0]['value'][0][0];

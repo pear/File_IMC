@@ -2,7 +2,7 @@
 /**
  * Parse vCard 2.1 and 3.0 text blocks.
  *
- * PHP versions 4 and 5
+ * PHP versions 5
  *
  * LICENSE: This source file is subject to version 2.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -13,9 +13,8 @@
  * @category  File_Formats
  * @package   File_IMC
  * @author    Till Klampaeckel <till@php.net>
- * @copyright Copyright (c) 2007 Contaxis Limited
- * @license   http://www.php.net/license/2_02.txt  PHP License 2.0
- * @version   CVS: $Id$
+ * @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @version   SVN: $Id$
  * @link      http://pear.php.net/package/File_IMC
  */
 
@@ -41,7 +40,7 @@ require_once "File/IMC.php";
  * @category File_Formats
  * @package  File_IMC
  * @author   Till Klampaeckel <till@php.net>
- * @license  http://www.php.net/license/2_02.txt  PHP License 2.0
+ * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @version  Release: @package_version@
  * @link     http://pear.php.net/package/File_IMC
  */
@@ -308,43 +307,5 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
     public function testExceptionIfInvalidFormatIsProvided()
     {
         $foo = File_IMC::parse('bar');
-    }
-
-    public function testVcalendarParsing()
-    {
-        $parser  = File_IMC::parse('vcalendar');
-        $calinfo = $parser->fromFile('sample.vcs');
-
-        $calendar = $calinfo['VCALENDAR'][0];
-        $events   = $calendar['VEVENT'];
-
-        $event1 = $events[0];
-        $event2 = $events[1];
-        $event3 = $events[2];
-
-        //var_dump($event1, $event2, $event3); exit;
-
-        $this->assertSame('1.0', $calendar['VERSION'][0]['value'][0][0]);
-        $this->assertSame(3, count($events));
-
-        // event1
-        $this->assertSame('New Volunteer Orientation', $event1['SUMMARY'][0]['value'][0][0]);
-        $this->assertSame(
-            null,
-            $event1['DESCRIPTION'][0]['value'][0][0]
-        );
-
-        // event2
-        $this->assertSame('Test Event 2', $event2['SUMMARY'][0]['value'][0][0]);
-        $this->assertSame(
-            "Blah blah blah! This one doesn't have any linebreaks, so it's not quoted-printable",
-            $event2['DESCRIPTION'][0]['value'][0][0]
-        );
-        // event3
-        $this->assertSame('Test Event 3', $event3['SUMMARY'][0]['value'][0][0]);
-        $this->assertSame(
-            null,
-            $event3['DESCRIPTION'][0]['value'][0][0]
-        );
     }
 }

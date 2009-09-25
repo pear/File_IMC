@@ -65,6 +65,11 @@ define('File_IMC_DIR_PHPT', dirname(__FILE__));
 require_once 'File_IMC_ParseTest.php';
 
 /**
+ * File_IMC_Parse_VcalendarTest
+ */
+require_once 'File_IMC_Parse_VcalendarTest.php';
+
+/**
  * File_IMC_BuildTest
  */
 require_once 'File_IMC_BuildTest.php';
@@ -117,6 +122,7 @@ class File_IMC_AllTests
          * You must add each additional class-level test suite name here
          */
         $suite->addTestSuite('File_IMC_ParseTest');
+        $suite->addTestSuite('File_IMC_Parse_VcalendarTest');
         $suite->addTestSuite('File_IMC_BuildTest');
 
         /*

@@ -1,7 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */ 
-/**+----------------------------------------------------------------------+
- * | PHP version 5                                                        |
+/**
  * +----------------------------------------------------------------------+
  * | Copyright (c) 1997-2008 The PHP Group                                |
  * +----------------------------------------------------------------------+
@@ -33,6 +31,8 @@
  * | ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE      |
  * | POSSIBILITY OF SUCH DAMAGE.                                          |
  * +----------------------------------------------------------------------+
+ *
+ * PHP Version 5
  *
  * @category File_Formats
  * @package  File_IMC
@@ -532,5 +532,27 @@ abstract class File_IMC_Build
     * @return string A properly formatted vCard/vCalendar text block.
     */
     abstract function fetch();
-}
 
+    /**
+     * Magic method to display the vCard/vCal.
+     *
+     * <code>
+     *
+     * $vcard = File_IMC::build('vCard');
+     *
+     * // set "TYPE=HOME,PREF" for the first TEL component
+     * $vcard->addParam('TYPE', 'HOME', 'TEL', 0);
+     * $vcard->addParam('TYPE', 'PREF', 'TEL', 0);
+     *
+     * echo $vcard;
+     *
+     * </code>
+     *
+     * @return string
+     * @uses   self::fetch()
+     */
+    public function __toString()
+    {
+        return $this->fetch();
+    }
+}

@@ -1,7 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4: */
-/**+----------------------------------------------------------------------+
- * | PHP version 5                                                        |
+/**
  * +----------------------------------------------------------------------+
  * | Copyright (c) 1997-2008 The PHP Group                                |
  * +----------------------------------------------------------------------+
@@ -34,11 +32,13 @@
  * | POSSIBILITY OF SUCH DAMAGE.                                          |
  * +----------------------------------------------------------------------+
  *
+ * PHP Version 5
+ *
  * @category File_Formats
  * @package  File_IMC
  * @author   Till Klampaeckel <till@php.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  CVS: $Id$
+ * @version  SVN: $Id$
  * @link     http://pear.php.net/package/File_IMC
  */
 

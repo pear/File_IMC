@@ -1,7 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */
-/**+----------------------------------------------------------------------+
- * | PHP version 5                                                        |
+/**
  * +----------------------------------------------------------------------+
  * | Copyright (c) 1997-2008 The PHP Group                                |
  * +----------------------------------------------------------------------+
@@ -34,11 +32,13 @@
  * | POSSIBILITY OF SUCH DAMAGE.                                          |
  * +----------------------------------------------------------------------+
  *
+ * PHP Version 5
+ *
  * @category File_Formats
  * @package  File_IMC
  * @author   Paul M. Jones <pmjones@ciaweb.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  CVS: $Id$
+ * @version  SVN: $Id$
  * @link     http://pear.php.net/package/File_IMC
  */
 
@@ -58,25 +58,26 @@
 *
 * "Get" returns the full vCard line for a single iteration.
 *
-* @author Paul M. Jones <pmjones@ciaweb.net>
-*
-* @package File_IMC
-*
+* @category File_Formats
+* @package  File_IMC
+* @author   Paul M. Jones <pmjones@ciaweb.net>
+* @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
+* @version  Release: @package_version@
+* @link     http://pear.php.net/package/File_IMC
 */
 class File_IMC_Build_Vcard extends File_IMC_Build
 {
     /**
-    *
     * Constructor
     *
     * @param string $version The vCard version to build; affects which
     * parameters are allowed and which components are returned by
     * fetch().
     *
-    * @return void
+    * @return File_IMC_Build_Vcard
     *
-    * @see fetch()
-    *
+    * @see  parent::fetch()
+    * @uses parent::reset()
     */
     public function __construct($version = '3.0')
     {
@@ -278,7 +279,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     * @param mixed $suffix Single (string) or multiple (array) honorific
     * suffix such as III, Jr., Ph.D., etc.
     *
-    * @return void
+    * @return $this
     */
     public function setName($family, $given, $addl = '', $prefix = '', $suffix = '')
     {
@@ -288,6 +289,8 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         $this->setValue('N', 0, FILE_IMC::VCARD_N_ADDL, $addl);
         $this->setValue('N', 0, FILE_IMC::VCARD_N_PREFIX, $prefix);
         $this->setValue('N', 0, FILE_IMC::VCARD_N_SUFFIX, $suffix);
+
+        return $this;
     }
 
     /**

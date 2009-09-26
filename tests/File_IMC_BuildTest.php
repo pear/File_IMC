@@ -35,28 +35,22 @@ set_include_path(
 require_once "File/IMC.php";
 
 /**
- * Tests for File_IMC.
+ * Tests for File_IMC_Build.
  *
- * @category  File_Formats
- * @package   File_IMC
- * @author    Till Klampaeckel <till@php.net>
- * @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version   Release: @package_version@
- * @link      http://pear.php.net/package/File_IMC
+ * @category File_Formats
+ * @package  File_IMC
+ * @author   Till Klampaeckel <till@php.net>
+ * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @version  Release: @package_version@
+ * @link     http://pear.php.net/package/File_IMC
  */
 class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var string
+     * @var File_IMC_Build_Vcard
      * @see self::setUp()
      */
     protected $vcard;
-
-    /**
-     * @var File_IMC
-     * @see self::setUp()
-     */
-    protected $parser;
 
     /**
      * setUp()
@@ -86,5 +80,44 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
     public function testExceptionIfInvalidFormatIsProvided()
     {
         $foo = File_IMC::build('bar');
+    }
+
+    /**
+     * Test the fluent interface.
+     */
+    public function testFluentInterface()
+    {
+        $this->assertType('File_IMC_Build_Vcard', $this->vcard->setName('Doe', 'John'));
+        $this->assertType('File_IMC_Build_Vcard', $this->vcard->setSource('Your mom.'));
+    }
+
+    /**
+     * Test formatted name set and get.
+     */
+    public function testFormattedName()
+    {
+        $name = 'Jane Doe';
+
+        $this->vcard->setFormattedName($name);
+        $this->assertSame("FN:{$name}", $this->vcard->getFormattedName());
+    }
+
+    /**
+     * @expectedException File_IMC_Exception
+     */
+    public function testVersionException()
+    {
+        $this->vcard->setVersion('4.0');
+    }
+
+    /**
+     * Test version set and get.
+     */
+    public function testVersion()
+    {
+        $version = '2.1';
+        $this->vcard->setVersion($version);
+
+        $this->assertSame("VERSION:{$version}", $this->vcard->getVersion());
     }
 }

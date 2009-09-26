@@ -119,6 +119,9 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     *
     * @return mixed        Boolean true if the parameter is valid
     * @throws File_IMC_Exception ... if not.
+    *
+    * @uses self::validateParam21()
+    * @uses self::validateParam30()
     */
     public function validateParam($name, $text, $comp = null, $iter = null)
     {
@@ -135,129 +138,165 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 
         if ($this->value['VERSION'][0][0][0] == '2.1') {
 
-            // Validate against version 2.1 (pretty strict)
-            static $types = array (
-                'DOM', 'INTL', 'POSTAL', 'PARCEL','HOME', 'WORK',
-                'PREF', 'VOICE', 'FAX', 'MSG', 'CELL', 'PAGER',
-                'BBS', 'MODEM', 'CAR', 'ISDN', 'VIDEO',
-                'AOL', 'APPLELINK', 'ATTMAIL', 'CIS', 'EWORLD',
-                'INTERNET', 'IBMMAIL', 'MCIMAIL',
-                'POWERSHARE', 'PRODIGY', 'TLX', 'X400',
-                'GIF', 'CGM', 'WMF', 'BMP', 'MET', 'PMB', 'DIB',
-                'PICT', 'TIFF', 'PDF', 'PS', 'JPEG', 'QTIME',
-                'MPEG', 'MPEG2', 'AVI',
-                'WAVE', 'AIFF', 'PCM',
-                'X509', 'PGP'
-            );
-
-            switch ($name) {
-
-            case 'TYPE':
-                if (! in_array($text, $types)) {
-                    throw new File_IMC_Exception(
-                        "vCard 2.1 [$comp] [$iter]: $text is not a recognized TYPE.",
-                        FILE_IMC::ERROR_INVALID_PARAM);
-                }
-                $result = true;
-                break;
-
-            case 'ENCODING':
-                if ($text != '7BIT' &&
-                    $text != '8BIT' &&
-                    $text != 'BASE64' &&
-                    $text != 'QUOTED-PRINTABLE') {
-
-                    throw new File_IMC_Exception(
-                        "vCard 2.1 [$comp] [$iter]: $text is not a recognized ENCODING.",
-                        FILE_IMC::ERROR_INVALID_PARAM);
-                }
-                $result = true;
-                break;
-
-            case 'CHARSET':
-                // all charsets are OK
-                $result = true;
-                break;
-
-            case 'LANGUAGE':
-                // all languages are OK
-                $result = true;
-                break;
-
-            case 'VALUE':
-                if ($text != 'INLINE' &&
-                    $text != 'CONTENT-ID' &&
-                    $text != 'CID' &&
-                    $text != 'URL' &&
-                    $text != 'VCARD') {
-
-                    throw new File_IMC_Exception(
-                        "vCard 2.1 [$comp] [$iter]: $text is not a recognized VALUE.",
-                        FILE_IMC::ERROR_INVALID_PARAM);
-                }
-                $result = true;
-                break;
-
-            default:
-                throw new File_IMC_Exception(
-                    "vCard 2.1 [$comp] [$iter]: $name is an unknown or invalid parameter name.",
-                    FILE_IMC::ERROR_INVALID_PARAM);
-                break;
-            }
+            return $this->validateParam21($name, $text, $comp, $iter);
 
         } elseif ($this->value['VERSION'][0][0][0] == '3.0') {
 
-            // Validate against version 3.0 (pretty lenient)
-            switch ($name) {
+            return $this->validateParam30($name, $text, $comp, $iter);
 
-            case 'TYPE':
-                // all types are OK
-                $result = true;
-                break;
-
-            case 'LANGUAGE':
-                // all languages are OK
-                $result = true;
-                break;
-
-            case 'ENCODING':
-                if ($text != '8BIT' &&
-                    $text != 'B') {
-                    throw new File_IMC_Exception(
-                        "vCard 3.0 [$comp] [$iter]: The only allowed ENCODING parameters are 8BIT and B.",
-                        FILE_IMC::ERROR_INVALID_PARAM);
-                }
-                $result = true;
-                break;
-
-            case 'VALUE':
-                if ($text != 'BINARY' &&
-                    $text != 'PHONE-NUMBER' &&
-                    $text != 'TEXT' &&
-                    $text != 'URI' &&
-                    $text != 'UTC-OFFSET' &&
-                    $text != 'VCARD') {
-
-                    throw new File_IMC_Exception(
-                        "vCard 3.0 [$comp] [$iter]: The only allowed VALUE parameters are BINARY, PHONE-NUMBER, TEXT, URI, UTC-OFFSET, and VCARD.",
-                        FILE_IMC::ERROR_INVALID_PARAM);
-                }
-                $result = true;
-                break;
-
-            default:
-                throw new File_IMC_Exception(
-                    "vCard 3.0 [$comp] [$iter]: Unknown or invalid parameter name ($name).",
-                    FILE_IMC::ERROR_INVALID_PARAM);
-                break;
-
-            }
-            return $result;
         }
 
         throw new File_IMC_Exception(
             "[$comp] [$iter] Unknown vCard version number or other error.",
             FILE_IMC::ERROR);
+    }
+
+    /**
+     * Validate parameters with 2.1 vcards.
+     *
+     * @param string $name The parameter name (e.g., TYPE or ENCODING).
+     *
+     * @param string $text The parameter value (e.g., HOME or BASE64).
+     *
+     * @param string $comp Optional, the component name (e.g., ADR or
+     *                     PHOTO).  Only used for error messaging.
+     *
+     * @param string $iter Optional, the iteration of the component.
+     *                     Only used for error messaging.
+     *
+     * @return boolean
+     */
+    protected function validateParam21($name, $text, $comp, $iter)
+    {
+        // Validate against version 2.1 (pretty strict)
+        static $types = array (
+            'DOM', 'INTL', 'POSTAL', 'PARCEL','HOME', 'WORK',
+            'PREF', 'VOICE', 'FAX', 'MSG', 'CELL', 'PAGER',
+            'BBS', 'MODEM', 'CAR', 'ISDN', 'VIDEO',
+            'AOL', 'APPLELINK', 'ATTMAIL', 'CIS', 'EWORLD',
+            'INTERNET', 'IBMMAIL', 'MCIMAIL',
+            'POWERSHARE', 'PRODIGY', 'TLX', 'X400',
+            'GIF', 'CGM', 'WMF', 'BMP', 'MET', 'PMB', 'DIB',
+            'PICT', 'TIFF', 'PDF', 'PS', 'JPEG', 'QTIME',
+            'MPEG', 'MPEG2', 'AVI',
+            'WAVE', 'AIFF', 'PCM',
+            'X509', 'PGP'
+        );
+
+        switch ($name) {
+
+        case 'TYPE':
+            if (!in_array($text, $types)) {
+                throw new File_IMC_Exception(
+                    "vCard 2.1 [$comp] [$iter]: $text is not a recognized TYPE.",
+                    FILE_IMC::ERROR_INVALID_PARAM);
+            }
+            $result = true;
+            break;
+
+        case 'ENCODING':
+            if ($text != '7BIT' &&
+                $text != '8BIT' &&
+                $text != 'BASE64' &&
+                $text != 'QUOTED-PRINTABLE') {
+
+                throw new File_IMC_Exception(
+                    "vCard 2.1 [$comp] [$iter]: $text is not a recognized ENCODING.",
+                    FILE_IMC::ERROR_INVALID_PARAM);
+            }
+            $result = true;
+            break;
+
+        case 'CHARSET':  // all charsets are OK
+        case 'LANGUAGE': // all languages are OK
+            $result = true;
+            break;
+
+        case 'VALUE':
+            if ($text != 'INLINE' &&
+                $text != 'CONTENT-ID' &&
+                $text != 'CID' &&
+                $text != 'URL' &&
+                $text != 'VCARD') {
+
+                throw new File_IMC_Exception(
+                    "vCard 2.1 [$comp] [$iter]: $text is not a recognized VALUE.",
+                    FILE_IMC::ERROR_INVALID_PARAM);
+            }
+            $result = true;
+            break;
+
+        default:
+            throw new File_IMC_Exception(
+                "vCard 2.1 [$comp] [$iter]: $name is an unknown or invalid parameter name.",
+                FILE_IMC::ERROR_INVALID_PARAM);
+            break;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Validate parameters with 3.0 vcards.
+     *
+     * @param string $name The parameter name (e.g., TYPE or ENCODING).
+     *
+     * @param string $text The parameter value (e.g., HOME or BASE64).
+     *
+     * @param string $comp Optional, the component name (e.g., ADR or
+     *                     PHOTO).  Only used for error messaging.
+     *
+     * @param string $iter Optional, the iteration of the component.
+     *                     Only used for error messaging.
+     *
+     * @return boolean
+     * @throws File_IMC_Exception In case of unexpectiveness.
+     */
+    protected function validateParam30($name, $text, $comp, $iter)
+    {
+
+        // Validate against version 3.0 (pretty lenient)
+        switch ($name) {
+
+        case 'TYPE':     // all types are OK
+        case 'LANGUAGE': // all languages are OK
+            $result = true;
+            break;
+
+        case 'ENCODING':
+            if ($text != '8BIT' &&
+                $text != 'B') {
+                throw new File_IMC_Exception(
+                    "vCard 3.0 [$comp] [$iter]: The only allowed ENCODING parameters are 8BIT and B.",
+                    FILE_IMC::ERROR_INVALID_PARAM);
+            }
+            $result = true;
+            break;
+
+        case 'VALUE':
+            if ($text != 'BINARY' &&
+                $text != 'PHONE-NUMBER' &&
+                $text != 'TEXT' &&
+                $text != 'URI' &&
+                $text != 'UTC-OFFSET' &&
+                $text != 'VCARD') {
+
+                $msg  = "vCard 3.0 [$comp] [$iter]: The only allowed VALUE";
+                $msg .= " parameters are BINARY, PHONE-NUMBER, TEXT, URI,";
+                $msg .= " UTC-OFFSET, and VCARD.";
+
+                throw new File_IMC_Exception($msg, FILE_IMC::ERROR_INVALID_PARAM);
+            }
+            $result = true;
+            break;
+        default:
+            throw new File_IMC_Exception(
+                "vCard 3.0 [$comp] [$iter]: Unknown or invalid parameter name ($name).",
+                FILE_IMC::ERROR_INVALID_PARAM);
+            break;
+
+        }
+        return $result;
     }
 
     /**

@@ -58,8 +58,13 @@
 *
 * "Get" returns the full vCard line for a single iteration.
 *
-* @author Paul M. Jones <pmjones@ciaweb.net>
-* @package File_IMC
+* @category File_Formats
+* @package  File_IMC
+* @author   Paul M. Jones <pmjones@ciaweb.net>
+* @author   Till Klampaeckel <till@php.net>
+* @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
+* @version  Release: @package_version@
+* @link     http://pear.php.net/package/File_IMC
 */
 abstract class File_IMC_Build
 {
@@ -248,8 +253,8 @@ abstract class File_IMC_Build
         }
 
         // massage the text arguments
-        $comp = strtoupper(trim($comp));
-        $param_name = strtoupper(trim($param_name));
+        $comp        = strtoupper(trim($comp));
+        $param_name  = strtoupper(trim($param_name));
         $param_value = trim($param_value);
 
         if (! is_integer($iter) || $iter < 0) {

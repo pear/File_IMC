@@ -43,7 +43,7 @@
  */
 
 /**
-* File_IMC_Parse_Vcalendar_Events
+* File_IMC_Parse_Vcalendar_Event
 *
 * <code>
 *   $parser = File_IMC::parse('vcalendar');
@@ -52,7 +52,7 @@
 *   $events = $parser->getEvents();
 *
 *   while ($events->valid()) {
-*       $event = $events->current();
+*       $event = $events->current(); // File_IMC_Parse_Vcalendar_Event
 *       $events->next();
 *   }
 * </code>
@@ -64,66 +64,37 @@
 * @version  Release: @package_version@
 * @link     http://pear.php.net/package/File_IMC
 */
-class File_IMC_Parse_Vcalendar_Events extends ArrayIterator
+class File_IMC_Parse_Vcalendar_Event
 {
     protected $data;
-    protected $index;
 
     public function __construct(array $data)
     {
         $this->data  = $data;
-        $this->index = 0;
     }
 
-    public function append($value)
+    public function getDescription()
     {
+        return $this->data['DESCRIPTION'][0]['value'][0][0];
     }
 
-    public function count()
+    public function getEnd()
     {
-        return count($this->data);
+        return $this->data['DTEND'][0]['value'][0][0];
     }
 
-    public function current()
+    public function getStart()
     {
-        return new File_IMC_Parse_Vcalendar_Event($this->data[$this->index]);
+        return $this->data['DTSTART'][0]['value'][0][0];
     }
 
-    /*
-    public function get($index)
+    public function getSummary()
     {
-        if (isset($this->data[$index])) {
-            return $this->data[$index];
-        }
-        throw File_IMC_Exception("Invalid index.");
-    }
-    */
-
-    public function key()
-    {
-        return $this->index;
+        return $this->data['SUMMARY'][0]['value'][0][0];
     }
 
-    public function next()
+    public function toArray()
     {
-        ++$this->index;
-    }
-
-    public function rewind()
-    {
-        $this->index = 0;
-    }
-
-    public function seek($position)
-    {
-        $this->index = $position;
-    }
-
-    public function valid()
-    {
-        if (isset($this->data[$this->index])) {
-            return true;
-        }
-        return false;
+        return $this->data;
     }
 }

@@ -51,8 +51,9 @@
 *
 *   $events = $parser->getEvents();
 *
-*   while($events->valid()) {
-*     $event = $events->current();
+*   while ($events->valid()) {
+*       $event = $events->current();
+*       $events->next();
 *   }
 * </code>
 *

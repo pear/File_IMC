@@ -87,7 +87,8 @@ class File_IMC_Parse_Vcalendar extends File_IMC_Parse
      */
     public function getEvents()
     {
-        return new File_IMC_Parse_Vcalendar_Events($this->data['VCALENDAR'][0]['VEVENT']);
+        $eventArray = $this->data['VCALENDAR'][0]['VEVENT'];
+        return new File_IMC_Parse_Vcalendar_Events($eventArray);
     }
 
     /**

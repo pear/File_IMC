@@ -10,12 +10,12 @@
  * the PHP License and are unable to obtain it through the world-wide-web, please
  * send a note to license@php.net so we can mail you a copy immediately.
  *
- * @category  File_Formats
- * @package   File_IMC
- * @author    Till Klampaeckel <till@php.net>
- * @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version   SVN: $Id$
- * @link      http://pear.php.net/package/File_IMC
+ * @category File_Formats
+ * @package  File_IMC
+ * @author   Till Klampaeckel <till@php.net>
+ * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @version  SVN: $Id$
+ * @link     http://pear.php.net/package/File_IMC
  */
 
 /**
@@ -46,9 +46,22 @@ require_once "File/IMC.php";
  */
 class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var File_IMC_Parse_Vcalendar
+     */
     protected static $parser;
+
+    /**
+     * @var array
+     */
     protected static $calendar;
 
+    /**
+     * Setup for all test methods
+     *
+     * @uses self::$parser
+     * @uses self::$calendar
+     */
     public function setUp()
     {
         self::$parser = File_IMC::parse('vcalendar');
@@ -58,10 +71,16 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
         self::$calendar = $calinfo['VCALENDAR'][0];
     }
 
+    /**
+     * To be used.
+     */
     public static function vcalendarProvider()
     {
     }
 
+    /**
+     * Test ArrayIterator::count()
+     */
     public function testEventCount()
     {
         $events = self::$calendar['VEVENT'];
@@ -71,26 +90,41 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(3, count($events));
     }
 
+    /**
+     * Test and compare {@link File_IMC_Parse_Vcalendar::getVersion()} to the array
+     * structure internally used.
+     *
+     * @uses self::$calendar
+     * @uses self::$parser
+     */
     public function testVersion()
     {
         $this->assertSame('1.0', self::$calendar['VERSION'][0]['value'][0][0]);
         $this->assertSame(self::$calendar['VERSION'][0]['value'][0][0], self::$parser->getVersion());
     }
 
+    /**
+     * Data provider for {@link self::testEvents()}.
+     *
+     * @return array
+     * @see    self::testEvents()
+     */
     public static function eventProvider()
     {
-        $parser   = File_IMC::parse('vcalendar');
-        $calinfo  = $parser->fromFile(dirname(__FILE__) . '/sample.vcs');
-        $calendar = $calinfo['VCALENDAR'][0];
+        $parser = File_IMC::parse('vcalendar');
+        $parser->fromFile(dirname(__FILE__) . '/sample.vcs');
 
-        $events = $calendar['VEVENT'];
+        $events = $parser->getEvents();
 
-        $event1 = $events[0];
-        $event2 = $events[1];
-        $event3 = $events[2];
+        $event1 = $events->current();
+
+        $events->next();
+        $event2 = $events->current();
+
+        $events->next();
+        $event3 = $events->current();
 
         //var_dump(self::$calendar, $events, $event1, $event2, $event3); exit;
-        //var_dump($event2); exit;
 
         $event1_desc  = "Interested in becoming a volunteer for the Sacramento SPCA? We'd love to have you join our team! Please download a volunteer application from this website, and when you mail it in, indicate that you'd like to attend this orientation.";
         $event1_desc .= "\n\n";

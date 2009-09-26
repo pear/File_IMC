@@ -1,7 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */ 
-/**+----------------------------------------------------------------------+
- * | PHP version 5                                                        |
+/*
  * +----------------------------------------------------------------------+
  * | Copyright (c) 1997-2008 The PHP Group                                |
  * +----------------------------------------------------------------------+
@@ -34,9 +32,11 @@
  * | POSSIBILITY OF SUCH DAMAGE.                                          |
  * +----------------------------------------------------------------------+
  *
- * @category Services
- * @package  File_Formats
- * @author   Marshall Roch <mroch@php.net>
+ * PHP Version 5
+ *
+ * @category File_Formats
+ * @package  File_IMC
+ * @author   Till Klampaeckel <till@php.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @version  SVN: $Id$
  * @link     http://pear.php.net/package/File_IMC
@@ -47,19 +47,24 @@
 *
 * @category File_Formats
 * @package  File_IMC
-* @author   Paul M. Jones <pjones@ciaweb.net>
 * @author   Till Klampaeckel <till@php.net>
 * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
 * @version  Release: @package_version@
 * @link     http://pear.php.net/package/File_IMC
 */
-class File_IMC_Parse_Vcalendar_Events implements Countable
+class File_IMC_Parse_Vcalendar_Events extends ArrayIterator
 {
     protected $data;
+    protected $index;
 
     public function __construct(array $data)
     {
-        $this->data = $data;
+        $this->data  = $data;
+        $this->index = 0;
+    }
+
+    public function append($value)
+    {
     }
 
     public function count()
@@ -67,11 +72,46 @@ class File_IMC_Parse_Vcalendar_Events implements Countable
         return count($this->data);
     }
 
+    public function current()
+    {
+        return $this->data[$this->index];
+    }
+
+    /*
     public function get($index)
     {
         if (isset($this->data[$index])) {
             return $this->data[$index];
         }
         throw File_IMC_Exception("Invalid index.");
+    }
+    */
+
+    public function key()
+    {
+        return $this->index;
+    }
+
+    public function next()
+    {
+        ++$this->index;
+    }
+
+    public function rewind()
+    {
+        $this->index = 0;
+    }
+
+    public function seek($position)
+    {
+        $this->index = $position;
+    }
+
+    public function valid()
+    {
+        if (isset($this->data[$this->index])) {
+            return true;
+        }
+        return false;
     }
 }

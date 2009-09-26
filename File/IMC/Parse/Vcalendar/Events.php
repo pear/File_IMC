@@ -45,6 +45,17 @@
 /**
 * File_IMC_Parse_Vcalendar_Events
 *
+* <code>
+*   $parser = File_IMC::parse('vcalendar');
+*   $parser->fromFile('path/to/sample.vcs');
+*
+*   $events = $parser->getEvents();
+*
+*   while($events->valid()) {
+*     $event = $events->current();
+*   }
+* </code>
+*
 * @category File_Formats
 * @package  File_IMC
 * @author   Till Klampaeckel <till@php.net>

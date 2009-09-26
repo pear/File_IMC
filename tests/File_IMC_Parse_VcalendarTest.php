@@ -116,13 +116,16 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
 
         $events = $parser->getEvents();
 
-        $event1 = $events->current();
+        $event1Obj = $events->current();
+        $event1    = $event1Obj->toArray();
 
         $events->next();
-        $event2 = $events->current();
+        $event2Obj = $events->current();
+        $event2    = $event2Obj->toArray();
 
         $events->next();
-        $event3 = $events->current();
+        $event3Obj = $events->current();
+        $event3    = $event3Obj->toArray();
 
         //var_dump(self::$calendar, $events, $event1, $event2, $event3); exit;
 
@@ -139,15 +142,20 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
         // event 1
             array('New Volunteer Orientation', $event1['SUMMARY'][0]['value'][0][0]),
             //array($event1_desc, $event1['DESCRIPTION'][0]['value'][0][0]),
+            array($event1Obj->getSummary(), $event1['SUMMARY'][0]['value'][0][0]),
 
         // event 2
             array('Test Event 2', $event2['SUMMARY'][0]['value'][0][0]),
+            array($event2Obj->getSummary(), $event2['SUMMARY'][0]['value'][0][0]),
             array($event2_desc, $event2['DESCRIPTION'][0]['value'][0][0]),
+            array($event2Obj->getDescription(), $event2['DESCRIPTION'][0]['value'][0][0]),
             array('"http://www.example.com"', $event2['DESCRIPTION'][0]['param']['ALTREP'][0]),
 
         // event 3
             array('Test Event 3', $event3['SUMMARY'][0]['value'][0][0]),
+            array($event3Obj->getSummary(), $event3['SUMMARY'][0]['value'][0][0]),
             array($event3_desc, $event3['DESCRIPTION'][0]['value'][0][0]),
+            array($event3Obj->getDescription(), $event3['DESCRIPTION'][0]['value'][0][0]),
         );
     }
 
@@ -157,5 +165,31 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
     public function testEvents($assert, $actual)
     {
         $this->assertSame($assert, $actual);
+    }
+
+    /**
+     * Test looping with valid(), next() and current() on
+     * {@link File_IMC_Parse_Vcalendar_Events}.
+     *
+     * @return void
+     * @uses   self::$parser
+     */
+    public function testValid()
+    {
+        $events = self::$parser->getEvents();
+
+        $i = 0;
+        while ($events->valid()) {
+            $event = $events->current();
+            //var_dump($event); exit;
+
+            $this->assertType('File_IMC_Parse_Vcalendar_Event', $event);
+
+            $events->next();
+
+            ++$i;
+        }
+
+        $this->assertEquals(3, $i);
     }
 }

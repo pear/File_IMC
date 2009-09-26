@@ -46,13 +46,18 @@ is the use of a factory pattern.  Again, see the examples.
  * this release heavily breaks BC to previous releases
   * no longer PHP4 compatible
   * implemented visibility in all classes
+  * moved all constants in classes, updated references
   * updates to class methods:
     * methods only used internally are not public anymore (but protected)
     * changes in visiblity also lead to a lot of changes in naming
-  * File_IMC_Build is now an abstract class
+  * File_IMC_Build
+    * is now an abstract class
+    * added test suite
+    * implements a fluent interface
+  * File_IMC_Parse_*
+    * implemented sane get-methods for the data
+    * added tests (from Contact_Vcard_Parse)
  * CS fixes
- * File_IMC_Build_Vcard implements a fluent interface
- * added some tests from Contact_Vcard_Parse to cover File_IMC_Parse_Vcard
  </notes>
  <contents>
   <dir name="/">

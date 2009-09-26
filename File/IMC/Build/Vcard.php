@@ -98,7 +98,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         if ($text != '3.0' && $text != '2.1') {
             throw new File_IMC_Exception(
                 'Version must be 3.0 or 2.1 to be valid.',
-                FILE_IMC::ERROR_INVALID_FILE_IMC_VCARD_VERSION);
+                FILE_IMC::ERROR_INVALID_VCARD_VERSION);
         }
         $this->setValue('VERSION', 0, 0, $text);
     }

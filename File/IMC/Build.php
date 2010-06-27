@@ -102,7 +102,14 @@ abstract class File_IMC_Build
     */
     public function reset($version = null)
     {
-        $prev = $this->value['VERSION'][0][0][0];
+        if (isset($this->value['VERSION'])) {
+            $prev = $this->value['VERSION'][0][0][0];
+        } else {
+
+            // this is extremely painful
+            $prev = null;
+            $this->setVersion();
+        }
 
         $this->value = array();
         $this->param = array();
@@ -138,8 +145,7 @@ abstract class File_IMC_Build
     */
     public function getVersion()
     {
-        return $this->getMeta('VERSION', 0) .
-            $this->getValue('VERSION', 0);
+        return $this->getMeta('VERSION', 0) . $this->getValue('VERSION', 0);
     }
 
     /**
@@ -342,8 +348,16 @@ abstract class File_IMC_Build
     {
         $comp = strtoupper($comp);
         settype($text, 'array');
+
+        if (!isset($this->value[$comp])) {
+            $this->value[$comp] = array();
+        }
+        if (!isset($this->value[$comp][$iter])) {
+            $this->value[$comp][$iter] = array();
+        }
+
         $this->value[$comp][$iter][$part] = $text;
-        $this->autoparam = $comp;
+        $this->autoparam                  = $comp;
     }
 
     /**
@@ -428,10 +442,14 @@ abstract class File_IMC_Build
     */
     public function getParam($comp, $iter = 0)
     {
-        $comp = strtoupper($comp);
+        $comp = trim(strtoupper($comp));
         $text = '';
 
-        if (!is_array($this->param[$comp][$iter])) {
+        if (!isset($this->param[$comp])) {
+            $this->param[$comp] = array();
+        }
+        if (!isset($this->param[$comp][$iter])
+            || !is_array($this->param[$comp][$iter])) {
             // if there were no parameters, this will be blank.
             return $text;
         }

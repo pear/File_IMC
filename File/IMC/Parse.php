@@ -340,9 +340,10 @@ abstract class File_IMC_Parse
             $text = str_replace('\,', ',', $text);
             $text = str_replace('\n', "\n", $text);
             */
-            // combined
-            $find    = array('\:', '\;', '\,', '\n');
-            $replace = array(':',  ';',  ',',  "\n");
+            // combined with \r per #16637
+            $find    = array('\:', '\;', '\,', '\n', '\r');
+            $replace = array(':',  ';',  ',',  "\n", "\r");
+
             $text    = str_replace($find, $replace, $text);
         }
         return $text;

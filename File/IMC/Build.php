@@ -203,9 +203,9 @@ abstract class File_IMC_Build
         $text = preg_replace("/$regex/i", "\\n", $text);
         */
 
-        // combined (per note from Daniel Convissor)
-        $regex = '(?<!\\\\)([\:\;\,\\n])';
-        $text = preg_replace("/$regex/", '\\\$1', $text);
+        // combined (per note from Daniel Convissor) and also \r per #16637
+        $regex = '(?<!\\\\)([\:\;\,\\n\\r])';
+        $text  = preg_replace("/$regex/", '\\\$1', $text);
     }
 
     /**

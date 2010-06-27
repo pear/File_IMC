@@ -24,11 +24,6 @@
  */
 require_once 'PHPUnit/Framework/TestCase.php';
 
-set_include_path(
-    realpath(dirname(__FILE__) . '/../')
-    . ':' . get_include_path()
-);
-
 /**
  * File_IMC
  */

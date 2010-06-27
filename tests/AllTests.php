@@ -19,6 +19,16 @@
  * @since      0.4.0
  */
 
+$svnOrNot = '@package_version@';
+if ($svnOrNot == '@package_version@') {
+    // we run from svn and fiddle with the include_path
+    set_include_path(
+        realpath(dirname(__FILE__) . '/../')
+        . PATH_SEPARATOR
+        . get_include_path()
+    );
+}
+
 
 /**
  * Check PHP version... PhpUnit v3+ requires at least PHP v5.1.4

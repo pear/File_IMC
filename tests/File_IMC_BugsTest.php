@@ -94,6 +94,6 @@ END:VCARD
         $cardinfo = $parser->fromText($testVcard);
         $address  = $cardinfo['VCARD'][0]['ADR'][0]['value'];
 
-        $this->assertEquals($address[2][0], '22221 W, Unit 3');
+        $this->assertEquals($address[File_IMC::VCARD_ADR_STREET][0], '22221 W, Unit 3');
     }
 }

@@ -1016,7 +1016,11 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         $postcode, $country)
     {
         $this->autoparam = 'ADR';
-        $iter = count($this->value['ADR']);
+        if (isset($this->value['ADR'])) {
+            $iter = count($this->value['ADR']);
+        } else {
+            $iter = 0;
+        }
         $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_POB,       $pob);
         $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_EXTEND,    $extend);
         $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_STREET,    $street);
@@ -1106,7 +1110,11 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     public function addTelephone($text)
     {
         $this->autoparam = 'TEL';
-        $iter = count($this->value['TEL']);
+        if (isset($this->value['TEL'])) {
+            $iter = count($this->value['TEL']);
+        } else {
+          $iter = 0;
+        }
         $this->setValue('TEL', $iter, 0, $text);
 
         return $this;
@@ -1348,38 +1356,38 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         }
 
         // displayed name of the data source  (3.0 only)
-        if (is_array($this->value['NAME']) &&
+        if (isset($this->value['NAME']) && is_array($this->value['NAME']) &&
             $this->value['VERSION'][0][0][0] == '3.0') {
             $lines[] = $this->getSourceName();
         }
 
         // data source (3.0 only)
-        if (is_array($this->value['SOURCE']) &&
+        if (isset($this->value['SOURCE']) && is_array($this->value['SOURCE']) &&
             $this->value['VERSION'][0][0][0] == '3.0') {
             $lines[] = $this->getSource();
         }
 
         // nicknames (3.0 only)
-        if (is_array($this->value['NICKNAME']) &&
+        if (isset($this->value['NICKNAME']) && is_array($this->value['NICKNAME']) &&
             $this->value['VERSION'][0][0][0] == '3.0') {
             $lines[] = $this->getNickname();
         }
 
         // personal photo
         // available in both 2.1 and 3.0
-        if (is_array($this->value['PHOTO'])) {
+        if (isset($this->value['PHOTO']) && is_array($this->value['PHOTO'])) {
             $lines[] = $this->getPhoto();
         }
 
         // bday
         // available in both 2.1 and 3.0
-        if (is_array($this->value['BDAY'])) {
+        if (isset($this->value['BDAY']) && is_array($this->value['BDAY'])) {
             $lines[] = $this->getBirthday();
         }
 
         // adr
         // available in both 2.1 and 3.0
-        if (is_array($this->value['ADR'])) {
+        if (isset($this->value['ADR']) && is_array($this->value['ADR'])) {
             foreach ($this->value['ADR'] as $key => $val) {
                 $lines[] = $this->getAddress($key);
             }
@@ -1387,7 +1395,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 
         // label
         // available in both 2.1 and 3.0
-        if (is_array($this->value['LABEL'])) {
+        if (isset($this->value['LABEL']) && is_array($this->value['LABEL'])) {
             foreach ($this->value['LABEL'] as $key => $val) {
                 $lines[] = $this->getLabel($key);
             }
@@ -1395,7 +1403,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 
         // tel
         // available in both 2.1 and 3.0
-        if (is_array($this->value['TEL'])) {
+        if (isset($this->value['TEL']) && is_array($this->value['TEL'])) {
             foreach ($this->value['TEL'] as $key => $val) {
                 $lines[] = $this->getTelephone($key);
             }
@@ -1403,7 +1411,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 
         // email
         // available in both 2.1 and 3.0
-        if (is_array($this->value['EMAIL'])) {
+        if (isset($this->value['EMAIL']) && is_array($this->value['EMAIL'])) {
             foreach ($this->value['EMAIL'] as $key => $val) {
                 $lines[] = $this->getEmail($key);
             }
@@ -1411,109 +1419,109 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 
         // mailer
         // available in both 2.1 and 3.0
-        if (is_array($this->value['MAILER'])) {
+        if (isset($this->value['MAILER']) && is_array($this->value['MAILER'])) {
             $lines[] = $this->getMailer();
         }
 
         // tz
         // available in both 2.1 and 3.0
-        if (is_array($this->value['TZ'])) {
+        if (isset($this->value['TZ']) && is_array($this->value['TZ'])) {
             $lines[] = $this->getTZ();
         }
 
         // geo
         // available in both 2.1 and 3.0
-        if (is_array($this->value['GEO'])) {
+        if (isset($this->value['GEO']) && is_array($this->value['GEO'])) {
             $lines[] = $this->getGeo();
         }
 
         // title
         // available in both 2.1 and 3.0
-        if (is_array($this->value['TITLE'])) {
+        if (isset($this->value['TITLE']) && is_array($this->value['TITLE'])) {
             $lines[] = $this->getTitle();
         }
 
         // role
         // available in both 2.1 and 3.0
-        if (is_array($this->value['ROLE'])) {
+        if (isset($this->value['ROLE']) && is_array($this->value['ROLE'])) {
             $lines[] = $this->getRole();
         }
 
         // company logo
         // available in both 2.1 and 3.0
-        if (is_array($this->value['LOGO'])) {
+        if (isset($this->value['LOGO']) && is_array($this->value['LOGO'])) {
             $lines[] = $this->getLogo();
         }
 
         // agent
         // available in both 2.1 and 3.0
-        if (is_array($this->value['AGENT'])) {
+        if (isset($this->value['AGENT']) && is_array($this->value['AGENT'])) {
             $lines[] = $this->getAgent();
         }
 
         // org
         // available in both 2.1 and 3.0
-        if (is_array($this->value['ORG'])) {
+        if (isset($this->value['ORG']) && is_array($this->value['ORG'])) {
             $lines[] = $this->getOrganization();
         }
 
         // categories (3.0 only)
-        if (is_array($this->value['CATEGORIES']) &&
+        if (isset($this->value['CATEGORIES']) && is_array($this->value['CATEGORIES']) &&
             $this->value['VERSION'][0][0][0] == '3.0') {
             $lines[] = $this->getCategories();
         }
 
         // note
         // available in both 2.1 and 3.0
-        if (is_array($this->value['NOTE'])) {
+        if (isset($this->value['NOTE']) && is_array($this->value['NOTE'])) {
             $lines[] = $this->getNote();
         }
 
         // prodid (3.0 only)
-        if (is_array($this->value['PRODID']) &&
+        if (isset($this->value['PRODID']) && is_array($this->value['PRODID']) &&
             $this->value['VERSION'][0][0][0] == '3.0') {
             $lines[] = $this->getProductID();
         }
 
         // rev
         // available in both 2.1 and 3.0
-        if (is_array($this->value['REV'])) {
+        if (isset($this->value['REV']) && is_array($this->value['REV'])) {
             $lines[] = $this->getRevision();
         }
 
         // sort-string (3.0 only)
-        if (is_array($this->value['SORT-STRING']) &&
+        if (isset($this->value['SORT-STRING']) && is_array($this->value['SORT-STRING']) &&
             $this->value['VERSION'][0][0][0] == '3.0') {
             $lines[] = $this->getSortString();
         }
 
         // name-pronounciation sound
         // available in both 2.1 and 3.0
-        if (is_array($this->value['SOUND'])) {
+        if (isset($this->value['SOUND']) && is_array($this->value['SOUND'])) {
             $lines[] = $this->getSound();
         }
 
         // uid
         // available in both 2.1 and 3.0
-        if (is_array($this->value['UID'])) {
+        if (isset($this->value['UID']) && is_array($this->value['UID'])) {
             $lines[] = $this->getUniqueID();
         }
 
         // url
         // available in both 2.1 and 3.0
-        if (is_array($this->value['URL'])) {
+        if (isset($this->value['URL']) && is_array($this->value['URL'])) {
             $lines[] = $this->getURL();
         }
 
         // class (3.0 only)
-        if (is_array($this->value['CLASS']) &&
+        if (isset($this->value['CLASS']) && is_array($this->value['CLASS']) &&
             $this->value['VERSION'][0][0][0] == '3.0') {
             $lines[] = $this->getClass();
         }
 
         // key
         // available in both 2.1 and 3.0
-        if (is_array($this->value['KEY'])) {
+        if (isset($this->value['KEY']) &&is_array($this->value['KEY'])) {
             $lines[] = $this->getKey();
         }
 

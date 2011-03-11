@@ -85,6 +85,11 @@ require_once 'File_IMC_Parse_VcalendarTest.php';
 require_once 'File_IMC_BuildTest.php';
 
 /**
+ * File_IMC_BugsTest
+ */
+require_once 'File_IMC_BugsTest.php';
+
+/**
  * Master Unit Test Suite class for File_IMC
  *
  * This top-level test suite class organizes
@@ -134,6 +139,7 @@ class File_IMC_AllTests
         $suite->addTestSuite('File_IMC_ParseTest');
         $suite->addTestSuite('File_IMC_Parse_VcalendarTest');
         $suite->addTestSuite('File_IMC_BuildTest');
+        $suite->addTestSuite('File_IMC_BugsTest');
 
         /*
          * add PHPT tests

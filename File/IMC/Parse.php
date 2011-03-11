@@ -330,8 +330,7 @@ abstract class File_IMC_Parse
     {
         if (is_array($text)) {
             foreach ($text as $key => $val) {
-                $this->_unescape($val);
-                $text[$key] = $val;
+                $text[$key] = $this->_unescape($val);
             }
         } else {
             /*

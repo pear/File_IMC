@@ -69,8 +69,31 @@ END:VCALENDAR';
         $description = $event['DESCRIPTION'][0]['value'][0][0];
 
         $this->assertEquals(
-            $description,
-            'This\n\nIs\n\nMy\n\nNotes\n\nTRE\n'
+            "This\n\nIs\n\nMy\n\nNotes\n\nTRE\n",
+			$description
         );
 	}
+
+    /**
+     * Weird escaping going on.
+     *
+     * @return void
+     */
+    public function test18155()
+    {
+        $testVcard = '
+BEGIN:VCARD
+VERSION:3.0
+N:Someone;Someone;;;
+FN:Someone
+ADR;type=WORK;type=pref:;;22221 W\, Unit 3;Somewhere;IL;60002;
+END:VCARD
+';
+
+        $parser   = File_IMC::parse('vCard');
+        $cardinfo = $parser->fromText($testVcard);
+        $address  = $cardinfo['VCARD'][0]['ADR'][0]['value'];
+
+        $this->assertEquals($address[2][0], '22221 W, Unit 3');
+    }
 }

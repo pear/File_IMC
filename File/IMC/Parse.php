@@ -560,7 +560,7 @@ abstract class File_IMC_Parse
             $name = $this->_getParamName($key);
 
             // list of all parameter values
-            $listall = trim($tmp[1]);
+            $listall = array_key_exists(1, $tmp) ? trim($tmp[1]) : '';
 
             // if there is a value-list for this parameter, they are
             // separated by commas, so split them out too.

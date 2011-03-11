@@ -129,13 +129,18 @@ class File_IMC
     const VCARD_GEO_LON = 1;
 
     /**
+	 * SPL-compatible autoloader.
+	 *
      * @param string $className Name of the class to load.
      *
      * @return boolean
      */
     public static function autoload($className)
     {
-        return require str_replace('_', '/', $className) . '.php';
+        if (strpos($className, 'File_IMC') === false) {
+            return false;
+		}
+        return include str_replace('_', '/', $className) . '.php';
     }
 
     /**

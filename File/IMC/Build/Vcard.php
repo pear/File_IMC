@@ -1152,7 +1152,11 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     public function addEmail($text)
     {
         $this->autoparam = 'EMAIL';
-        $iter            = count($this->value['EMAIL']);
+
+        $iter = 0;
+        if (array_key_exists('EMAIL', $this->value)) {
+            $iter = count($this->value['EMAIL']);
+        }
 
         $this->setValue('EMAIL', $iter, 0, $text);
 

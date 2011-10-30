@@ -178,7 +178,7 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
             $event = $events->current();
             //var_dump($event); exit;
 
-            $this->assertType('File_IMC_Parse_Vcalendar_Event', $event);
+            $this->assertInstanceOf('File_IMC_Parse_Vcalendar_Event', $event);
 
             $events->next();
 

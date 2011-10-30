@@ -82,8 +82,8 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
      */
     public function testFluentInterface()
     {
-        $this->assertType('File_IMC_Build_Vcard', $this->vcard->setName('Doe', 'John'));
-        $this->assertType('File_IMC_Build_Vcard', $this->vcard->setSource('Your mom.'));
+        $this->assertInstanceOf('File_IMC_Build_Vcard', $this->vcard->setName('Doe', 'John'));
+        $this->assertInstanceOf('File_IMC_Build_Vcard', $this->vcard->setSource('Your mom.'));
     }
 
     /**

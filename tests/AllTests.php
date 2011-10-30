@@ -55,7 +55,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 /*
  * Files needed by PhpUnit
  */
-require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 require_once 'PHPUnit/Extensions/PhptTestSuite.php';
 

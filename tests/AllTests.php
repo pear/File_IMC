@@ -72,22 +72,22 @@ define('File_IMC_DIR_PHPT', dirname(__FILE__));
 /**
  * File_IMC_ParseTest
  */
-require_once 'File_IMC_ParseTest.php';
+require_once 'File/IMC/ParseTest.php';
 
 /**
  * File_IMC_Parse_VcalendarTest
  */
-require_once 'File_IMC_Parse_VcalendarTest.php';
+require_once 'File/IMC/Parse/VcalendarTest.php';
 
 /**
  * File_IMC_BuildTest
  */
-require_once 'File_IMC_BuildTest.php';
+require_once 'File/IMC/BuildTest.php';
 
 /**
  * File_IMC_BugsTest
  */
-require_once 'File_IMC_BugsTest.php';
+require_once 'File/IMC/BugsTest.php';
 
 /**
  * Master Unit Test Suite class for File_IMC

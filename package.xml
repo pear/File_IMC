@@ -95,18 +95,24 @@ is the use of a factory pattern.  Again, see the examples.</description>
     <file name="AllTests.php" role="test">
      <tasks:replace from="@package_version@" to="version" type="package-info" />
     </file>
-    <file name="File_IMC_BugsTest.php" role="test">
-     <tasks:replace from="@package_version@" to="version" type="package-info" />
-    </file>
-    <file name="File_IMC_BuildTest.php" role="test">
-     <tasks:replace from="@package_version@" to="version" type="package-info" />
-    </file>
-    <file name="File_IMC_ParseTest.php" role="test">
-     <tasks:replace from="@package_version@" to="version" type="package-info" />
-    </file>
-    <file name="File_IMC_Parse_VcalendarTest.php" role="test">
-     <tasks:replace from="@package_version@" to="version" type="package-info" />
-    </file>
+    <dir name="File">
+     <dir name="IMC">
+      <file name="BugsTest.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="BuildTest.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="ParseTest.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <dir name="Parse">
+       <file name="VcalendarTest.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir>
+     </dir>
+    </dir>
     <file name="sample.vcf" role="test" />
     <file name="sample.vcs" role="test" />
     <file name="vcard-parse.phpt" role="test" />

@@ -61,7 +61,7 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
     {
         self::$parser = File_IMC::parse('vcalendar');
 
-        $calinfo = self::$parser->fromFile(dirname(__FILE__) . '/sample.vcs');
+        $calinfo = self::$parser->fromFile(dirname(__FILE__) . '/../../../sample.vcs');
 
         self::$calendar = $calinfo['VCALENDAR'][0];
     }
@@ -107,7 +107,7 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
     public static function eventProvider()
     {
         $parser = File_IMC::parse('vcalendar');
-        $parser->fromFile(dirname(__FILE__) . '/sample.vcs');
+        $parser->fromFile(dirname(__FILE__) . '/../../../sample.vcs');
 
         $events = $parser->getEvents();
 

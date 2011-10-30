@@ -264,7 +264,7 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
     public function testFromFile()
     {
         $parser = File_IMC::parse('vcard');
-        $parsed = $parser->fromFile(dirname(__FILE__) . '/sample.vcf');
+        $parsed = $parser->fromFile(dirname(__FILE__) . '/../../sample.vcf');
 
         $vcard = $parsed['VCARD'][0];
 

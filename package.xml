@@ -26,10 +26,10 @@ is the use of a factory pattern.  Again, see the examples.</description>
   <email>till@php.net</email>
   <active>yes</active>
  </lead>
- <date>2011-03-11</date>
- <time>17:46:18</time>
+ <date>2011-10-30</date>
+ <time>13:15:53</time>
  <version>
-  <release>0.4.2</release>
+  <release>0.4.3</release>
   <api>0.4.0</api>
  </version>
  <stability>
@@ -39,11 +39,8 @@ is the use of a factory pattern.  Again, see the examples.</description>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
  <notes>
 * Fix Bug #17656: New Lines [till]
- * Fix Bug #18128: error notice while importing vcards [till]
- * Fix Bug #18129: interfere with other autoloaders [till]
- * Fix Bug #18155: Value strings inside arrays are not escaped [till]
- * Fix Bug #18188: Patch:many undefined indexes, like TEL in
-   File_IMC_Build_Vcard-&gt;addTelephone() [till]
+ * Fix Bug #18375: Undefined index EMAIL in Build/Vcard.php on line 1155 [till]
+ * Fix Bug #18802: Undefined index [till]
  </notes>
  <contents>
   <dir name="/">
@@ -131,6 +128,23 @@ is the use of a factory pattern.  Again, see the examples.</description>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>0.4.3</release>
+    <api>0.4.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2011-10-30</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
+   <notes>
+* Fix Bug #17656: New Lines [till]
+ * Fix Bug #18375: Undefined index EMAIL in Build/Vcard.php on line 1155 [till]
+ * Fix Bug #18802: Undefined index [till]
+   </notes>
+  </release>
   <release>
    <version>
     <release>0.4.2</release>

@@ -96,4 +96,36 @@ END:VCARD
 
         $this->assertEquals($address[File_IMC::VCARD_ADR_STREET][0], '22221 W, Unit 3');
     }
+
+    /**
+     * Covers a bug in File_IMC::build() (and related).
+     *
+     * Fixes an 'undefined index ORG', etc. in
+     * {@link File_IMC::addOrganization()}.
+     *
+     * @return  void
+     * @credits Stefan Huber
+     * @link    http://pear.php.net/bugs/bug.php?id=18802
+     */
+    public function test18802()
+    {
+        $assertion = "BEGIN:VCARD
+VERSION:3.0
+FN:Stephan Groen
+N:Groen;Stephan;;;
+PROFILE:VCARD
+EMAIL;TYPE=WORK,PREF:stephan@example.org
+ORG:The Company!
+END:VCARD";
+
+        $vcard = File_IMC::build('vCard');
+        $vcard->setFormattedName('Stephan Groen');
+        $vcard->setName('Groen', 'Stephan');
+        $vcard->addEmail('stephan@example.org');
+        $vcard->addParam('TYPE', 'WORK');
+        $vcard->addParam('TYPE', 'PREF');
+        $vcard->addOrganization('The Company!');
+        $text = $vcard->fetch();
+        $this->assertEquals($assertion, $text);
+    }
 }

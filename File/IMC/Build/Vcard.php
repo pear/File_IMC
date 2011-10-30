@@ -1269,6 +1269,10 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 
         settype($text, 'array');
 
+        if (!isset($this->value['ORG'])) {
+            $this->value['ORG']    = array();
+            $this->value['ORG'][0] = array();
+        }
         $base = count($this->value['ORG'][0]);
 
         // start at the original base point, and add

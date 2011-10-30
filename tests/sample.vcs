@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:1.0
+BEGIN:VEVENT
+SUMMARY:New Volunteer Orientation
+DESCRIPTION;ENCODING=QUOTED-PRINTABLE:Interested in becoming a volunteer for the Sacramento SPCA? We'd love to have you join our team! Please download a volunteer application from this website, and when you mail it in, indicate that you'd like to attend this orientation.=0D=0A=0D=0AContact Dee Dee Drake for more information.
+DTSTART:20020925T010000Z
+DTEND:20020925T020000Z
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Test Event 2
+DESCRIPTION;ALTREP="http://www.example.com":Blah blah blah! This one doesn't have any linebreaks, so it's not quoted-printable
+DTSTART:20020925T010000Z
+DTEND:20020925T020000Z
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Test Event 3
+DESCRIPTION;ENCODING=QUOTED-PRINTABLE:Lorem ipsum dolor sit amet!
+DTSTART:20020925T010000Z
+DTEND:20020925T020000Z
+END:VEVENT
+END:VCALENDAR

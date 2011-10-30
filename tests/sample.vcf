@@ -1,0 +1,29 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Shagnasty;Bolivar;Odysseus;Mr.;Senior
+FN:Bolivar Shagnasty
+ADR;TYPE=HOME,WORK:;;123 Main,Apartment 101;Beverly Hills;CA;90210
+EMAIL;TYPE=HOME;TYPE=WORK:boshag@example.com
+EMAIL;TYPE=PREF:boshag@ciaweb.net
+HOME.ORG:Home Organization
+WORK.ORG:Work Organization
+BDAY:19950415
+NOTE: This is some text: with a semicolon, and a comma; this is some more text after it. And colon:oscopy.
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Shagnasty;Bolivar;Odysseus;Mr.;Junior
+FN:Bolivar Shagnasty
+ADR;TYPE=HOME,WORK:;;123 Main,Apartment 101;Beverly Hills;CA;90210
+EMAIL;TYPE=HOME;TYPE=WORK:boshag@example.com
+EMAIL;TYPE=PREF:boshag@ciaweb.net
+BDAY:1995-04-15
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Shagnasty;Bolivar;Odysseus;Mr.;III,B.S.
+FN:Bolivar Shagnasty
+ADR;TYPE=HOME,WORK:;;123 Main,Apartment 101;Beverly Hills;CA;90210
+EMAIL;TYPE=HOME;TYPE=WORK:boshag@example.com
+EMAIL;TYPE=PREF:boshag@ciaweb.net
+END:VCARD

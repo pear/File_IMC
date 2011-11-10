@@ -43,12 +43,6 @@
  */
 
 /**
- * PEAR_Exception
- * @ignore
- */
-require_once 'PEAR/Exception.php';
-
-/**
  * File_IMC_Exception
  *
  * @category File_Formats
@@ -59,6 +53,6 @@ require_once 'PEAR/Exception.php';
  * @link     http://pear.php.net/package/File_IMC
  * @uses     PEAR_Exception
  */
-class File_IMC_Exception extends PEAR_Exception
+class File_IMC_Exception extends Exception
 {
 }

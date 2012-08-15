@@ -646,8 +646,7 @@ abstract class File_IMC_Build
 	}
 }
 
-if ( !function_exists('quoted_printable_encode') )
-{
+if (!function_exists('quoted_printable_encode')) {
 	/**
 	 * quoted_printable_encode()
 	 * PHP 5.3.0
@@ -704,5 +703,3 @@ if ( !function_exists('quoted_printable_encode') )
 		return $ret;
 	}
 }
-
-?>

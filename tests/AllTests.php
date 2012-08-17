@@ -1,4 +1,5 @@
 <?php
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 /**
  * Master Unit Test Suite file for File_IMC
  *
@@ -22,13 +23,11 @@
 $svnOrNot = '@package_version@';
 if ($svnOrNot == '@package_version@') {
     // we run from svn and fiddle with the include_path
-    set_include_path(
-        realpath(dirname(__FILE__) . '/../')
-        . PATH_SEPARATOR
-        . get_include_path()
-    );
+	set_include_path(
+		 // bkdotcom switched from prepend to append... was getting "unable to find File/IMC.php" error
+		get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__) . '/../')
+	);
 }
-
 
 /**
  * Check PHP version... PhpUnit v3+ requires at least PHP v5.1.4
@@ -127,7 +126,7 @@ class File_IMC_AllTests
      * @return PHPUnit_Framework_TestSuite a master test suite
      *                                     containing all class test suites
      * @uses PHPUnit_Framework_TestSuite
-     */ 
+     */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite(
@@ -160,4 +159,4 @@ if (PHPUnit_MAIN_METHOD == 'File_IMC_AllTests::main') {
     File_IMC_AllTests::main();
 }
 
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+?>

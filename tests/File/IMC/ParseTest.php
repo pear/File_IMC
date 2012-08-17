@@ -73,8 +73,8 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
 
         $param1Name  = "PARAM1";
         $param1Value = "PARAMVALUE1";
-        $param2Name  = "PARAM2";
-        $param2Value = "PARAMVALUE2";
+        $param2Name  = "X-PARAM";
+        $param2Value = "X-VALUE";
         $param3Value = "PARAMVALUE3";
 
         $this->vcard = "BEGIN:VCARD\n\r" .
@@ -88,6 +88,7 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
             $additionalNames . ";" .
             $prefix . ";" .
             $suffix . "\n\r" .
+            'TZ;VALUE=text:-05:00; EST; Raleigh/North America'."\r\n" .
             "END:VCARD";
 
         $this->parser = File_IMC::parse('vcard');
@@ -132,39 +133,21 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
         $vcard .= "CATEGORIES:Customers:Verendus LLC" . "\n";
         $vcard .= "X-ABUID:8291364B-FCBF-4577-8294-166AC0E8B9C7\:ABPerson" . "\n";
         $vcard .= "END:VCARD";
-
-        return array(
-            array($vcard),
-        );
+    	return $vcard;
     }
 
     /**
-     * This test doesn't make any sense (yet).
-     *
      * @param  string $vcard
      * @return void
-     *
-     * @dataProvider getPropertyGroupVcard
      */
-    public function testPropertyGroups($vcard)
+    public function testPropertyGroups()
     {
-        $this->markTestIncomplete("Property groups are not yet implemented and this test didn't make any sense!");
-        return;
-
-        $vcard = $this->getPropertyGroupVcard();
-
-        list($ret) = $this->parser->fromText($vcard);
-
-        list($data) = $ret["A.N"];
-        $values = $data['value'];
-
-        //var_dump($vcard, $values, $ret);
-
-        $this->assertEquals("FamilyName", $values[0][0]);
-        $this->assertEquals("GivenName", $values[1][0]);
-        $this->assertEquals("Additional Names", $values[2][0]);
-        $this->assertEquals("Prefix.", $values[3][0]);
-        $this->assertEquals("Suffix", $values[4][0]);
+        $parsed = $this->parser->fromText($this->vcard);
+        $vcardData = $parsed['VCARD'][0];
+		$nameValues = $vcardData['N'][0]['value'];
+        $this->assertEquals("FamilyName",	$nameValues[0][0]);
+        $this->assertEquals("GivenName",	$nameValues[1][0]);
+        $this->assertEquals("A",			$vcardData['N'][0]['group']);
     }
 
     /**
@@ -175,18 +158,15 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
      */
     public function testParameters()
     {
-        $this->markTestIncomplete("Not done yet!");
+        $parsed = $this->parser->fromText($this->vcard);
+        $vcardData = $parsed['VCARD'][0];
 
-        $ret = $this->parser->fromText($this->vcard);
-        //var_dump($ret); exit;
-
-        list($data) = $ret["A.N"];
-
-        $expected = array("PARAM1" => array("PARAMVALUE1"),
-                          "PARAM2" => array("PARAMVALUE2"),
-                          'TYPE' => array("PARAMVALUE3"));
-
-        $this->assertSame($expected, $data['param']);
+        $expected = array(
+			'PARAM1'		=> array('PARAMVALUE1'),
+			'X-PARAM'		=> array('X-VALUE'),
+			'PARAMVALUE3'	=> array('PARAMVALUE3'),
+		);
+        $this->assertSame($expected, $vcardData['N'][0]['param']);
     }
 
     /**
@@ -194,44 +174,41 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public static function exampleProvider()
+    public function exampleProvider()
     {
         $data   = self::getExampleVcard();
         $parser = File_IMC::parse('vcard');
         $parsed = $parser->fromText($data);
-
-        $vcard = $parsed['VCARD'][0];
-
+        $vcardData = $parsed['VCARD'][0];
         $data = array(
-
-            array('3.0',               $vcard['VERSION'][0]['value'][0][0]),
-            array('Shagnasty',         $vcard['N'][0]['value'][0][0]),
-            array('Bolivar',           $vcard['N'][0]['value'][1][0]),
-            array('Odysseus',          $vcard['N'][0]['value'][2][0]),
-            array('Mr.',               $vcard['N'][0]['value'][3][0]),
-            array('III',               $vcard['N'][0]['value'][4][0]),
-            array('B.S.',              $vcard['N'][0]['value'][4][1]),
-            array('Bolivar Shagnasty', $vcard['FN'][0]['value'][0][0]),
-
-        // Address
-            array('HOME',          $vcard['ADR'][0]['param']['TYPE'][0]),
-            array('WORK',          $vcard['ADR'][0]['param']['TYPE'][1]),
-            array('123 Main',      $vcard['ADR'][0]['value'][2][0]),
-            array('Apartment 101', $vcard['ADR'][0]['value'][2][1]),
-            array('Beverly Hills', $vcard['ADR'][0]['value'][3][0]),
-            array('CA',            $vcard['ADR'][0]['value'][4][0]),
-            array('90210',         $vcard['ADR'][0]['value'][5][0]),
-            array('',              $vcard['ADR'][0]['value'][6][0]),
-
-        // Email
-            array('HOME',               $vcard['EMAIL'][0]['param']['TYPE'][0]),
-            array('WORK',               $vcard['EMAIL'][0]['param']['TYPE'][1]),
-            array('boshag@example.com', $vcard['EMAIL'][0]['value'][0][0]),
-            array('PREF',               $vcard['EMAIL'][1]['param']['TYPE'][0]),
-            array('boshag@ciaweb.net',  $vcard['EMAIL'][1]['value'][0][0]),
+		// VERSION
+            array('3.0',				$vcardData['VERSION'][0]['value'][0][0]),
+		// N
+            array('Shagnasty',			$vcardData['N'][0]['value'][0][0]),
+            array('Bolivar',			$vcardData['N'][0]['value'][1][0]),
+            array('Odysseus',			$vcardData['N'][0]['value'][2][0]),
+            array('Mr.',				$vcardData['N'][0]['value'][3][0]),
+            array('III',				$vcardData['N'][0]['value'][4][0]),
+            array('B.S.',				$vcardData['N'][0]['value'][4][1]),
+		// FN
+            array('Bolivar Shagnasty',	$vcardData['FN'][0]['value'][0][0]),
+        // ADR
+            array('HOME',				$vcardData['ADR'][0]['param']['TYPE'][0]),
+            array('WORK',				$vcardData['ADR'][0]['param']['TYPE'][1]),
+            array('123 Main',			$vcardData['ADR'][0]['value'][2][0]),
+            array('Apartment 101',		$vcardData['ADR'][0]['value'][2][1]),
+            array('Beverly Hills',		$vcardData['ADR'][0]['value'][3][0]),
+            array('CA',					$vcardData['ADR'][0]['value'][4][0]),
+            array('90210',				$vcardData['ADR'][0]['value'][5][0]),
+            array('',					$vcardData['ADR'][0]['value'][6][0]),
+        // EMAIL
+            array('HOME',				$vcardData['EMAIL'][0]['param']['TYPE'][0]),
+            array('WORK',				$vcardData['EMAIL'][0]['param']['TYPE'][1]),
+            array('boshag@example.com',	$vcardData['EMAIL'][0]['value'][0][0]),
+            array('PREF',				$vcardData['EMAIL'][1]['param']['TYPE'][0]),
+            array('boshag@ciaweb.net',	$vcardData['EMAIL'][1]['value'][0][0]),
 
         );
-
         return $data;
     }
 
@@ -248,8 +225,6 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
      */
     public function testExampleParser($expect, $actual)
     {
-        //$this->markTestIncomplete("Not done yet!").
-
         $this->assertSame($expect, $actual);
     }
 
@@ -318,3 +293,5 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
         $foo = File_IMC::parse('bar');
     }
 }
+
+?>

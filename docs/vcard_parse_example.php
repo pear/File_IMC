@@ -17,15 +17,15 @@
 // |          Marshall Roch <mroch@php.net>                               |
 // +----------------------------------------------------------------------+
 //
-// $Id$
+// $Id: vcard_parse_example.php 283068 2009-06-29 19:54:28Z till $
 
 require_once 'File/IMC.php';
 
 // create vCard parser
-$parse = File_IMC::parse('vCard');
+$parser = File_IMC::parse('vCard');
 
 // parse a vCard file and store the data in $cardinfo
-$cardinfo = $parse->fromFile('sample.vcf');
+$cardinfo = $parser->fromFile('sample.vcf');
 
 // view the card info array
 echo '<pre>';

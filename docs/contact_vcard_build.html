@@ -33,38 +33,50 @@
 <pre>&lt;?php
     
     // include the class file
-    require_once 'Contact_Vcard_Build.php';
+    require_once 'File/IMC.php';
     
     // instantiate a builder object
     // (defaults to version 3.0)
-    $vcard = new Contact_Vcard_Build();
+    $builder = File_IMC::build('vCard');
     
     // set a formatted name
-    $vcard->setFormattedName('Bolivar Shagnasty');
+    $builder->set('FN','Bolivar Shagnasty');
     
     // set the structured name parts
-    $vcard->setName('Shagnasty', 'Bolivar', 'Odysseus',
-        'Mr.', 'III');
+    $builder->set('N',array(
+    	'Shagnasty',
+    	'Bolivar',
+    	'Odysseus',
+        'Mr.',
+        'III'
+    ));
     
     // add a work email.  note that we add the value
     // first and the param after -- Contact_Vcard_Build
     // is smart enough to add the param in the correct
     // place.
-    $vcard->addEmail('boshag@example.com');
-    $vcard->addParam('TYPE', 'WORK');
+    $builder->set('EMAIL','boshag@example.com');
+    $builder->addParam('TYPE', 'WORK');
     
     // add a home/preferred email
-    $vcard->addEmail('bolivar@example.net');
-    $vcard->addParam('TYPE', 'HOME');
-    $vcard->addParam('TYPE', 'PREF');
+    $builder->set('EMAIL','bolivar@example.net','new');
+    $builder->addParam('TYPE', 'HOME');
+    $builder->addParam('TYPE', 'PREF');
     
     // add a work address
-    $vcard->addAddress('POB 101', 'Suite 202', '123 Main',
-        'Beverly Hills', 'CA', '90210', 'US');
-    $vcard->addParam('TYPE', 'WORK');
+    $builder->set('ADR',array(
+    	'POB 101',
+    	'Suite 202',
+    	'123 Main',
+        'Beverly Hills',
+        'CA',
+        '90210',
+        'US'
+    ));
+    $builder->addParam('TYPE', 'WORK');
     
     // get back the vCard and print it
-    $text = $vcard->fetch();
+    $text = $builder->fetch();
     echo '&lt;pre&gt;';
     print_r($text);
     echo '&lt;/pre&gt;';
@@ -308,16 +320,16 @@
 
 <pre>
     // add first address iteration
-    $vcard->addAddress($pobox0, $extend0, $street0, $city0, 
-        $state0, $zip0, $country0);
+    $vcard->set('ADR',array('$pobox0, $extend0, $street0, $city0, 
+        $state0, $zip0, $country0));
     
     // add parameters to the first address
     $vcard->addParam('TYPE', 'HOME');
     $vcard->addParam('TYPE', 'PREF');
     
     // add second address iteration
-    $vcard->addAddress($pobox1, $extend1, $street1, $city1, 
-        $state1, $zip1, $country1);
+    $vcard->set('ADR',array('$pobox1, $extend1, $street1, $city1, 
+        $state1, $zip1, $country1),1);	// could also pass "new" as 3rd parameter
     
     // add parameters to the second address
     $vcard->addParam('TYPE', 'WORK');

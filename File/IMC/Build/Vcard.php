@@ -54,7 +54,7 @@
 */
 class File_IMC_Build_Vcard extends File_IMC_Build
 {
-    /**
+	/**
 	* Constructor
 	*
 	* @param string $version The vCard version to build; affects which
@@ -411,10 +411,19 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 				unset($value[$k]);
 			}
 		}
+		// flatten the array
+		$vals = $value;
+		$value = array();
+		foreach ( $vals as $v )
+		{
+			settype($v,'array');
+			$value = array_merge($value,$v);
+		}
+		// clear existing value
 		if ( isset($this->value['ORG'][$iter]) ) {
-			// clear existing value
 			unset($this->value['ORG'][$iter]);
 		}
+		// set the new value(s)
 		foreach ( $value as $k => $v) {
 			settype($v, 'array');
 			foreach ( $v as $v2 ) {
@@ -639,7 +648,6 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 			'CATEGORIES'=> array( 'vers' => array('3.0') ),
 			'NOTE'		=> array( ),
 			'PRODID'	=> array( 'vers' => array('3.0') ),
-			'CLASS'		=> array( 'vers' => array('3.0') ),
 			'REV'		=> array( ),
 			'SORT-STRING'=>array( 'vers' => array('3.0') ),
 			'SOUND'		=> array( ),
@@ -715,7 +723,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 	*/
 	public function addAddress() {
 		$args = func_get_args();
-		return $this->set('ADR',$args);
+		return $this->set('ADR',$args,'new');
 	}
 
 	/**
@@ -723,7 +731,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 	* @see self::set()
 	*/
 	public function addCategories($val) {
-		return $this->set('CATEGORIES',$val);
+		return $this->set('CATEGORIES',$val,'new');
 	}
 
 	/**
@@ -731,7 +739,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 	* @see self::set()
 	*/
 	public function addEmail($val) {
-		return $this->set('EMAIL',$val);
+		return $this->set('EMAIL',$val,'new');
 	}
 
 	/**
@@ -739,7 +747,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 	* @see self::set()
 	*/
 	public function addLabel($val) {
-		return $this->set('LABEL',$val);
+		return $this->set('LABEL',$val,'new');
 	}
 
 	/**
@@ -747,14 +755,23 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 	* @see self::set()
 	*/
 	public function addNickname($val) {
-		return $this->set('NICKNAME',$val);
+		return $this->set('NICKNAME',$val,'new');
 	}
 
 	/**
 	* @deprecated
 	* @see self::set()
 	*/
-	public function addOrganization($val) {
+	public function addOrganization($val,$append=true) {
+		if ( $append && !empty($this->value['ORG'][0]) )
+		{
+			settype($val,'array');
+			$vals_cur = array();
+			foreach ( $this->value['ORG'][0] as $part_num => $part_val ) {
+				$vals_cur = array_merge($vals_cur,$part_val);
+			}
+			$val = array_merge($vals_cur,$val);
+		}
 		return $this->set('ORG',$val);
 	}
 
@@ -763,7 +780,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 	* @see self::set()
 	*/
 	public function addTelephone($val) {
-		return $this->set('TEL',$val);
+		return $this->set('TEL',$val,'new');
 	}
 
 	/**

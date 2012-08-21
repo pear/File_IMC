@@ -17,7 +17,7 @@
 // |          Marshall Roch <mroch@php.net>                               |
 // +----------------------------------------------------------------------+
 //
-// $Id: vcard_parse_example.php 283068 2009-06-29 19:54:28Z till $
+// $Id$
 
 require_once 'File/IMC.php';
 

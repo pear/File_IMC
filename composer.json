@@ -32,9 +32,6 @@
         "source": "https://github.com/pear/File_IMC"
     },
     "type": "library",
-    "require": {
-        "pear/pear_exception": "*"
-    },
     "require-dev": {
         "phpunit/phpunit": "*"
     }

@@ -19,28 +19,21 @@
  * @since      0.4.0
  */
 
+$root = dirname(__DIR__);
+
 $svnOrNot = '@package_version@';
 if ($svnOrNot == '@package_version@') {
     // we run from svn and fiddle with the include_path
     set_include_path(
-        realpath(dirname(__FILE__) . '/../')
+        realpath($root)
         . PATH_SEPARATOR
         . get_include_path()
     );
 }
 
-
-/**
- * Check PHP version... PhpUnit v3+ requires at least PHP v5.1.4
- */
-if (version_compare(PHP_VERSION, "5.1.4") < 0) {
-    // Cannnot run test suites
-    echo 'Cannot run test suite via PhpUnit... requires at least PHP v5.1.4.' . PHP_EOL;
-    echo 'Use "pear run-tests -p File_IMC" to run the PHPT tests directly.' . PHP_EOL
-;
-    exit(1);
+if (file_exists($root . '/vendor/autoload.php')) {
+    require $root . '/vendor/autoload.php';
 }
-
 
 /**
  * Derive the "main" method name

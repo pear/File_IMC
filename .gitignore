@@ -1,1 +1,6 @@
 File_IMC*.tgz
+
+# composer related
+composer.lock
+composer.phar
+vendor

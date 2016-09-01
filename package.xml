@@ -26,8 +26,8 @@ is the use of a factory pattern.  Again, see the examples.</description>
   <email>till@php.net</email>
   <active>yes</active>
  </lead>
- <date>2011-10-30</date>
- <time>13:15:53</time>
+ <date>2012-08-15</date>
+ <time>14:30:00</time>
  <version>
   <release>0.5.0</release>
   <api>0.5.0</api>
@@ -38,7 +38,7 @@ is the use of a factory pattern.  Again, see the examples.</description>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
  <notes>
- * exception no longer extends PEAR_Exception [bc-break]
+* various bug fixes and improvements by Brad Kent: https://github.com/pear/File_IMC/pull/5
  </notes>
  <contents>
   <dir name="/">
@@ -126,6 +126,21 @@ is the use of a factory pattern.  Again, see the examples.</description>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>0.5.0</release>
+    <api>0.5.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2012-08-15</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
+   <notes>
+* various bug fixes and improvements by Brad Kent: https://github.com/pear/File_IMC/pull/5
+   </notes>
+  </release>
   <release>
    <version>
     <release>0.4.3</release>

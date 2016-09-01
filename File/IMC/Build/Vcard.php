@@ -43,68 +43,65 @@
  */
 
 /**
-* This class builds a single vCard (version 3.0 or 2.1).
-*
-* @category File_Formats
-* @package  File_IMC
-* @author   Paul M. Jones <pmjones@ciaweb.net>
-* @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
-* @version  Release: @package_version@
-* @link     http://pear.php.net/package/File_IMC
-*/
+ * This class builds a single vCard (version 3.0 or 2.1).
+ *
+ * @category File_Formats
+ * @package  File_IMC
+ * @author   Paul M. Jones <pmjones@ciaweb.net>
+ * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @version  Release: @package_version@
+ * @link     http://pear.php.net/package/File_IMC
+ */
 class File_IMC_Build_Vcard extends File_IMC_Build
 {
     /**
-    * Constructor
-    *
-    * @param string $version The vCard version to build; affects which
-    * parameters are allowed and which properties are returned by
-    * fetch().
-    *
-    * @return File_IMC_Build_Vcard
-    *
-    * @see  parent::fetch()
-    * @uses parent::reset()
-    */
+     * Constructor
+     *
+     * @param string $version The vCard version to build; affects which
+     * parameters are allowed and which properties are returned by
+     * fetch().
+     *
+     * @return File_IMC_Build_Vcard
+     *
+     * @see  parent::fetch()
+     * @uses parent::reset()
+     */
     public function __construct($version = '3.0')
     {
         $this->reset($version);
     }
 
     /**
-    * setVersion
-    *
-    * @param string $val version
-    *
-    * @return null
-    */
-    public function setVersion($val='3.0')
+     * setVersion
+     *
+     * @param string $val version
+     *
+     * @return null
+     */
+    public function setVersion($val = '3.0')
     {
         $this->set('VERSION', $val);
     }
 
     /**
-    * Validates parameter names and values based on the vCard version
-    * (2.1 or 3.0).
-    *
-    * @param string $name The parameter name (e.g., TYPE or ENCODING).
-    *
-    * @param string $text The parameter value (e.g., HOME or BASE64).
-    *
-    * @param string $prop Optional, the propety name (e.g., ADR or PHOTO).
-    *						Only used for error messaging.
-    *
-    * @param int    $iter Optional, the iteration of the property.
-    *						Only used for error messaging.
-    *
-    * @return mixed	Boolean true if the parameter is valid
-    * @access public
-    * @throws File_IMC_Exception ... if not.
-    *
-    * @uses self::validateParam21()
-    * @uses self::validateParam30()
-    */
-    public function validateParam($name, $text, $prop=null, $iter=null)
+     * Validates parameter names and values based on the vCard version
+     * (2.1 or 3.0).
+     *
+     * @param string $name The parameter name (e.g., TYPE or ENCODING).
+     * @param string $text The parameter value (e.g., HOME or BASE64).
+     * @param string $prop Optional, the propety name (e.g., ADR or PHOTO).
+     *						Only used for error messaging.
+     * @param int    $iter Optional, the iteration of the property.
+     *						Only used for error messaging.
+     *
+     * @return mixed	Boolean true if the parameter is valid
+     * @access public
+     * @throws File_IMC_Exception ... if not.
+     *
+     * @uses self::validateParam21()
+     * @uses self::validateParam30()
+     */
+    public function validateParam($name, $text, $prop = null, $iter = null)
     {
         $name = strtoupper($name);
         $text = strtoupper($text);
@@ -117,9 +114,9 @@ class File_IMC_Build_Vcard extends File_IMC_Build
                 FILE_IMC::ERROR_INVALID_PARAM
             );
         }
-        if ( $this->value['VERSION'][0][0][0] == '2.1' ) {
+        if ($this->value['VERSION'][0][0][0] == '2.1') {
             return $this->_validateParam21($name, $text, $prop, $iter);
-        } elseif ( $this->value['VERSION'][0][0][0] == '3.0' ) {
+        } elseif ($this->value['VERSION'][0][0][0] == '3.0') {
             return $this->_validateParam30($name, $text, $prop, $iter);
         }
         throw new File_IMC_Exception(
@@ -146,48 +143,48 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         // Validate against version 2.1 (pretty strict)
         $x_val = strpos($text, 'X-') === 0;
         switch ($name) {
-        case 'TYPE':
-            static $types = array (
-                // ADR
-                'DOM', 'INTL', 'POSTAL', 'PARCEL','HOME', 'WORK',
-                // TEL
-                'PREF','VOICE', 'FAX', 'MSG', 'CELL', 'PAGER', 'BBS',
-                'MODEM', 'CAR', 'ISDN', 'VIDEO',
-                //EMAIL
-                'AOL', 'APPLELINK', 'ATTMAIL', 'CIS', 'EWORLD','INTERNET',
-                    'IBMMAIL', 'MCIMAIL','POWERSHARE', 'PRODIGY', 'TLX', 'X400',
-                //PHOTO & LOGO
-                'GIF', 'CGM', 'WMF', 'BMP', 'MET', 'PMB', 'DIB', 'PICT', 'TIFF',
-                    'PDF', 'PS', 'JPEG', 'MPEG', 'MPEG2', 'AVI', 'QTIME',
-                //SOUND
-                'WAVE', 'AIFF', 'PCM',
-                // KEY
-                'X509', 'PGP'
-            );
-            $result = ( in_array($text, $types) || $x_val );
-            break;
-        case 'ENCODING':
-            $vals = array('7BIT','8BIT','BASE64','QUOTED-PRINTABLE');
-            $result = ( in_array($text, $vals) || $x_val );
-            break;
-        case 'CHARSET':  // all charsets are OK
-        case 'LANGUAGE': // all languages are OK
-            $result = true;
-            break;
-        case 'VALUE':
-            $vals = array('INLINE','CONTENT-ID','CID','URL','VCARD');
-            $result = ( in_array($text, $vals) || $x_val );
-            break;
-        default:
-            $result = ( strpos($name, 'X-') === 0 );
-            /*
-            if ( !$result )
-                throw new File_IMC_Exception(
-                    'vCard 2.1 ['.$prop.']['.$iter.']: '
-                    .'"'.$name.'" is an unknown or invalid parameter name.',
-                    FILE_IMC::ERROR_INVALID_PARAM);
-            */
-            break;
+            case 'TYPE':
+                static $types = array (
+                    // ADR
+                    'DOM', 'INTL', 'POSTAL', 'PARCEL','HOME', 'WORK',
+                    // TEL
+                    'PREF','VOICE', 'FAX', 'MSG', 'CELL', 'PAGER', 'BBS',
+                    'MODEM', 'CAR', 'ISDN', 'VIDEO',
+                    // EMAIL
+                    'AOL', 'APPLELINK', 'ATTMAIL', 'CIS', 'EWORLD','INTERNET',
+                        'IBMMAIL', 'MCIMAIL','POWERSHARE', 'PRODIGY', 'TLX', 'X400',
+                    // PHOTO & LOGO
+                    'GIF', 'CGM', 'WMF', 'BMP', 'MET', 'PMB', 'DIB', 'PICT', 'TIFF',
+                        'PDF', 'PS', 'JPEG', 'MPEG', 'MPEG2', 'AVI', 'QTIME',
+                    // SOUND
+                    'WAVE', 'AIFF', 'PCM',
+                    // KEY
+                    'X509', 'PGP'
+                );
+                $result = ( in_array($text, $types) || $x_val );
+                break;
+            case 'ENCODING':
+                $vals = array('7BIT','8BIT','BASE64','QUOTED-PRINTABLE');
+                $result = ( in_array($text, $vals) || $x_val );
+                break;
+            case 'CHARSET':  // all charsets are OK
+            case 'LANGUAGE': // all languages are OK
+                $result = true;
+                break;
+            case 'VALUE':
+                $vals = array('INLINE','CONTENT-ID','CID','URL','VCARD');
+                $result = ( in_array($text, $vals) || $x_val );
+                break;
+            default:
+                $result = ( strpos($name, 'X-') === 0 );
+                /*
+                if ( !$result )
+                    throw new File_IMC_Exception(
+                        'vCard 2.1 ['.$prop.']['.$iter.']: '
+                        .'"'.$name.'" is an unknown or invalid parameter name.',
+                        FILE_IMC::ERROR_INVALID_PARAM);
+                */
+                break;
         }
         /*
         if ( !$result )
@@ -217,28 +214,28 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         // Validate against version 3.0 (pretty lenient)
         $x_val = strpos($text, 'X-') === 0;
         switch ($name) {
-        case 'TYPE':     // all types are OK
-        case 'LANGUAGE': // all languages are OK
-            $result = true;
-            break;
-        case 'ENCODING':
-            $vals = array('8BIT','B');
-            $result = ( in_array($text, $vals) || $x_val );
-            break;
-        case 'VALUE':
-            $vals = array('BINARY','PHONE-NUMBER','TEXT','URI','UTC-OFFSET','VCARD');
-            $result = ( in_array($text, $vals) || $x_val );
-            break;
-        default:
-            $result = ( strpos($name, 'X-') === 0 );
-            /*
-            if ( !$result )
-                throw new File_IMC_Exception(
-                    'vCard 3.0 ['.$prop.']['.$iter.']: '
-                    .'"'.$name.'" is an unknown or invalid parameter name.',
-                    FILE_IMC::ERROR_INVALID_PARAM);
-            */
-            break;
+            case 'TYPE':     // all types are OK
+            case 'LANGUAGE': // all languages are OK
+                $result = true;
+                break;
+            case 'ENCODING':
+                $vals = array('8BIT','B');
+                $result = ( in_array($text, $vals) || $x_val );
+                break;
+            case 'VALUE':
+                $vals = array('BINARY','PHONE-NUMBER','TEXT','URI','UTC-OFFSET','VCARD');
+                $result = ( in_array($text, $vals) || $x_val );
+                break;
+            default:
+                $result = ( strpos($name, 'X-') === 0 );
+                /*
+                if ( !$result )
+                    throw new File_IMC_Exception(
+                        'vCard 3.0 ['.$prop.']['.$iter.']: '
+                        .'"'.$name.'" is an unknown or invalid parameter name.',
+                        FILE_IMC::ERROR_INVALID_PARAM);
+                */
+                break;
         }
         /*
         if ( !$result )
@@ -251,24 +248,24 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Sets the value of one entire ADR iteration.
-    *
-    * @param array $value address components
-    *   post-office-box
-    *   extended-address
-    *   street-address
-    *   locality		: (e.g., city)
-    *   region			: (e.g., state, province, or governorate)
-    *   postal-code		: (e.g., ZIP code)
-    *	country-name
-    *  value may be passed as a numeric or key/value array
-    *  (keys coming from hCard microformat specification)
-    *  each component may be a String (one repetition) or array (multiple reptitions)
-    * @param int   $iter  iteration
-    *
-    * @return $this
-    * @access private
-    */
+     * Sets the value of one entire ADR iteration.
+     *
+     * @param array $value address components
+     *   post-office-box
+     *   extended-address
+     *   street-address
+     *   locality		: (e.g., city)
+     *   region			: (e.g., state, province, or governorate)
+     *   postal-code		: (e.g., ZIP code)
+     *	country-name
+     *  value may be passed as a numeric or key/value array
+     *  (keys coming from hCard microformat specification)
+     *  each component may be a String (one repetition) or array (multiple reptitions)
+     * @param int   $iter  iteration
+     *
+     * @return void
+     * @access private
+     */
     protected function _setADR($value, $iter)
     {
         $keys = array(
@@ -280,11 +277,11 @@ class File_IMC_Build_Vcard extends File_IMC_Build
             'postal-code',
             'country-name',
         );
-        foreach ( $keys as $i => $k ) {
-            if ( isset($value[$k]) ) {
+        foreach ($keys as $i => $k) {
+            if (isset($value[$k])) {
                 $value[$i] = $value[$k];
             }
-            if ( !isset($value[$i]) ) {
+            if (!isset($value[$i])) {
                 $value[$i] = '';
             }
         }
@@ -298,23 +295,23 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Sets the FN property of the card.  If no text is passed as the
-    * FN value, constructs an FN automatically from N property.
-    *
-    * @param string $text Override the automatic generation of FN from N
-    *    elements with the specified text.
-    * @param int    $iter Iteration
-    *
-    * @return mixed Void on success
-    * @access private
-    * @throws File_IMC_Exception ... on failure.
-    */
-    protected function _setFN($text=null, $iter=0)
+     * Sets the FN property of the card.  If no text is passed as the
+     * FN value, constructs an FN automatically from N property.
+     *
+     * @param string $text Override the automatic generation of FN from N
+     *    elements with the specified text.
+     * @param int    $iter Iteration
+     *
+     * @return         void
+     * @access private
+     * @throws         File_IMC_Exception ... on failure.
+     */
+    protected function _setFN($text = null, $iter = 0)
     {
-        if ( $text === null ) {
+        if ($text === null) {
             // no text was specified for the FN, so build it
             // from the current N property if an N exists
-            if ( is_array($this->value['N']) ) {
+            if (is_array($this->value['N'])) {
                 // build from N.
                 // first (given) name, first iteration, first repetition
                 $text .= $this->getValue('N', 0, FILE_IMC::VCARD_N_GIVEN, 0);
@@ -342,27 +339,27 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Sets the GEO property (both latitude and longitude)
-    *
-    * @param array $value coords lat and lon
-    *     value may be passed as a numeric or key/value array
-    *     (keys coming from geo microformat specification)
-    * @param int   $iter  iteration
-    *
-    * @return $this
-    * @access private
-    */
+     * Sets the GEO property (both latitude and longitude)
+     *
+     * @param array $value coords lat and lon
+     *     value may be passed as a numeric or key/value array
+     *     (keys coming from geo microformat specification)
+     * @param int   $iter  iteration
+     *
+     * @return void
+     * @access private
+     */
     protected function _setGEO($value, $iter)
     {
         $keys = array(
             'latitude',
             'longitude',
         );
-        foreach ( $keys as $i => $k ) {
-            if ( isset($value[$k]) ) {
+        foreach ($keys as $i => $k) {
+            if (isset($value[$k])) {
                 $value[$i] = $value[$k];
             }
-            if ( !isset($value[$i]) ) {
+            if (!isset($value[$i])) {
                 $value[$i] = '';
             }
         }
@@ -371,23 +368,23 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Sets the full N property of the vCard.
-    *
-    * @param array $value name comonents
-    *	family-name		: family/last name.
-    *	given-name		: given/first name.
-    *	additional-name	: additional/middle name.
-    *	honorific-prefix: prefix such as Mr., Miss, etc.
-    *	honorific-suffix: suffix such as III, Jr., Ph.D., etc.
-    * value may be passed as a numeric or key/value array
-    *   (keys coming from hCard microformat specification)
-    * each component may be a string or array
-    * @param int   $iter  iteration
-    *
-    * @return null
-    * @access private
-    */
-    protected function _setN($value,$iter)
+     * Sets the full N property of the vCard.
+     *
+     * @param array $value name comonents
+     *	family-name		: family/last name.
+     *	given-name		: given/first name.
+     *	additional-name	: additional/middle name.
+     *	honorific-prefix: prefix such as Mr., Miss, etc.
+     *	honorific-suffix: suffix such as III, Jr., Ph.D., etc.
+     * value may be passed as a numeric or key/value array
+     *   (keys coming from hCard microformat specification)
+     * each component may be a string or array
+     * @param int   $iter  iteration
+     *
+     * @return void
+     * @access private
+     */
+    protected function _setN($value, $iter)
     {
         $keys = array(
             'family-name',
@@ -396,11 +393,11 @@ class File_IMC_Build_Vcard extends File_IMC_Build
             'honorific-prefix',
             'honorific-suffix',
         );
-        foreach ( $keys as $i => $k ) {
-            if ( isset($value[$k]) ) {
+        foreach ($keys as $i => $k) {
+            if (isset($value[$k])) {
                 $value[$i] = $value[$k];
             }
-            if ( !isset($value[$i]) ) {
+            if (!isset($value[$i])) {
                 $value[$i] = '';
             }
         }
@@ -412,32 +409,32 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Sets the full value of the ORG property.
-    *
-    * The ORG property can have one or more parts (as opposed to
-    * repetitions of values within those parts).  The first part is the
-    * highest-level organization, the second part is the next-highest,
-    * the third part is the third-highest, and so on.  There can by any
-    * number of parts in one ORG iteration.  (This is different from
-    * other properties, such as NICKNAME, where an iteration has only
-    * one part but may have many repetitions within that part.)
-    *
-    * @param mixed $value String (one ORG part) or array (of ORG parts)
-    *     to use as the value for the property iteration.
-    * @param int   $iter  iteration
-    *
-    * @return null
-    * @access private
-    */
-    protected function _setORG($value,$iter)
+     * Sets the full value of the ORG property.
+     *
+     * The ORG property can have one or more parts (as opposed to
+     * repetitions of values within those parts).  The first part is the
+     * highest-level organization, the second part is the next-highest,
+     * the third part is the third-highest, and so on.  There can by any
+     * number of parts in one ORG iteration.  (This is different from
+     * other properties, such as NICKNAME, where an iteration has only
+     * one part but may have many repetitions within that part.)
+     *
+     * @param mixed $value String (one ORG part) or array (of ORG parts)
+     *     to use as the value for the property iteration.
+     * @param int   $iter  iteration
+     *
+     * @return void
+     * @access private
+     */
+    protected function _setORG($value, $iter)
     {
         $keys = array(
             'organization-name',
             'organization-unit',	// may pass an array
         );
         settype($value, 'array');
-        foreach ( $keys as $i => $k ) {
-            if ( isset($value[$k]) ) {
+        foreach ($keys as $k) {
+            if (isset($value[$k])) {
                 $value[] = $value[$k];
                 unset($value[$k]);
             }
@@ -445,19 +442,19 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         // flatten the array
         $vals = $value;
         $value = array();
-        foreach ( $vals as $v ) {
+        foreach ($vals as $v) {
             settype($v, 'array');
             $value = array_merge($value, $v);
         }
         // clear existing value
-        if ( isset($this->value['ORG'][$iter]) ) {
+        if (isset($this->value['ORG'][$iter])) {
             unset($this->value['ORG'][$iter]);
         }
         // set the new value(s)
-        foreach ( $value as $k => $v) {
+        foreach ($value as $k => $v) {
             settype($v, 'array');
-            foreach ( $v as $v2 ) {
-                if ( !empty($v2) ) {
+            foreach ($v as $v2) {
+                if (!empty($v2)) {
                     $this->setValue('ORG', $iter, $k, $v2);
                 }
             }
@@ -465,14 +462,14 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Gets back the value of one ADR property iteration.
-    *
-    * @param int $iter The property iteration-number to get the value for.
-    *
-    * @return mixed The value of this property iteration, or ...
-    * @access private
-    * @throws File_IMC_Exception ... if the iteration is not valid.
-    */
+     * Gets back the value of one ADR property iteration.
+     *
+     * @param int $iter The property iteration-number to get the value for.
+     *
+     * @return mixed The value of this property iteration, or ...
+     * @access private
+     * @throws File_IMC_Exception ... if the iteration is not valid.
+     */
     protected function _getADR($iter)
     {
         if (! is_integer($iter) || $iter < 0) {
@@ -492,13 +489,13 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Gets back the value of the GEO property.
-    *
-    * @param int $iter The property iteration-number to get
-    *
-    * @return string The value of this property.
-    * @access private
-    */
+     * Gets back the value of the GEO property.
+     *
+     * @param int $iter The property iteration-number to get
+     *
+     * @return string The value of this property.
+     * @access private
+     */
     protected function _getGEO($iter)
     {
         return $this->getMeta('GEO', $iter)
@@ -507,13 +504,13 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Gets back the full N property
-    *
-    * @param int $iter The property iteration-number to get the value for.
-    *
-    * @return string
-    * @access private
-    */
+     * Gets back the full N property
+     *
+     * @param int $iter The property iteration-number to get the value for.
+     *
+     * @return string
+     * @access private
+     */
     protected function _getN($iter)
     {
         return $this->getMeta('N', $iter)
@@ -525,21 +522,21 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Gets back the value of the ORG property.
-    *
-    * @param int $iter The property iteration-number to get the value for.
-    *
-    * @return string The value of this property.
-    * @access private
-    */
+     * Gets back the value of the ORG property.
+     *
+     * @param int $iter The property iteration-number to get the value for.
+     *
+     * @return string The value of this property.
+     * @access private
+     */
     protected function _getORG($iter)
     {
         $text	= $this->getMeta('ORG', $iter);
         $parts	= count($this->value['ORG'][$iter]);
         $last = $parts - 1;
-        for ( $part = 0; $part < $parts; $part++ ) {
+        for ($part = 0; $part < $parts; $part++) {
             $text .= $this->getValue('ORG', $iter, $part);
-            if ( $part != $last ) {
+            if ($part != $last) {
                 $text .= ';';
             }
         }
@@ -547,62 +544,62 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Sets the value of the specified property
-    *   for PHOTO, LOGO, SOUND, & KEY properties:
-    *		if a filepath is passed:, automatically base64-encodes
-    *			and sets ENCODING parameter
-    *		if a URL is passed, automatically sets the VALUE=URL|URI parameter
-    *
-    * _setPROPERTY($value,$iter) method will be used if exists  ( ie _setADR() )
-    *
-    * @param string $prop  property
-    * @param mixed  $value value
-    *       when property is ADR, GEO, or N:  value is an array
-    *			additionaly, the array may be an associateive array
-    *			ADR: 	post-office-box, extended-address, street-address,
-    *                      locality, region, postal-code, country-name
-    *			GEO:	latitude, longitude
-    *			N:		family-name, given-name, additional-name,
-    *                      honorific-prefix, honorific-suffix
-    *       when property is ORG, value may be an string or array
-    *			ORG		'organization-name','organization-unit'
-    *       for all other properties, value is a string
-    * @param mixed  $iter  iteration default = 0; pass 'new' to add an iteration
-    *
-    * @return $this
-    * @access public
+     * Sets the value of the specified property
+     *   for PHOTO, LOGO, SOUND, & KEY properties:
+     *		if a filepath is passed:, automatically base64-encodes
+     *			and sets ENCODING parameter
+     *		if a URL is passed, automatically sets the VALUE=URL|URI parameter
+     *
+     * _setPROPERTY($value,$iter) method will be used if exists  ( ie _setADR() )
+     *
+     * @param string $prop  property
+     * @param mixed  $value value
+     *       when property is ADR, GEO, or N:  value is an array
+     *			additionaly, the array may be an associateive array
+     *			ADR: 	post-office-box, extended-address, street-address,
+     *                      locality, region, postal-code, country-name
+     *			GEO:	latitude, longitude
+     *			N:		family-name, given-name, additional-name,
+     *                      honorific-prefix, honorific-suffix
+     *       when property is ORG, value may be an string or array
+     *			ORG		'organization-name','organization-unit'
+     *       for all other properties, value is a string
+     * @param mixed  $iter  iteration default = 0; pass 'new' to add an iteration
+     *
+     * @return $this
+     * @access public
     */
-    public function set($prop,$value,$iter=0)
+    public function set($prop, $value, $iter = 0)
     {
         $prop = strtoupper(trim($prop));
-        if ( $iter === 'new' ) {
+        if ($iter === 'new') {
             $iter = isset($this->value[$prop])
                 ? count($this->value[$prop])
                 : 0;
-        } elseif ( !is_integer($iter) || $iter < 0) {
+        } elseif (!is_integer($iter) || $iter < 0) {
             throw new File_IMC_Exception(
                 $prop.' iteration number not valid.',
                 FILE_IMC::ERROR_INVALID_ITERATION
             );
         }
         $method = '_set'.$prop;
-        if ( method_exists($this, $method) ) {
+        if (method_exists($this, $method)) {
             call_user_func(array($this,$method), $value, $iter);
         } else {
-            if ( $prop == 'VERSION' && !in_array($value, array('2.1','3.0')) ) {
+            if ($prop == 'VERSION' && !in_array($value, array('2.1','3.0'))) {
                 throw new File_IMC_Exception(
                     'Version must be 3.0 or 2.1 to be valid.',
                     FILE_IMC::ERROR_INVALID_VCARD_VERSION
                 );
-            } elseif ( in_array($prop, array('PHOTO','LOGO','SOUND','KEY')) ) {
-                if ( file_exists($value) ) {
+            } elseif (in_array($prop, array('PHOTO','LOGO','SOUND','KEY'))) {
+                if (file_exists($value)) {
                     $value = base64_encode(file_get_contents($value));
                 }
             }
             $this->setValue($prop, $iter, 0, $value);
-            if ( in_array($prop, array('PHOTO','LOGO','SOUND','KEY')) ) {
+            if (in_array($prop, array('PHOTO','LOGO','SOUND','KEY'))) {
                 $ver = $this->getValue('VERSION');
-                if ( preg_match('#^(https?|ftp)://#', $value) ) {
+                if (preg_match('#^(https?|ftp)://#', $value)) {
                     $this->addParam('VALUE', $ver == '2.1' ? 'URL' : 'URI');
                 } else {
                     $this->addParam('ENCODING', $ver == '2.1' ? 'BASE64' : 'B');
@@ -613,24 +610,24 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Gets back the vcard line of the specified property
-    *    (property name, params, & value)
-    * This func removes the need for all the public getXxx functions...
-    *      uses the protected methods: _getADR, _getGEO, _getN, & _getORG
-    *
-    * _getPROPERTY($iter) method will be used if exists  ( ie _getADR() )
-    *
-    * @param string $prop property
-    * @param int    $iter iteration default = 0
-    *
-    * @return string The value of the property
-    * @access public
-    */
-    public function get($prop,$iter=0)
+     * Gets back the vcard line of the specified property
+     *    (property name, params, & value)
+     * This func removes the need for all the public getXxx functions...
+     *      uses the protected methods: _getADR, _getGEO, _getN, & _getORG
+     *
+     * _getPROPERTY($iter) method will be used if exists  ( ie _getADR() )
+     *
+     * @param string $prop property
+     * @param int    $iter iteration default = 0
+     *
+     * @return string The value of the property
+     * @access public
+     */
+    public function get($prop, $iter = 0)
     {
         $return = '';
         $prop = strtoupper(trim($prop));
-        if ( !is_integer($iter) || $iter < 0) {
+        if (!is_integer($iter) || $iter < 0) {
             throw new File_IMC_Exception(
                 $prop.' iteration number not valid.',
                 FILE_IMC::ERROR_INVALID_ITERATION
@@ -638,7 +635,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         }
         $this->encode($prop, $iter);
         $method = '_get'.$prop;
-        if ( method_exists($this, $method) ) {
+        if (method_exists($this, $method)) {
             $return = call_user_func(array($this,$method), $iter);
         } else {
             $return = $this->getMeta($prop, $iter).$this->getValue($prop, $iter, 0);
@@ -647,17 +644,17 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * Fetches a full vCard text block based on $this->value and
-    * $this->param. The order of the returned properties is similar to
-    * their order in RFC 2426.  Honors the value of
-    * $this->value['VERSION'] to determine which vCard properties are
-    * returned (2.1- or 3.0-compliant).
-    *
-    * @return string A properly formatted vCard text block.
-    *
-    * @access public
-    * @uses self::get()
-    */
+     * Fetches a full vCard text block based on $this->value and
+     * $this->param. The order of the returned properties is similar to
+     * their order in RFC 2426.  Honors the value of
+     * $this->value['VERSION'] to determine which vCard properties are
+     * returned (2.1- or 3.0-compliant).
+     *
+     * @return string A properly formatted vCard text block.
+     *
+     * @access public
+     * @uses   self::get()
+     */
     public function fetch()
     {
         $prop_dfn_default = array(
@@ -710,28 +707,28 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 
         $prop_keys = array_keys($this->value);
 
-        foreach ( $prop_dfns as $prop => $prop_dfn ) {
-            if ( !is_array($prop_dfn) ) {
+        foreach ($prop_dfns as $prop => $prop_dfn) {
+            if (!is_array($prop_dfn)) {
                 $prop_dfn = array( 'func' => $prop_dfn );
             }
             $prop_dfn = array_merge($prop_dfn_default, $prop_dfn);
-            if ( false !== $key = array_search($prop, $prop_keys) ) {
+            if (false !== $key = array_search($prop, $prop_keys)) {
                 unset($prop_keys[$key]);
             }
             $prop_exists = isset($this->value[$prop]) && is_array($this->value[$prop]);
-            if ( $prop == 'PROFILE' && in_array($ver, $prop_dfn['vers']) ) {
+            if ($prop == 'PROFILE' && in_array($ver, $prop_dfn['vers'])) {
                 // special case... don't really care what current val is
                 $lines[] = 'PROFILE:VCARD';
-            } elseif ( $prop_exists ) {
-                if ( in_array($ver, $prop_dfn['vers']) ) {
-                    foreach ( $this->value[$prop] as $iter => $val ) {
+            } elseif ($prop_exists) {
+                if (in_array($ver, $prop_dfn['vers'])) {
+                    foreach ($this->value[$prop] as $iter => $val) {
                         $lines[] = $this->get($prop, $iter);
-                        if ( $prop_dfn['limit'] ) {
+                        if ($prop_dfn['limit']) {
                             break;
                         }
                     }
                 }
-            } elseif ( in_array($ver, $prop_dfn['req']) ) {
+            } elseif (in_array($ver, $prop_dfn['req'])) {
                 throw new File_IMC_Exception(
                     $prop.' not set (required).',
                     FILE_IMC::ERROR_PARAM_NOT_SET
@@ -739,8 +736,8 @@ class File_IMC_Build_Vcard extends File_IMC_Build
             }
         }
         // now build the extension properties
-        foreach ( $prop_keys as $prop ) {
-            if ( strpos($prop, 'X-') === 0 ) {
+        foreach ($prop_keys as $prop) {
+            if (strpos($prop, 'X-') === 0) {
                 foreach ($this->value[$prop] as $key => $val) {
                     $lines[] = $this->get($prop, $key);
                 }
@@ -751,7 +748,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
 
         // fold lines at 75 characters
         $regex = '/(.{1,75})/i';
-        foreach ( $lines as $key => $val ) {
+        foreach ($lines as $key => $val) {
             if (strlen($val) > 75) {
                 // we trim to drop the last newline, which will be added
                 // again by the implode function at the end of fetch()
@@ -763,23 +760,25 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         return implode($newline, $lines);
     }
 
-    /********* deprecated methods *********/
+    /*
+        ******** deprecated methods ********
+    */
 
     /**
-    * addAddress
-    *
-    * @param string $pob      p.o. box
-    * @param string $extend   "extended address"
-    * @param string $street   street address
-    * @param string $locality locailty (e.g., city)
-    * @param string $region   region (e.g., state, province, or governorate)
-    * @param string $postcode postal code (e.g., ZIP code)
-    * @param string $country  country-name
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * addAddress
+     *
+     * @param string $pob      p.o. box
+     * @param string $extend   "extended address"
+     * @param string $street   street address
+     * @param string $locality locailty (e.g., city)
+     * @param string $region   region (e.g., state, province, or governorate)
+     * @param string $postcode postal code (e.g., ZIP code)
+     * @param string $country  country-name
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function addAddress()
     {
         $args = func_get_args();
@@ -787,77 +786,77 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * addCategories
-    *
-    * @param string $val Categories
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * addCategories
+     *
+     * @param string $val Categories
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function addCategories($val)
     {
         return $this->set('CATEGORIES', $val, 'new');
     }
 
     /**
-    * addEmail
-    *
-    * @param string $val email
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * addEmail
+     *
+     * @param string $val email
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function addEmail($val)
     {
         return $this->set('EMAIL', $val, 'new');
     }
 
     /**
-    * addLabel
-    *
-    * @param string $val label
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * addLabel
+     *
+     * @param string $val label
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function addLabel($val)
     {
         return $this->set('LABEL', $val, 'new');
     }
 
     /**
-    * addNickname
-    *
-    * @param string $val nickname
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * addNickname
+     *
+     * @param string $val nickname
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function addNickname($val)
     {
         return $this->set('NICKNAME', $val, 'new');
     }
 
     /**
-    * addOrganization
-    *
-    * @param string $val    organization
-    * @param bool   $append append or replace
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
-    public function addOrganization($val,$append=true)
+     * addOrganization
+     *
+     * @param string $val    organization
+     * @param bool   $append append or replace
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
+    public function addOrganization($val, $append = true)
     {
-        if ( $append && !empty($this->value['ORG'][0]) ) {
+        if ($append && !empty($this->value['ORG'][0])) {
             settype($val, 'array');
             $vals_cur = array();
-            foreach ( $this->value['ORG'][0] as $part_num => $part_val ) {
+            foreach ($this->value['ORG'][0] as $part_num => $part_val) {
                 $vals_cur = array_merge($vals_cur, $part_val);
             }
             $val = array_merge($vals_cur, $val);
@@ -866,491 +865,491 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * addTelephone
-    *
-    * @param string $val telephone
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * addTelephone
+     *
+     * @param string $val telephone
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function addTelephone($val)
     {
         return $this->set('TEL', $val, 'new');
     }
 
     /**
-    * getAddress
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getAddress($iter=0)
+     * getAddress
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getAddress($iter = 0)
     {
         return $this->get('ADR', $iter);
     }
 
     /**
-    * getAgent
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getAgent($iter=0)
+     * getAgent
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getAgent($iter = 0)
     {
         return $this->get('AGENT', $iter);
     }
 
     /**
-    * getBirthday
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getBirthday($iter=0)
+     * getBirthday
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getBirthday($iter = 0)
     {
         return $this->get('BDAY', $iter);
     }
 
     /**
-    * getCategories
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getCategories($iter=0)
+     * getCategories
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getCategories($iter = 0)
     {
         return $this->get('CATEGORIES', $iter);
     }
 
     /**
-    * getClass
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getClass($iter=0)
+     * getClass
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getClass($iter = 0)
     {
         return $this->get('CLASS', $iter);
     }
 
     /**
-    * getEmail
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getEmail($iter=0)
+     * getEmail
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getEmail($iter = 0)
     {
         return $this->get('EMAIL', $iter);
     }
 
     /**
-    * getFormattedName
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getFormattedName($iter=0)
+     * getFormattedName
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getFormattedName($iter = 0)
     {
         return $this->get('FN', $iter);
     }
 
     /**
-    * getGeo
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getGeo($iter=0)
+     * getGeo
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getGeo($iter = 0)
     {
         return $this->get('GEO', $iter);
     }
 
     /**
-    * getKey
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getKey($iter=0)
+     * getKey
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getKey($iter = 0)
     {
         return $this->get('KEY', $iter);
     }
 
     /**
-    * getLabel
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getLabel($iter=0)
+     * getLabel
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getLabel($iter = 0)
     {
         return $this->get('LABEL', $iter);
     }
 
     /**
-    * getLogo
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getLogo($iter=0)
+     * getLogo
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getLogo($iter = 0)
     {
         return $this->get('LOGO', $iter);
     }
 
     /**
-    * getMailer
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getMailer($iter=0)
+     * getMailer
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getMailer($iter = 0)
     {
         return $this->get('MAILER', $iter);
     }
 
     /**
-    * getName
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getName($iter=0)
+     * getName
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getName($iter = 0)
     {
         return $this->get('N', $iter);
     }
 
     /**
-    * getNickname
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getNickname($iter=0)
+     * getNickname
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getNickname($iter = 0)
     {
         return $this->get('NICKNAME', $iter);
     }
 
     /**
-    * getNote
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getNote($iter=0)
+     * getNote
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getNote($iter = 0)
     {
         return $this->get('NOTE', $iter);
     }
 
     /**
-    * getOrganization
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getOrganization($iter=0)
+     * getOrganization
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getOrganization($iter = 0)
     {
         return $this->get('ORG', $iter);
     }
 
     /**
-    * getPhoto
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getPhoto($iter=0)
+     * getPhoto
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getPhoto($iter = 0)
     {
         return $this->get('PHOTO', $iter);
     }
 
     /**
-    * getProductID
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getProductID($iter=0)
+     * getProductID
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getProductID($iter = 0)
     {
         return $this->get('PRODID', $iter);
     }
 
     /**
-    * getRevision
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getRevision($iter=0)
+     * getRevision
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getRevision($iter = 0)
     {
         return $this->get('REV', $iter);
     }
 
     /**
-    * getRole
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getRole($iter=0)
+     * getRole
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getRole($iter = 0)
     {
         return $this->get('ROLE', $iter);
     }
 
     /**
-    * getSortString
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getSortString($iter=0)
+     * getSortString
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getSortString($iter = 0)
     {
         return $this->get('SORT-STRING', $iter);
     }
 
     /**
-    * getSound
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getSound($iter=0)
+     * getSound
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getSound($iter = 0)
     {
         return $this->get('SOUND', $iter);
     }
 
     /**
-    * getSource
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getSource($iter=0)
+     * getSource
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getSource($iter = 0)
     {
         return $this->get('SOURCE', $iter);
     }
 
     /**
-    * getSourceName
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getSourceName($iter=0)
+     * getSourceName
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getSourceName($iter = 0)
     {
         return $this->get('NAME', $iter);
     }
 
     /**
-    * getTZ
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getTZ($iter=0)
+     * getTZ
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getTZ($iter = 0)
     {
         return $this->get('TZ', $iter);
     }
 
     /**
-    * getTelephone
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getTelephone($iter=0)
+     * getTelephone
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getTelephone($iter = 0)
     {
         return $this->get('TEL', $iter);
     }
 
     /**
-    * getTitle
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getTitle($iter=0)
+     * getTitle
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getTitle($iter = 0)
     {
         return $this->get('TITLE', $iter);
     }
 
     /**
-    * getURL
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getURL($iter=0)
+     * getURL
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getURL($iter = 0)
     {
         return $this->get('URL', $iter);
     }
 
     /**
-    * getUniqueID
-    *
-    * @param int $iter iteration
-    *
-    * @return string
-    * @deprecated
-    * @see self::get()
-    */
-    public function getUniqueID($iter=0)
+     * getUniqueID
+     *
+     * @param int $iter iteration
+     *
+     * @return     string
+     * @deprecated
+     * @see        self::get()
+     */
+    public function getUniqueID($iter = 0)
     {
         return $this->get('UID', $iter);
     }
 
     /**
-    * setAgent
-    *
-    * @param string $val agent
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setAgent
+     *
+     * @param string $val agent
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setAgent($val)
     {
         return $this->set('AGENT', $val);
     }
 
     /**
-    * setBirthday
-    *
-    * @param string $val birthday
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setBirthday
+     *
+     * @param string $val birthday
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setBirthday($val)
     {
         return $this->set('BDAY', $val);
     }
 
     /**
-    * setClass
-    *
-    * @param string $val class
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setClass
+     *
+     * @param string $val class
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setClass($val)
     {
         return $this->set('CLASS', $val);
     }
 
     /**
-    * setFormattedName
-    *
-    * @param string $val formattedName
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setFormattedName
+     *
+     * @param string $val formattedName
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setFormattedName($val)
     {
         return $this->set('FN', $val);
     }
 
     /**
-    * setGeo
-    *
-    * @param string $lat latitude
-    * @param string $lon longitude
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setGeo
+     *
+     * @param string $lat latitude
+     * @param string $lon longitude
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setGeo()
     {
         $args = func_get_args();
@@ -1358,60 +1357,60 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * setKey
-    *
-    * @param string $val key
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setKey
+     *
+     * @param string $val key
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setKey($val)
     {
         return $this->set('KEY', $val);
     }
 
     /**
-    * setLogo
-    *
-    * @param string $val logo
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setLogo
+     *
+     * @param string $val logo
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setLogo($val)
     {
         return $this->set('LOGO', $val);
     }
 
     /**
-    * setMailer
-    *
-    * @param string $val mailer
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setMailer
+     *
+     * @param string $val mailer
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setMailer($val)
     {
         return $this->set('MAILER', $val);
     }
 
     /**
-    * setName
-    *
-    * @param string $family family/last name.
-    * @param string $given  given/first name.
-    * @param string $addl   additional/middle name.
-    * @param string $prefix honorific prefix such as Mr., Miss, etc.
-    * @param string $suffix honorific suffix such as III, Jr., Ph.D., etc.
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setName
+     *
+     * @param string $family family/last name.
+     * @param string $given  given/first name.
+     * @param string $addl   additional/middle name.
+     * @param string $prefix honorific prefix such as Mr., Miss, etc.
+     * @param string $suffix honorific suffix such as III, Jr., Ph.D., etc.
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setName()
     {
         $args = func_get_args();
@@ -1419,191 +1418,184 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     }
 
     /**
-    * setNote
-    *
-    * @param string $val note
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setNote
+     *
+     * @param string $val note
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setNote($val)
     {
         return $this->set('NOTE', $val);
     }
 
     /**
-    * setPhoto
-    *
-    * @param string $val photo
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setPhoto
+     *
+     * @param string $val photo
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setPhoto($val)
     {
         return $this->set('PHOTO', $val);
     }
 
     /**
-    * setProductID
-    *
-    * @param string $val productID
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setProductID
+     *
+     * @param string $val productID
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setProductID($val)
     {
         return $this->set('PRODID', $val);
     }
 
     /**
-    * setRevision
-    *
-    * @param string $val revision
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setRevision
+     *
+     * @param string $val revision
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setRevision($val)
     {
         return $this->set('REV', $val);
     }
 
     /**
-    * setRole
-    *
-    * @param string $val role
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setRole
+     *
+     * @param string $val role
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setRole($val)
     {
         return $this->set('ROLE', $val);
     }
 
     /**
-    * setSortString
-    *
-    * @param string $val sortString
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setSortString
+     *
+     * @param string $val sortString
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setSortString($val)
     {
         return $this->set('SORT-STRING', $val);
     }
 
     /**
-    * setSound
-    *
-    * @param string $val sound
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setSound
+     *
+     * @param string $val sound
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setSound($val)
     {
         return $this->set('SOUND', $val);
     }
 
     /**
-    * setSource
-    *
-    * @param string $val source
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setSource
+     *
+     * @param string $val source
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setSource($val)
     {
         return $this->set('SOURCE', $val);
     }
 
     /**
-    * setSourceName
-    *
-    * @param string $val sourceName
-    *
-    * @return $this
-    *
-    * @deprecated
-    * @see self::set()
-    */
+     * setSourceName
+     *
+     * @param string $val sourceName
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setSourceName($val)
     {
         return $this->set('NAME', $val);
     }
 
     /**
-    * setTZ
-    *
-    * @param string $val TZ
-    *
-    * @return $this
-    *
-    * @deprecated
-    * @see self::set()
-    */
+     * setTZ
+     *
+     * @param string $val TZ
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setTZ($val)
     {
         return $this->set('TZ', $val);
     }
 
     /**
-    * setTitle
-    *
-    * @param string $val title
-    *
-    * @return $this
-    *
-    * @deprecated
-    * @see self::set()
-    */
+     * setTitle
+     *
+     * @param string $val title
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setTitle($val)
     {
         return $this->set('TITLE', $val);
     }
 
     /**
-    * setURL
-    *
-    * @param string $val URL
-    *
-    * @return $this
-    *
-    * @deprecated
-    * @see self::set()
-    */
+     * setURL
+     *
+     * @param string $val URL
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setURL($val)
     {
         return $this->set('URL', $val);
     }
 
     /**
-    * setUniqueID
-    *
-    * @param string $val uniqueID
-    *
-    * @return $this
-    * @deprecated
-    * @see self::set()
-    */
+     * setUniqueID
+     *
+     * @param string $val uniqueID
+     *
+     * @return     $this
+     * @deprecated
+     * @see        self::set()
+     */
     public function setUniqueID($val)
     {
         return $this->set('UID', $val);
     }
-
 }
-
-?>

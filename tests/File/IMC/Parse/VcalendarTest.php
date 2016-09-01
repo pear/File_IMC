@@ -19,12 +19,6 @@
  */
 
 /**
- * PHPUnit_Framework_TestCase
- * @ignore
- */
-require_once 'PHPUnit/Framework/TestCase.php';
-
-/**
  * File_IMC
  */
 require_once "File/IMC.php";

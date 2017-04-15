@@ -38,7 +38,7 @@
  * @package  File_IMC
  * @author   Paul M. Jones <pmjones@ciaweb.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  CVS: $Id$
+ * @version  CVS: $Id: Parse.php 309122 2011-03-11 16:33:57Z till $
  * @link     http://pear.php.net/package/File_IMC
  */
 
@@ -57,7 +57,7 @@
 * @author   Paul M. Jones <pmjones@ciaweb.net>
 * @author   Till Klampaeckel <till@php.net>
 * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
-* @version  Release: @package_version@
+* @version  Release: 0.4.3
 * @link     http://pear.php.net/package/File_IMC
 */
 abstract class File_IMC_Parse

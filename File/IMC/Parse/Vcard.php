@@ -38,7 +38,7 @@
  * @package  File_IMC
  * @author   Paul M. Jones <pmjones@ciaweb.net>
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version  SVN: $Id$
+ * @version  SVN: $Id: Vcard.php 288819 2009-09-25 19:39:27Z till $
  * @link     http://pear.php.net/package/File_IMC
  */
 

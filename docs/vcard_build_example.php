@@ -24,35 +24,53 @@ require_once 'File/IMC.php';
 
 // instantiate a builder object
 // (defaults to version 3.0)
-$vcard = File_IMC::build('vCard');
+$builder = File_IMC::build('vCard');
 
 // set a formatted name
-$vcard->setFormattedName('Bolivar Shagnasty');
+$builder->set('FN','Bolivar Shagnasty');
 
 // set the structured name parts
-$vcard->setName('Shagnasty', 'Bolivar', 'Odysseus', 'Mr.', 'III');
+$builder->set('N',array(
+                   'Shagnasty',
+	'Bolivar',
+	'Odysseus',
+	'Mr.',
+	'III'
+));
 
 // add a work email.  note that we add the value
 // first and the param after -- Contact_Vcard_Build
 // is smart enough to add the param in the correct
 // place.
-$vcard->addEmail('boshag@example.com');
-$vcard->addParam('TYPE', 'WORK');
+$builder->set('EMAIL','boshag@example.com');
+$builder->addParam('TYPE', 'WORK');
 
 // add a home/preferred email
-$vcard->addEmail('bolivar@example.net');
-$vcard->addParam('TYPE', 'HOME');
-$vcard->addParam('TYPE', 'PREF');
+//	if we didn't specify the 3rd parameter, it
+//	would default to 0 (the first email)..
+//	and overwrite the email set above
+//	could also pass the integer 1 to
+//	explicitly specify the index to set
+$builder->set('EMAIL','bolivar@example.net','new');
+$builder->addParam('TYPE', 'HOME');
+$builder->addParam('TYPE', 'PREF');
 
 // add a work address
-$vcard->addAddress('POB 101', 'Suite 202', '123 Main',
-                   'Beverly Hills', 'CA', '90210', 'US');
-$vcard->addParam('TYPE', 'WORK');
+$builder->set('ADR',array(
+	'POB 101',
+	'Suite 202',
+	'123 Main',
+	'Beverly Hills',
+	'CA',
+	'90210',
+	'US'
+));
+$builder->addParam('TYPE', 'WORK');
 
 // get back the vCard and print it
-$text = $vcard->fetch();
+$text = $builder->fetch();
 echo '<pre>';
 print_r($text);
 echo '</pre>';
-    
+
 ?>

@@ -25,14 +25,21 @@ $svnOrNot = '@package_version@';
 if ($svnOrNot == '@package_version@') {
     // we run from svn and fiddle with the include_path
     set_include_path(
-        realpath($root)
+        get_include_path()
         . PATH_SEPARATOR
-        . get_include_path()
+        . realpath($root)
     );
 }
 
 if (file_exists($root . '/vendor/autoload.php')) {
     require $root . '/vendor/autoload.php';
+} else {
+    /*
+     * Files needed by PhpUnit
+     */
+    require_once 'PHPUnit/Autoload.php';
+    require_once 'PHPUnit/TextUI/TestRunner.php';
+    require_once 'PHPUnit/Extensions/PhptTestSuite.php';
 }
 
 /**
@@ -44,13 +51,6 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'File_IMC_AllTests::main');
 }
 
-
-/*
- * Files needed by PhpUnit
- */
-require_once 'PHPUnit/Autoload.php';
-require_once 'PHPUnit/TextUI/TestRunner.php';
-require_once 'PHPUnit/Extensions/PhptTestSuite.php';
 
 /*
  * You must add each additional class-level test suite file here
@@ -120,7 +120,7 @@ class File_IMC_AllTests
      * @return PHPUnit_Framework_TestSuite a master test suite
      *                                     containing all class test suites
      * @uses PHPUnit_Framework_TestSuite
-     */ 
+     */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite(

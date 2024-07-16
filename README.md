@@ -1,3 +1,5 @@
+[![Test Status](https://github.com/pear/File_IMC/actions/workflows/ci.yml/badge.svg)](https://github.com/pear/File_IMC/actions/workflows/ci.yml)
+
 Allows you to programmatically create a vCard or vCalendar, and fetch the text.
 
 IMPORTANT: The array structure has changed slightly from Contact_Vcard_Parse.

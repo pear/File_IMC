@@ -1,8 +1,6 @@
 <?php
-/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */ 
+/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */
 /**+----------------------------------------------------------------------+
- * | PHP version 5                                                        |
- * +----------------------------------------------------------------------+
  * | Copyright (c) 1997-2008 The PHP Group                                |
  * +----------------------------------------------------------------------+
  * | All rights reserved.                                                 |

@@ -33,7 +33,7 @@ require_once "File/IMC.php";
  * @version  Release: @package_version@
  * @link     http://pear.php.net/package/File_IMC
  */
-class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
+class File_IMC_Parse_VcalendarTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var File_IMC_Parse_Vcalendar
@@ -51,7 +51,7 @@ class File_IMC_Parse_VcalendarTest extends PHPUnit_Framework_TestCase
      * @uses self::$parser
      * @uses self::$calendar
      */
-    public function setUp()
+    public function setUp(): void
     {
         self::$parser = File_IMC::parse('vcalendar');
 

@@ -254,5 +254,3 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
         );
     }
 }
-
-?>

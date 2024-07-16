@@ -106,25 +106,22 @@ class File_IMC_AllTests
      * Launches the TextUI test runner
      *
      * @return void
-     * @uses PHPUnit_TextUI_TestRunner
      */
     public static function main()
     {
-        PHPUnit_TextUI_TestRunner::run(self::suite());
     }
 
 
     /**
      * Adds all class test suites into the master suite
      *
-     * @return PHPUnit_Framework_TestSuite a master test suite
+     * @return PHPUnit\Framework\TestSuite a master test suite
      *                                     containing all class test suites
-     * @uses PHPUnit_Framework_TestSuite
+     * @uses PHPUnit\Framework\TestSuite
      */
     public static function suite()
     {
-        $suite = new PHPUnit_Framework_TestSuite(
-            'File_IMC Full Suite of Unit Tests');
+        $suite = new \PHPUnit\Framework\TestSuite('File_IMC Full Suite of Unit Tests');
 
         /*
          * You must add each additional class-level test suite name here
@@ -137,7 +134,7 @@ class File_IMC_AllTests
         /*
          * add PHPT tests
          */
-        $phpt = new PHPUnit_Extensions_PhptTestSuite(File_IMC_DIR_PHPT);
+        $phpt = new \PHPUnit\Framework\TestSuite(File_IMC_DIR_PHPT);
         $suite->addTestSuite($phpt);
 
         return $suite;

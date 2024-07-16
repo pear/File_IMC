@@ -33,7 +33,7 @@ require_once "File/IMC.php";
  * @version  Release: @package_version@
  * @link     http://pear.php.net/package/File_IMC
  */
-class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
+class File_IMC_ParseTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string
@@ -56,7 +56,7 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
      * @uses   self::$vcard
      * @uses   self::$parser
      */
-    public function setUp()
+    public function setUp(): void
     {
         $familyName      = "FamilyName";
         $givenName       = "GivenName";
@@ -272,20 +272,20 @@ class File_IMC_ParseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException File_IMC_Exception
+     * Test Exception
      */
     public function testExceptionIfNoFormatIsProvided()
     {
+        $this->expectException('File_IMC_Exception');
         $foo = File_IMC::parse('');
     }
 
     /**
-     * @expectedException File_IMC_Exception
+     * Test Exception
      */
     public function testExceptionIfInvalidFormatIsProvided()
     {
+        $this->expectException('File_IMC_Exception');
         $foo = File_IMC::parse('bar');
     }
 }
-
-?>

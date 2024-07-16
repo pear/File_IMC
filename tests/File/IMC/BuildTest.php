@@ -33,7 +33,7 @@ require_once "File/IMC.php";
  * @version  Release: @package_version@
  * @link     http://pear.php.net/package/File_IMC
  */
-class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
+class File_IMC_BuildTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var File_IMC_Build_Vcard
@@ -50,7 +50,7 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
      * @uses   self::$vcard
      * @uses   self::$parser
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->vcard = File_IMC::build('vcard');
     }
@@ -239,18 +239,20 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
 	}
 
     /**
-     * @expectedException File_IMC_Exception
+     * Test Exception
      */
     public function testExceptionIfNoFormatIsProvided()
     {
+        $this->expectException('File_IMC_Exception');
         $foo = File_IMC::build('');
     }
 
     /**
-     * @expectedException File_IMC_Exception
+     * Test Exception
      */
     public function testExceptionIfInvalidFormatIsProvided()
     {
+        $this->expectException('File_IMC_Exception');
         $foo = File_IMC::build('bar');
     }
 
@@ -274,10 +276,11 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException File_IMC_Exception
+     *Test Exception
      */
     public function testVersionException()
     {
+        $this->expectException('File_IMC_Exception');
         $this->vcard->setVersion('4.0');
     }
 
@@ -291,5 +294,3 @@ class File_IMC_BuildTest extends PHPUnit_Framework_TestCase
         $this->assertSame("VERSION:{$version}", $this->vcard->get('VERSION'));
     }
 }
-
-?>

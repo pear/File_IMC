@@ -111,7 +111,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
                 "vCard [$prop] [$iter] [$name]: "
                 .'The parameter value may only contain '
                 .'a-z, A-Z, 0-9, and dashes (-).',
-                FILE_IMC::ERROR_INVALID_PARAM
+                File_IMC::ERROR_INVALID_PARAM
             );
         }
         if ($this->value['VERSION'][0][0][0] == '2.1') {
@@ -121,7 +121,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         }
         throw new File_IMC_Exception(
             "[$prop] [$iter] Unknown vCard version number or other error.",
-            FILE_IMC::ERROR
+            File_IMC::ERROR
         );
     }
 
@@ -182,7 +182,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
                     throw new File_IMC_Exception(
                         'vCard 2.1 ['.$prop.']['.$iter.']: '
                         .'"'.$name.'" is an unknown or invalid parameter name.',
-                        FILE_IMC::ERROR_INVALID_PARAM);
+                        File_IMC::ERROR_INVALID_PARAM);
                 */
                 break;
         }
@@ -191,7 +191,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
             throw new File_IMC_Exception(
                 'vCard 2.1 ['.$prop.']['.$iter.']: '
                 .'"'.$text.'" is not a recognized '.$name.' value.',
-                FILE_IMC::ERROR_INVALID_PARAM);
+                File_IMC::ERROR_INVALID_PARAM);
         */
         return $result;
     }
@@ -233,7 +233,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
                     throw new File_IMC_Exception(
                         'vCard 3.0 ['.$prop.']['.$iter.']: '
                         .'"'.$name.'" is an unknown or invalid parameter name.',
-                        FILE_IMC::ERROR_INVALID_PARAM);
+                        File_IMC::ERROR_INVALID_PARAM);
                 */
                 break;
         }
@@ -242,7 +242,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
             throw new File_IMC_Exception(
                 'vCard 3.0 ['.$prop.']['.$iter.']: '
                 .'"'.$text.'" is not a recognized '.$name.' value.',
-                FILE_IMC::ERROR_INVALID_PARAM);
+                File_IMC::ERROR_INVALID_PARAM);
         */
         return $result;
     }
@@ -285,13 +285,13 @@ class File_IMC_Build_Vcard extends File_IMC_Build
                 $value[$i] = '';
             }
         }
-        $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_POB,       $value[0]);
-        $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_EXTEND,    $value[1]);
-        $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_STREET,    $value[2]);
-        $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_LOCALITY,  $value[3]);
-        $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_REGION,    $value[4]);
-        $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_POSTCODE,  $value[5]);
-        $this->setValue('ADR', $iter, FILE_IMC::VCARD_ADR_COUNTRY,   $value[6]);
+        $this->setValue('ADR', $iter, File_IMC::VCARD_ADR_POB,       $value[0]);
+        $this->setValue('ADR', $iter, File_IMC::VCARD_ADR_EXTEND,    $value[1]);
+        $this->setValue('ADR', $iter, File_IMC::VCARD_ADR_STREET,    $value[2]);
+        $this->setValue('ADR', $iter, File_IMC::VCARD_ADR_LOCALITY,  $value[3]);
+        $this->setValue('ADR', $iter, File_IMC::VCARD_ADR_REGION,    $value[4]);
+        $this->setValue('ADR', $iter, File_IMC::VCARD_ADR_POSTCODE,  $value[5]);
+        $this->setValue('ADR', $iter, File_IMC::VCARD_ADR_COUNTRY,   $value[6]);
     }
 
     /**
@@ -314,24 +314,24 @@ class File_IMC_Build_Vcard extends File_IMC_Build
             if (is_array($this->value['N'])) {
                 // build from N.
                 // first (given) name, first iteration, first repetition
-                $text .= $this->getValue('N', 0, FILE_IMC::VCARD_N_GIVEN, 0);
+                $text .= $this->getValue('N', 0, File_IMC::VCARD_N_GIVEN, 0);
                 // add a space after, if there was text
                 if ($text != '') {
                     $text .= ' ';
                 }
                 // last (family) name, first iteration, first repetition
-                $text .= $this->getValue('N', 0, FILE_IMC::VCARD_N_FAMILY, 0);
+                $text .= $this->getValue('N', 0, File_IMC::VCARD_N_FAMILY, 0);
                 // add a space after, if there was text
                 if ($text != '') {
                     $text .= ' ';
                 }
                 // last-name suffix, first iteration, first repetition
-                $text .= $this->getValue('N', 0, FILE_IMC::VCARD_N_SUFFIX, 0);
+                $text .= $this->getValue('N', 0, File_IMC::VCARD_N_SUFFIX, 0);
             } else {
                 // no N exists, and no FN was set, so return.
                 throw new File_IMC_Exception(
                     'FN not specified and N not set; cannot set FN.',
-                    FILE_IMC::ERROR_PARAM_NOT_SET
+                    File_IMC::ERROR_PARAM_NOT_SET
                 );
             }
         }
@@ -363,8 +363,8 @@ class File_IMC_Build_Vcard extends File_IMC_Build
                 $value[$i] = '';
             }
         }
-        $this->setValue('GEO', $iter, FILE_IMC::VCARD_GEO_LAT, $value[0]);
-        $this->setValue('GEO', $iter, FILE_IMC::VCARD_GEO_LON, $value[1]);
+        $this->setValue('GEO', $iter, File_IMC::VCARD_GEO_LAT, $value[0]);
+        $this->setValue('GEO', $iter, File_IMC::VCARD_GEO_LON, $value[1]);
     }
 
     /**
@@ -401,11 +401,11 @@ class File_IMC_Build_Vcard extends File_IMC_Build
                 $value[$i] = '';
             }
         }
-        $this->setValue('N', $iter, FILE_IMC::VCARD_N_FAMILY,	$value[0]);
-        $this->setValue('N', $iter, FILE_IMC::VCARD_N_GIVEN,	$value[1]);
-        $this->setValue('N', $iter, FILE_IMC::VCARD_N_ADDL,		$value[2]);
-        $this->setValue('N', $iter, FILE_IMC::VCARD_N_PREFIX,	$value[3]);
-        $this->setValue('N', $iter, FILE_IMC::VCARD_N_SUFFIX,	$value[4]);
+        $this->setValue('N', $iter, File_IMC::VCARD_N_FAMILY,	$value[0]);
+        $this->setValue('N', $iter, File_IMC::VCARD_N_GIVEN,	$value[1]);
+        $this->setValue('N', $iter, File_IMC::VCARD_N_ADDL,		$value[2]);
+        $this->setValue('N', $iter, File_IMC::VCARD_N_PREFIX,	$value[3]);
+        $this->setValue('N', $iter, File_IMC::VCARD_N_SUFFIX,	$value[4]);
     }
 
     /**
@@ -475,17 +475,17 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         if (! is_integer($iter) || $iter < 0) {
             throw new File_IMC_Exception(
                 'ADR iteration number not valid.',
-                FILE_IMC::ERROR_INVALID_ITERATION
+                File_IMC::ERROR_INVALID_ITERATION
             );
         }
         return $this->getMeta('ADR', $iter)
-            .$this->getValue('ADR', $iter, FILE_IMC::VCARD_ADR_POB) . ';'
-            .$this->getValue('ADR', $iter, FILE_IMC::VCARD_ADR_EXTEND) . ';'
-            .$this->getValue('ADR', $iter, FILE_IMC::VCARD_ADR_STREET) . ';'
-            .$this->getValue('ADR', $iter, FILE_IMC::VCARD_ADR_LOCALITY) . ';'
-            .$this->getValue('ADR', $iter, FILE_IMC::VCARD_ADR_REGION) . ';'
-            .$this->getValue('ADR', $iter, FILE_IMC::VCARD_ADR_POSTCODE) . ';'
-            .$this->getValue('ADR', $iter, FILE_IMC::VCARD_ADR_COUNTRY);
+            .$this->getValue('ADR', $iter, File_IMC::VCARD_ADR_POB) . ';'
+            .$this->getValue('ADR', $iter, File_IMC::VCARD_ADR_EXTEND) . ';'
+            .$this->getValue('ADR', $iter, File_IMC::VCARD_ADR_STREET) . ';'
+            .$this->getValue('ADR', $iter, File_IMC::VCARD_ADR_LOCALITY) . ';'
+            .$this->getValue('ADR', $iter, File_IMC::VCARD_ADR_REGION) . ';'
+            .$this->getValue('ADR', $iter, File_IMC::VCARD_ADR_POSTCODE) . ';'
+            .$this->getValue('ADR', $iter, File_IMC::VCARD_ADR_COUNTRY);
     }
 
     /**
@@ -499,8 +499,8 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     protected function _getGEO($iter)
     {
         return $this->getMeta('GEO', $iter)
-            .$this->getValue('GEO', $iter, FILE_IMC::VCARD_GEO_LAT, 0) . ';'
-            .$this->getValue('GEO', $iter, FILE_IMC::VCARD_GEO_LON, 0);
+            .$this->getValue('GEO', $iter, File_IMC::VCARD_GEO_LAT, 0) . ';'
+            .$this->getValue('GEO', $iter, File_IMC::VCARD_GEO_LON, 0);
     }
 
     /**
@@ -514,11 +514,11 @@ class File_IMC_Build_Vcard extends File_IMC_Build
     protected function _getN($iter)
     {
         return $this->getMeta('N', $iter)
-            .$this->getValue('N', $iter, FILE_IMC::VCARD_N_FAMILY) . ';'
-            .$this->getValue('N', $iter, FILE_IMC::VCARD_N_GIVEN) . ';'
-            .$this->getValue('N', $iter, FILE_IMC::VCARD_N_ADDL) . ';'
-            .$this->getValue('N', $iter, FILE_IMC::VCARD_N_PREFIX) . ';'
-            .$this->getValue('N', $iter, FILE_IMC::VCARD_N_SUFFIX);
+            .$this->getValue('N', $iter, File_IMC::VCARD_N_FAMILY) . ';'
+            .$this->getValue('N', $iter, File_IMC::VCARD_N_GIVEN) . ';'
+            .$this->getValue('N', $iter, File_IMC::VCARD_N_ADDL) . ';'
+            .$this->getValue('N', $iter, File_IMC::VCARD_N_PREFIX) . ';'
+            .$this->getValue('N', $iter, File_IMC::VCARD_N_SUFFIX);
     }
 
     /**
@@ -579,7 +579,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         } elseif (!is_integer($iter) || $iter < 0) {
             throw new File_IMC_Exception(
                 $prop.' iteration number not valid.',
-                FILE_IMC::ERROR_INVALID_ITERATION
+                File_IMC::ERROR_INVALID_ITERATION
             );
         }
         $method = '_set'.$prop;
@@ -589,7 +589,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
             if ($prop == 'VERSION' && !in_array($value, array('2.1','3.0'))) {
                 throw new File_IMC_Exception(
                     'Version must be 3.0 or 2.1 to be valid.',
-                    FILE_IMC::ERROR_INVALID_VCARD_VERSION
+                    File_IMC::ERROR_INVALID_VCARD_VERSION
                 );
             } elseif (in_array($prop, array('PHOTO','LOGO','SOUND','KEY'))) {
                 if (file_exists($value)) {
@@ -630,7 +630,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
         if (!is_integer($iter) || $iter < 0) {
             throw new File_IMC_Exception(
                 $prop.' iteration number not valid.',
-                FILE_IMC::ERROR_INVALID_ITERATION
+                File_IMC::ERROR_INVALID_ITERATION
             );
         }
         $this->encode($prop, $iter);
@@ -731,7 +731,7 @@ class File_IMC_Build_Vcard extends File_IMC_Build
             } elseif (in_array($ver, $prop_dfn['req'])) {
                 throw new File_IMC_Exception(
                     $prop.' not set (required).',
-                    FILE_IMC::ERROR_PARAM_NOT_SET
+                    File_IMC::ERROR_PARAM_NOT_SET
                 );
             }
         }

@@ -147,11 +147,11 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
         // array_pad makes sure there are the right number of elements
         $tmp = array_pad($this->_splitBySemi($text), 5, '');
         return array(
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_FAMILY]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_GIVEN]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_ADDL]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_PREFIX]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_N_SUFFIX])
+            $this->_splitByComma($tmp[File_IMC::VCARD_N_FAMILY]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_N_GIVEN]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_N_ADDL]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_N_PREFIX]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_N_SUFFIX])
         );
     }
 
@@ -173,13 +173,13 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
         // array_pad makes sure there are the right number of elements
         $tmp = array_pad($this->_splitBySemi($text), 7, '');
         return array(
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_POB]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_EXTEND]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_STREET]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_LOCALITY]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_REGION]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_POSTCODE]),
-            $this->_splitByComma($tmp[FILE_IMC::VCARD_ADR_COUNTRY])
+            $this->_splitByComma($tmp[File_IMC::VCARD_ADR_POB]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_ADR_EXTEND]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_ADR_STREET]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_ADR_LOCALITY]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_ADR_REGION]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_ADR_POSTCODE]),
+            $this->_splitByComma($tmp[File_IMC::VCARD_ADR_COUNTRY])
         );
     }
 
@@ -249,8 +249,8 @@ class File_IMC_Parse_Vcard extends File_IMC_Parse
         // array_pad makes sure there are the right number of elements
         $tmp = array_pad($this->_splitBySemi($text), 2, '');
         return array(
-            array($tmp[FILE_IMC::VCARD_GEO_LAT]), // lat
-            array($tmp[FILE_IMC::VCARD_GEO_LON])  // lon
+            array($tmp[File_IMC::VCARD_GEO_LAT]), // lat
+            array($tmp[File_IMC::VCARD_GEO_LON])  // lon
         );
     }
 }

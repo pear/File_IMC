@@ -244,7 +244,7 @@ abstract class File_IMC_Build
         if (is_object($text)) {
             throw new File_IMC_Exception(
                 'The escape() method works only with string literals and arrays.',
-                FILE_IMC::ERROR_INVALID_PARAM_TYPE
+                File_IMC::ERROR_INVALID_PARAM_TYPE
             );
         }
         if (is_array($text)) {
@@ -325,7 +325,7 @@ abstract class File_IMC_Build
             throw new File_IMC_Exception(
                 $iter.' is not a valid iteration number for '
                 .$prop.'; must be a positive integer.',
-                FILE_IMC::ERROR_INVALID_ITERATION
+                File_IMC::ERROR_INVALID_ITERATION
             );
         }
 

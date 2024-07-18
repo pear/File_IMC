@@ -160,7 +160,7 @@ abstract class File_IMC_Parse
     *
     * @param string $text The string on which to convert line endings.
     *
-    * @return void
+    * @return string|array
     */
     protected function _convertLineEndings($text)
     {

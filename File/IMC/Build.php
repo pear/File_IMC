@@ -130,7 +130,7 @@ abstract class File_IMC_Build
     * @param string $iter Optional, the iteration of the property. Only
     * used for error messaging.
     *
-    * @return void
+    * @return mixed	      Boolean true if the parameter is valid
     * @throws File_IMC_Exception if not.
     */
     abstract function validateParam($name, $text, $prop = null, $iter = null);

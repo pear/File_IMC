@@ -1,0 +1,39 @@
+name: PHPStan
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches: [ 'master' ]
+
+jobs:
+  run:
+    name: PHPStan
+    runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        level: [ 0 ]
+        include:
+          - current-level: 0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Install PHPStan
+        run: composer require --dev phpstan/phpstan
+
+      - name: Run PHPStan
+        if:  matrix.level == matrix.current-level
+        run: ./vendor/bin/phpstan analyse --memory-limit 1G File tests --level "${{ matrix.level }}"
+
+      - name: Run PHPStan
+        if:  matrix.level > matrix.current-level
+        continue-on-error: true
+        run: |
+             ./vendor/bin/phpstan analyse --memory-limit 1G File tests --level "${{ matrix.level }}"
+             exit 0

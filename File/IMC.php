@@ -98,6 +98,7 @@ class File_IMC
     const ERROR_INVALID_VCARD_VERSION = 103;
     const ERROR_PARAM_NOT_SET         = 104;
     const ERROR_INVALID_ITERATION     = 105;
+    const ERROR_INVALID_PARAM_TYPE    = 106;
 
     /**
      * Constants for File_IMC vCard "N" component positions.

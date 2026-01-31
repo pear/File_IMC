@@ -37,9 +37,9 @@ if (file_exists($root . '/vendor/autoload.php')) {
     /*
      * Files needed by PhpUnit
      */
-    require_once 'PHPUnit/Autoload.php';
-    require_once 'PHPUnit/TextUI/TestRunner.php';
-    require_once 'PHPUnit/Extensions/PhptTestSuite.php';
+    require_once 'PHPUnit/Autoload.php'; /** @phpstan-ignore requireOnce.fileNotFound */
+    require_once 'PHPUnit/TextUI/TestRunner.php'; /** @phpstan-ignore requireOnce.fileNotFound */
+    require_once 'PHPUnit/Extensions/PhptTestSuite.php'; /** @phpstan-ignore requireOnce.fileNotFound */
 }
 
 /**
